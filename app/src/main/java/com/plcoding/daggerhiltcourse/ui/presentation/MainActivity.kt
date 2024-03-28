@@ -17,15 +17,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.plcoding.daggerhiltcourse.data.model.Notification
 import com.plcoding.daggerhiltcourse.ui.presentation.clients.ClientsScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.course_details.CourseDetailsScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.course_notifications.CourseNotificationsScreen
-//import com.plcoding.daggerhiltcourse.ui.presentation.course_details.CourseDetailsScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.home.HomeScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.my_agenda.MyAgendaScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseScreen
-import com.plcoding.daggerhiltcourse.ui.presentation.settings.SettingsScreen
 import com.plcoding.daggerhiltcourse.ui.theme.DaggerHiltCourseTheme
 import com.plcoding.daggerhiltcourse.util.AlarmScheduler
 import com.plcoding.daggerhiltcourse.util.AndroidAlarmScheduler
@@ -165,14 +162,6 @@ fun App(scheduler: AlarmScheduler) {
                             }
                             ClientsScreen()
                         }
-                        composable(Routes.SETTINGS) {
-                            LaunchedEffect(Unit) {
-                                bottomBarState.value = true
-                                topBarState.value = true
-                            }
-                            SettingsScreen()
-                        }
-
                     }
                 }
             }
