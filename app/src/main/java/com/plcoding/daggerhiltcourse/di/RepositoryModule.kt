@@ -1,7 +1,7 @@
 package com.plcoding.daggerhiltcourse.di
 
-import com.plcoding.daggerhiltcourse.data.repository.MyRepositoryImpl
-import com.plcoding.daggerhiltcourse.domain.repository.MyRepository
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepositoryImpl
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,6 +15,6 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindMyRepository(
-        myRepositoryImpl: MyRepositoryImpl
-    ): MyRepository
+        myRepositoryImpl: RemoteRepositoryImpl
+    ): RemoteRepository
 }
