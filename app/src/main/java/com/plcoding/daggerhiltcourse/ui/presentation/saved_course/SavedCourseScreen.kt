@@ -1,5 +1,6 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.saved_course
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,8 +13,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -25,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -32,9 +36,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.plcoding.daggerhiltcourse.R
 import com.plcoding.daggerhiltcourse.data.model.Course
-import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseEvent
-import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseViewModel
 import com.plcoding.daggerhiltcourse.util.UiEvent
 
 @Composable
@@ -61,13 +64,18 @@ fun SavedCourseScreen(
 @Composable
 fun CourseItem(course: Course, viewModel: SavedCourseViewModel) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    var showDialog by remember { mutableStateOf(false) }
+    var showDeleteDialog by remember { mutableStateOf(false) }
+    var showFeedbackDialog by remember { mutableStateOf(false) }
+    val isFinished = viewModel.isFinished
 
     LaunchedEffect(true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is UiEvent.ShowDialog -> {
-                    showDialog = event.state
+                is UiEvent.ShowDeleteDialog -> {
+                    showDeleteDialog = event.state
+                }
+                is UiEvent.ShowFeedbackDialog -> {
+                    showFeedbackDialog = event.state
                 }
                 else -> Unit
             }
@@ -131,31 +139,60 @@ fun CourseItem(course: Course, viewModel: SavedCourseViewModel) {
                         )
                     )
                 }
-                Button(
-                    onClick = { viewModel.onEvent(SavedCourseEvent.OnDeleteCourseClick) },
-                    modifier = Modifier
-                        .height(64.dp)
-                        .fillMaxWidth()
-                        .padding(top = 8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.Black, // Set button color to black
-                        contentColor = Color.White // Set text color to white
-                    ),
-                    shape = RoundedCornerShape(8.dp),
+                if (isFinished) {
+                    Button(
+                        onClick = {
+                            showFeedbackDialog=true
+                        },
+                        modifier = Modifier
+                            .height(64.dp)
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color.Black,
+                            contentColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(8.dp),
 
-                    ) {
-                    Text(
-                        text = "Delete",
-                        style = TextStyle(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
+                        ) {
+                        Text(
+                            text = "Feedback",
+                            style = TextStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                            )
                         )
-                    )
+                    }
+                } else {
+                    Button(
+                        onClick = { viewModel.onEvent(SavedCourseEvent.OnDeleteCourseClick) },
+                        modifier = Modifier
+                            .height(64.dp)
+                            .fillMaxWidth()
+                            .padding(top = 8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = Color.Black,
+                            contentColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(8.dp),
+
+                        ) {
+                        Text(
+                            text = "Delete",
+                            style = TextStyle(
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                            )
+                        )
+                    }
                 }
             }
         }
-        if (showDialog) {
+        if (showDeleteDialog) {
             DeleteComponentButton(viewModel)
+        }
+        if (showFeedbackDialog) {
+            FeedbackDialog(viewModel)
         }
     }
 }
@@ -170,8 +207,8 @@ fun DeleteComponentButton(viewModel: SavedCourseViewModel) {
         confirmButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black, // Set button color to black
-                    contentColor = Color.White // Set text color to white
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White
                 ),
                 onClick = {
                     isVisible = false
@@ -188,11 +225,134 @@ fun DeleteComponentButton(viewModel: SavedCourseViewModel) {
                     contentColor = Color.White // Set text color to white
                 ),
                 onClick = {
-                isVisible = false
-                viewModel.onEvent(SavedCourseEvent.OnDeleteDismissClick)
-            }) {
+                    isVisible = false
+                    viewModel.onEvent(SavedCourseEvent.OnDeleteDismissClick)
+                }
+            ) {
                 Text("No")
             }
         }
     )
 }
+@Composable
+fun FeedbackDialog(viewModel: SavedCourseViewModel) {
+    var feedbackText by remember { mutableStateOf("") }
+    var selectedRating by remember { mutableStateOf(0) }
+    var isVisible by remember { mutableStateOf(true) }
+
+    LaunchedEffect(true) {
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.UpdateFeedbackRating -> {
+                    selectedRating = event.rating
+                }
+            }
+        }
+    }
+
+    AlertDialog(
+        onDismissRequest = {
+            isVisible = false
+            viewModel.onEvent(SavedCourseEvent.OnFeedbackDismissClick)
+        },
+        title = { Text(text = "Send Feedback") },
+        text = {
+            Column {
+                Text("We'd love to hear your feedback!")
+                TextField(
+                    value = feedbackText,
+                    onValueChange = { feedbackText = it },
+                    label = { Text("Feedback") }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text("How was your experience?")
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier=Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly) {
+                        SadSmileyButton(
+                            isSelected = selectedRating == 1,
+                            onClick = { viewModel.onEvent(SavedCourseEvent.OnFeedbackRatingClick(1)) }
+                        )
+                        NeutralSmileyButton(
+                            isSelected = selectedRating == 2,
+                            onClick = { viewModel.onEvent(SavedCourseEvent.OnFeedbackRatingClick(2)) }
+                        )
+                        HappySmileyButton(
+                            isSelected = selectedRating == 3,
+                            onClick = { viewModel.onEvent(SavedCourseEvent.OnFeedbackRatingClick(3)) }
+                        )
+                }
+            }
+        },
+        confirmButton = {
+            Button(
+                onClick = {
+                    viewModel.onEvent(SavedCourseEvent.OnSendFeedbackClick(selectedRating, feedbackText))
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White
+                )
+            ) {
+                Text("Submit")
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = {
+                    isVisible = false
+                    viewModel.onEvent(SavedCourseEvent.OnFeedbackDismissClick)
+                },
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White
+                )
+            )
+            {
+                Text("Cancel")
+            }
+        }
+    )
+}
+
+@Composable
+fun SadSmileyButton(isSelected: Boolean, onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Image(
+            painter = painterResource(id = if (isSelected) R.drawable.ic_smiley_sad_selected else R.drawable.ic_smiley_sad_unselected),
+            contentDescription = null,
+            modifier = Modifier
+                .size(48.dp)
+                .padding(all = 8.dp)
+        )
+    }
+}
+
+@Composable
+fun NeutralSmileyButton(isSelected: Boolean, onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Image(
+            painter = painterResource(id = if (isSelected) R.drawable.ic_smiley_neutral_selected else R.drawable.ic_smiley_neutral_unselected),
+            contentDescription = null,
+            modifier = Modifier
+                .size(48.dp)
+                .padding(all = 8.dp)
+        )
+    }
+}
+
+@Composable
+fun HappySmileyButton(isSelected: Boolean, onClick: () -> Unit) {
+    IconButton(onClick = onClick) {
+        Image(
+            painter = painterResource(id = if (isSelected) R.drawable.ic_smiley_happy_selected else R.drawable.ic_smiley_happy_unselected),
+            contentDescription = null,
+            modifier = Modifier
+                .size(48.dp)
+                .padding(all = 8.dp)
+        )
+    }
+}
+
+

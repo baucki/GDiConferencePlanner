@@ -11,6 +11,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Checkbox
+import androidx.compose.material.CheckboxColors
+import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -99,7 +101,10 @@ fun CourseNotificationsScreen(
                             checked = isNotifiableInSevenDays,
                             onCheckedChange = { isChecked ->
                                 viewModel.onEvent(CourseNotificationsEvent.OnSevenDaysNotificationClick(isChecked))
-                            }
+                            },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = Color.Black
+                            )
                         )
                         Text(
                             modifier = Modifier.padding(8.dp),
@@ -110,7 +115,10 @@ fun CourseNotificationsScreen(
                             checked = isNotifiableInTwoDays,
                             onCheckedChange = { isChecked ->
                                 viewModel.onEvent(CourseNotificationsEvent.OnTwoDaysNotificationClick(isChecked))
-                            }
+                            },
+                            colors = CheckboxDefaults.colors(
+                                checkedColor = Color.Black
+                            )
                         )
                         Text(
                             modifier = Modifier.padding(8.dp),

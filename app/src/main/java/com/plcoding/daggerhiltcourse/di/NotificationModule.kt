@@ -44,5 +44,4 @@ object NotificationModule {
         notificationManager.createNotificationChannel(channel)
         return notificationManager
     }
-
 }

@@ -84,13 +84,12 @@ class CourseNotificationViewModel @Inject constructor(
                     )
                     item.let(event.scheduler::schedule)
                 }
+                sendUiEvent(UiEvent.PopBackStack)
             }
             is CourseNotificationsEvent.OnSevenDaysNotificationClick -> {
-//                isNotifiableInSevenDays = !isNotifiableInSevenDays
                 sendUiEvent(UiEvent.UpdateSevenDaysNotificationCheckbox(event.isNotify))
             }
             is CourseNotificationsEvent.OnTwoDaysNotificationClick -> {
-//                isNotifiableInTwoDays = !isNotifiableInTwoDays
                 sendUiEvent(UiEvent.UpdateTwoDaysNotificationCheckbox(event.isNotify))
             }
         }
