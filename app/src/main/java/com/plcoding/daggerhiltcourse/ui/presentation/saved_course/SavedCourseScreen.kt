@@ -51,6 +51,12 @@ fun SavedCourseScreen(
         viewModel.uiEvent.collect { event ->
             when (event) {
                 is UiEvent.PopBackStack -> onPopBackStack()
+                is UiEvent.ShowDeleteDialog -> {
+                    viewModel.showDeleteDialog = event.state
+                }
+                is UiEvent.ShowFeedbackDialog -> {
+                    viewModel.showFeedbackDialog = event.state
+                }
                 else -> Unit
             }
         }
@@ -64,23 +70,6 @@ fun SavedCourseScreen(
 @Composable
 fun CourseItem(course: Course, viewModel: SavedCourseViewModel) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    var showDeleteDialog by remember { mutableStateOf(false) }
-    var showFeedbackDialog by remember { mutableStateOf(false) }
-    val isFinished = viewModel.isFinished
-
-    LaunchedEffect(true) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.ShowDeleteDialog -> {
-                    showDeleteDialog = event.state
-                }
-                is UiEvent.ShowFeedbackDialog -> {
-                    showFeedbackDialog = event.state
-                }
-                else -> Unit
-            }
-        }
-    }
 
     Surface(
         modifier = Modifier
@@ -139,10 +128,10 @@ fun CourseItem(course: Course, viewModel: SavedCourseViewModel) {
                         )
                     )
                 }
-                if (isFinished) {
+                if (viewModel.isFinished) {
                     Button(
                         onClick = {
-                            showFeedbackDialog=true
+                            viewModel.onEvent(SavedCourseEvent.OnFeedbackClick)
                         },
                         modifier = Modifier
                             .height(64.dp)
@@ -188,10 +177,10 @@ fun CourseItem(course: Course, viewModel: SavedCourseViewModel) {
                 }
             }
         }
-        if (showDeleteDialog) {
+        if (viewModel.showDeleteDialog) {
             DeleteComponentButton(viewModel)
         }
-        if (showFeedbackDialog) {
+        if (viewModel.showFeedbackDialog) {
             FeedbackDialog(viewModel)
         }
     }
@@ -199,9 +188,10 @@ fun CourseItem(course: Course, viewModel: SavedCourseViewModel) {
 
 @Composable
 fun DeleteComponentButton(viewModel: SavedCourseViewModel) {
-    var isVisible by remember { mutableStateOf(true) }
     AlertDialog(
-        onDismissRequest = { isVisible = false },
+        onDismissRequest = {
+            viewModel.onEvent(SavedCourseEvent.OnDeleteDismissClick)
+        },
         title = { Text("Confirm Delete") },
         text = { Text("Are you sure you want to delete this course from the agenda?") },
         confirmButton = {
@@ -211,11 +201,10 @@ fun DeleteComponentButton(viewModel: SavedCourseViewModel) {
                     contentColor = Color.White
                 ),
                 onClick = {
-                    isVisible = false
                     viewModel.onEvent(SavedCourseEvent.OnDeleteConfirmClick)
                 }
             ) {
-                Text("Yes")
+                Text("Confirm")
             }
         },
         dismissButton = {
@@ -225,34 +214,18 @@ fun DeleteComponentButton(viewModel: SavedCourseViewModel) {
                     contentColor = Color.White // Set text color to white
                 ),
                 onClick = {
-                    isVisible = false
                     viewModel.onEvent(SavedCourseEvent.OnDeleteDismissClick)
                 }
             ) {
-                Text("No")
+                Text("Cancel")
             }
         }
     )
 }
 @Composable
 fun FeedbackDialog(viewModel: SavedCourseViewModel) {
-    var feedbackText by remember { mutableStateOf("") }
-    var selectedRating by remember { mutableStateOf(0) }
-    var isVisible by remember { mutableStateOf(true) }
-
-    LaunchedEffect(true) {
-        viewModel.uiEvent.collect { event ->
-            when (event) {
-                is UiEvent.UpdateFeedbackRating -> {
-                    selectedRating = event.rating
-                }
-            }
-        }
-    }
-
     AlertDialog(
         onDismissRequest = {
-            isVisible = false
             viewModel.onEvent(SavedCourseEvent.OnFeedbackDismissClick)
         },
         title = { Text(text = "Send Feedback") },
@@ -260,8 +233,8 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
             Column {
                 Text("We'd love to hear your feedback!")
                 TextField(
-                    value = feedbackText,
-                    onValueChange = { feedbackText = it },
+                    value = viewModel.feedbackText,
+                    onValueChange = { viewModel.onEvent(SavedCourseEvent.OnFeedbackTextChangeClick(it)) },
                     label = { Text("Feedback") }
                 )
                 Spacer(modifier = Modifier.height(16.dp))
@@ -271,15 +244,15 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
                     modifier=Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly) {
                         SadSmileyButton(
-                            isSelected = selectedRating == 1,
+                            isSelected = viewModel.selectedRating == 1,
                             onClick = { viewModel.onEvent(SavedCourseEvent.OnFeedbackRatingClick(1)) }
                         )
                         NeutralSmileyButton(
-                            isSelected = selectedRating == 2,
+                            isSelected = viewModel.selectedRating == 2,
                             onClick = { viewModel.onEvent(SavedCourseEvent.OnFeedbackRatingClick(2)) }
                         )
                         HappySmileyButton(
-                            isSelected = selectedRating == 3,
+                            isSelected = viewModel.selectedRating == 3,
                             onClick = { viewModel.onEvent(SavedCourseEvent.OnFeedbackRatingClick(3)) }
                         )
                 }
@@ -288,7 +261,7 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
         confirmButton = {
             Button(
                 onClick = {
-                    viewModel.onEvent(SavedCourseEvent.OnSendFeedbackClick(selectedRating, feedbackText))
+                    viewModel.onEvent(SavedCourseEvent.OnFeedbackSubmitClick(viewModel.selectedRating, viewModel.feedbackText))
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color.Black,
@@ -301,7 +274,7 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
         dismissButton = {
             Button(
                 onClick = {
-                    isVisible = false
+//                    isVisible = false
                     viewModel.onEvent(SavedCourseEvent.OnFeedbackDismissClick)
                 },
                 colors = ButtonDefaults.buttonColors(

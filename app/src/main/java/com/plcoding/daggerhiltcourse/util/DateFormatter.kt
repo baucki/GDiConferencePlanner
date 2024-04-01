@@ -15,11 +15,9 @@ class DateFormatter {
             val formatter = DateTimeFormatter.ofPattern("MMM d", Locale.ENGLISH)
             return date.format(formatter)
         }
-
         fun dateToLocalTime(dateString: String): LocalDateTime {
             val pattern = "yyyy-MM-dd'T'HH:mm:ss"
             return LocalDateTime.parse(dateString, DateTimeFormatter.ofPattern(pattern))
         }
-
     }
 }

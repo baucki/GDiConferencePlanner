@@ -58,12 +58,14 @@ fun HomeScreen(
     }
 
     if (courses.isEmpty()) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
-        }
+        topBarState.value = true
+        bottomBarState.value = true
+//        Box(
+//            modifier = Modifier.fillMaxSize(),
+//            contentAlignment = Alignment.Center
+//        ) {
+//            CircularProgressIndicator()
+//        }
     } else {
         topBarState.value = true
         bottomBarState.value = true

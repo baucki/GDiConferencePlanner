@@ -13,11 +13,9 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class FeedbackModule {
-
     @Binds
     @Singleton
     abstract fun bindMyFeedbackRepository(
         myClientRepository: FeedbackRepositoryImpl
     ): FeedbackRepository
-
 }

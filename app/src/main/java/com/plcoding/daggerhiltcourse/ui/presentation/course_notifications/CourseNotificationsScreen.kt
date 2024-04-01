@@ -37,20 +37,10 @@ fun CourseNotificationsScreen(
     viewModel: CourseNotificationViewModel = hiltViewModel()
 ) {
     val course = viewModel.course
-    val isNotifiableInSevenDays = viewModel.isNotifiableInSevenDays
-    val isNotifiableInTwoDays = viewModel.isNotifiableInTwoDays
-
 
     LaunchedEffect(true) {
         viewModel.uiEvent.collect { event ->
             when (event) {
-                is UiEvent.UpdateSevenDaysNotificationCheckbox -> {
-                    println(event.state)
-                    viewModel.isNotifiableInSevenDays = event.state
-                }
-                is UiEvent.UpdateTwoDaysNotificationCheckbox -> {
-                    viewModel.isNotifiableInTwoDays = event.state
-                }
                 is UiEvent.PopBackStack -> {
                     onPopBackStack()
                 }
@@ -98,7 +88,7 @@ fun CourseNotificationsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                     Row() {
                         Checkbox(
-                            checked = isNotifiableInSevenDays,
+                            checked = viewModel.isNotifiableInSevenDays,
                             onCheckedChange = { isChecked ->
                                 viewModel.onEvent(CourseNotificationsEvent.OnSevenDaysNotificationClick(isChecked))
                             },
@@ -112,7 +102,7 @@ fun CourseNotificationsScreen(
                     }
                     Row() {
                         Checkbox(
-                            checked = isNotifiableInTwoDays,
+                            checked = viewModel.isNotifiableInTwoDays,
                             onCheckedChange = { isChecked ->
                                 viewModel.onEvent(CourseNotificationsEvent.OnTwoDaysNotificationClick(isChecked))
                             },

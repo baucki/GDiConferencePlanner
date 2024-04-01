@@ -12,15 +12,27 @@ import javax.inject.Inject
 class AlarmReceiver : BroadcastReceiver() {
 
     @Inject
-    lateinit var notificationBuilder: NotificationCompat.Builder
+    @SevenDaysNotification
+    lateinit var sevenDaysNotificationBuilder: NotificationCompat.Builder
 
     @Inject
-    lateinit var notificationManager: NotificationManagerCompat
+    @SevenDaysNotification
+    lateinit var sevenDaysNotificationManager: NotificationManagerCompat
 
+    @Inject
+    @TwoDaysNotification
+    lateinit var twoDaysNotificationBuilder: NotificationCompat.Builder
+
+    @Inject
+    @TwoDaysNotification
+    lateinit var twoDaysNotificationManager: NotificationManagerCompat
     override fun onReceive(context: Context, intent: Intent?) {
         val message = intent?.getStringExtra("EXTRA_MESSAGE") ?: return
-        println("Alarm triggered: $message")
-        notificationBuilder.setContentText(message)
-        notificationManager.notify(1, notificationBuilder.build())
+        if (message == "seven days") {
+            sevenDaysNotificationManager.notify(1, sevenDaysNotificationBuilder.build())
+        }
+        else if (message == "two days") {
+            twoDaysNotificationManager.notify(2, twoDaysNotificationBuilder.build())
+        }
     }
 }

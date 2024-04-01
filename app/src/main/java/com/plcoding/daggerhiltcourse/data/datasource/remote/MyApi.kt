@@ -11,16 +11,16 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface MyApi {
-    @GET("course/all")
+    @GET("courses/all")
     suspend fun fetchAllCourses(): List<Course>
 
     @GET("clients/all")
     suspend fun fetchAllClients(): List<Client>
 
-    @POST("feedback/add")
+    @POST("feedbacks/add")
     suspend fun addFeedback(@Body feedback: Feedback): Feedback?
 
-    @GET("course/find/{id}")
+    @GET("courses/find/{id}")
     suspend fun fetchCourseById(@Path("id") id: String): Course?
 
 }

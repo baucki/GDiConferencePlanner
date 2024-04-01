@@ -5,8 +5,8 @@ sealed class SavedCourseEvent {
     object OnDeleteConfirmClick: SavedCourseEvent()
     object OnDeleteDismissClick: SavedCourseEvent()
     object OnFeedbackDismissClick: SavedCourseEvent()
-    object OnFeedbackSubmitClick: SavedCourseEvent()
-    object OnFeedbackTextChangeClick: SavedCourseEvent()
+    object OnFeedbackClick: SavedCourseEvent()
+    data class OnFeedbackTextChangeClick(val value: String): SavedCourseEvent()
     data class OnFeedbackRatingClick(val rating: Int): SavedCourseEvent()
-    data class OnSendFeedbackClick(val rating: Int, val message: String): SavedCourseEvent()
+    data class OnFeedbackSubmitClick(val rating: Int, val message: String): SavedCourseEvent()
 }

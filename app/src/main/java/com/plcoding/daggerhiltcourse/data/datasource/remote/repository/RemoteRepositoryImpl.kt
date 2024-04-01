@@ -10,7 +10,6 @@ class RemoteRepositoryImpl @Inject constructor(
     override suspend fun fetchAllCourses(): List<Course> {
         return api.fetchAllCourses()
     }
-
     override suspend fun fetchCourseById(id: Int): Course {
         return api.fetchCourseById(id.toString())!!
     }

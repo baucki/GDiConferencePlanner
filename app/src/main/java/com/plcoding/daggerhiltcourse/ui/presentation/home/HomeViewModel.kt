@@ -23,10 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val remoteRepository: Lazy<RemoteRepository>,
-    private val localRepository: LocalRepository,
-    savedStateHandle: SavedStateHandle
-    ): ViewModel() {
+    private val remoteRepository: Lazy<RemoteRepository>
+): ViewModel() {
 
     var course by mutableStateOf<Course?>(null)
 

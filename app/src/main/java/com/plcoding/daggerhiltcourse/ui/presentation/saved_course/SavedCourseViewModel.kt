@@ -31,6 +31,11 @@ class SavedCourseViewModel @Inject constructor(
         private set
 
     var isFinished by mutableStateOf(false)
+    var showDeleteDialog by mutableStateOf(false)
+    var showFeedbackDialog by mutableStateOf(false)
+
+    var feedbackText by mutableStateOf("")
+    var selectedRating by mutableStateOf(0)
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -49,7 +54,6 @@ class SavedCourseViewModel @Inject constructor(
         when (event) {
             is SavedCourseEvent.OnDeleteCourseClick -> {
                 sendUiEvent(UiEvent.ShowDeleteDialog(true))
-                sendUiEvent(UiEvent.ShowDeleteDialog(true))
             }
             is SavedCourseEvent.OnDeleteConfirmClick -> {
                 viewModelScope.launch {
@@ -59,18 +63,20 @@ class SavedCourseViewModel @Inject constructor(
             }
             is SavedCourseEvent.OnDeleteDismissClick -> {
                 sendUiEvent(UiEvent.ShowDeleteDialog(false))
-                sendUiEvent(UiEvent.ShowDeleteDialog(false))
             }
             is SavedCourseEvent.OnFeedbackDismissClick -> {
                 sendUiEvent(UiEvent.ShowFeedbackDialog(false))
-                sendUiEvent(UiEvent.ShowFeedbackDialog(false))
+            }
+            is SavedCourseEvent.OnFeedbackClick -> {
+                sendUiEvent(UiEvent.ShowFeedbackDialog(true))
             }
             is SavedCourseEvent.OnFeedbackRatingClick -> {
-                sendUiEvent(UiEvent.UpdateFeedbackRating(event.rating))
-                sendUiEvent(UiEvent.UpdateFeedbackRating(event.rating))
-                sendUiEvent(UiEvent.UpdateFeedbackRating(event.rating))
+                selectedRating = event.rating
             }
-            is SavedCourseEvent.OnSendFeedbackClick -> {
+            is SavedCourseEvent.OnFeedbackTextChangeClick -> {
+                feedbackText = event.value
+            }
+            is SavedCourseEvent.OnFeedbackSubmitClick -> {
                 viewModelScope.launch {
                     if (event.rating != 0) {
                         var ratingString = ""
@@ -78,6 +84,7 @@ class SavedCourseViewModel @Inject constructor(
                         if (event.rating==2) ratingString = "neutral"
                         if (event.rating==3) ratingString = "good"
                         feedbackRepository.addFeedback(Feedback(ratingString, event.message, course!!))
+                        sendUiEvent(UiEvent.ShowFeedbackDialog(false))
                     }
                 }
             }

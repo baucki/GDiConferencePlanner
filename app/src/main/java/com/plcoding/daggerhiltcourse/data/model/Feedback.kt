@@ -4,5 +4,4 @@ data class Feedback (
     val rating: String,
     val description: String,
     val course: Course
-//    val courseId: Int
 )

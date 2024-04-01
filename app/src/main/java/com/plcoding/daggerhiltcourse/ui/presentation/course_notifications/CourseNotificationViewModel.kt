@@ -26,24 +26,9 @@ class CourseNotificationViewModel @Inject constructor(
 ): ViewModel() {
     var course by mutableStateOf<Course?>(null)
         private set
-    var title by mutableStateOf("")
-        private set
-    var description by mutableStateOf("")
-        private set
-    var location by mutableStateOf("")
-        private set
-    var startTime by mutableStateOf("")
-        private set
-    var endTime by mutableStateOf("")
-        private set
-    var instructor by mutableStateOf("")
-        private set
-    var imageUrl by mutableStateOf("")
-        private set
 
     var isNotifiableInSevenDays by mutableStateOf(false)
     var isNotifiableInTwoDays by mutableStateOf(false)
-
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -53,13 +38,6 @@ class CourseNotificationViewModel @Inject constructor(
         if (courseId != -1) {
             viewModelScope.launch {
                 localRepository.getCourseById(courseId)?.let { course ->
-                    title = course.title
-                    description = course.description
-                    location = course.description
-                    startTime = course.description
-                    endTime = course.description
-                    instructor = course.instructor
-                    imageUrl = course.imageUrl
                     this@CourseNotificationViewModel.course = course
                 }
             }
@@ -72,7 +50,7 @@ class CourseNotificationViewModel @Inject constructor(
                     val date = DateFormatter.dateToLocalTime(course!!.startTime).minusDays(7)
                     val item = Notification(
                         time = date,
-                        message = "Konferencija pocinje za 7 dana"
+                        message = "seven days"
                     )
                     item.let(event.scheduler::schedule)
                 }
@@ -80,17 +58,17 @@ class CourseNotificationViewModel @Inject constructor(
                     val date = DateFormatter.dateToLocalTime(course!!.startTime).minusDays(2)
                     val item = Notification(
                         time = date,
-                        message = "Konferencija pocinje za 2 dana"
+                        message = "two days"
                     )
                     item.let(event.scheduler::schedule)
                 }
                 sendUiEvent(UiEvent.PopBackStack)
             }
             is CourseNotificationsEvent.OnSevenDaysNotificationClick -> {
-                sendUiEvent(UiEvent.UpdateSevenDaysNotificationCheckbox(event.isNotify))
+                isNotifiableInSevenDays = event.isNotify
             }
             is CourseNotificationsEvent.OnTwoDaysNotificationClick -> {
-                sendUiEvent(UiEvent.UpdateTwoDaysNotificationCheckbox(event.isNotify))
+                isNotifiableInTwoDays = event.isNotify
             }
         }
     }
