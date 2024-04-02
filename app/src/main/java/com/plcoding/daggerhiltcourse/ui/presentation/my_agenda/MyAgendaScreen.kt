@@ -28,6 +28,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.plcoding.daggerhiltcourse.data.model.Course
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
 import com.plcoding.daggerhiltcourse.util.DateFormatter
 import com.plcoding.daggerhiltcourse.util.UiEvent
 
@@ -46,46 +48,58 @@ fun MyAgendaScreen(
             }
         }
     }
-    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     LazyColumn {
-        items(courses.value.sortedBy { it.startTime }) {course ->
-
-            Surface(
+        items(courses.value.sortedBy { it.course.startTime }) {course ->
+            CourseItem(
+                modifier = Modifier.clickable { viewModel.onEvent(MyAgendaEvent.OnCourseClick(course.course)) },
+                course
+            )
+        }
+    }
+}
+@Composable
+fun CourseItem(
+    modifier: Modifier = Modifier,
+    course: CourseWithSpeakers,
+) {
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(12.dp),
+        elevation = 6.dp,
+        color = Color.White,
+        shape = RoundedCornerShape(16.dp),
+    ) {
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(12.dp)
-                .clickable { viewModel.onEvent(MyAgendaEvent.OnCourseClick(course)) }
-                ,
-                elevation = 6.dp,
-                color = Color.White,
-                shape = RoundedCornerShape(16.dp),
+                    .padding(start = 12.dp)
+                    .width(screenWidth * 0.13f),
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(
-                        verticalArrangement = Arrangement.SpaceBetween,
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        modifier = Modifier
-                            .padding(start = 12.dp)
-                            .width(screenWidth * 0.13f),
-                    ) {
 
-                        val date = DateFormatter.formatDate(course.startTime.split("T")[0])
-                        Text(text = date)
+                val date = DateFormatter.formatDate(course.course.startTime.split("T")[0])
+                Text(text = date)
 //                        Text(text = date.split(" ")[0])
 //                        Text(text = date.split(" ")[1])
-                        Text(text = course.startTime.split("T")[1].substring(0, 5))
+                Text(text = course.course.startTime.split("T")[1].substring(0, 5))
 
-                    }
-                    Column(modifier = Modifier.padding(all = 8.dp)) {
+            }
+            Column(modifier = Modifier.padding(all = 8.dp)) {
+                Text(
+                    text = course.course.title,
+                    style = TextStyle(fontWeight = FontWeight.Bold)
+                )
+                Text(text = course.course.location)
+                course.speakers.forEach { speaker ->
+                    Column {
                         Text(
-                            text = course.title,
-                            style = TextStyle(fontWeight = FontWeight.Bold)
-                        )
-                        Text(text = course.location)
-                        Text(
-                            text = course.instructor,
+                            text = speaker.name + ", " + speaker.title,
                             style = TextStyle(fontStyle = FontStyle.Italic)
                         )
                     }

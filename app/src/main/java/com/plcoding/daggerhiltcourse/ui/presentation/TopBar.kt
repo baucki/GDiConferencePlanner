@@ -25,13 +25,12 @@ fun TopBar(
     modifier: Modifier = Modifier
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
-    val title: String = when (backStackEntry?.destination?.route ?: "clients_details") {
+    val title: String = when (backStackEntry?.destination?.route) {
         "home" -> "Konferencija Beograd 2024"
         "my_agenda" -> "Konferencija Beograd 2024"
         "clients" -> "Clients"
-        "settings" -> "Settings"
         "splash_screen" -> ""
-        else -> "Course"
+        else -> "Details"
     }
     AnimatedVisibility(
         visible = topBarState.value,
@@ -48,7 +47,7 @@ fun TopBar(
                     }
                 }
             },
-            backgroundColor = Color.White, // Change this to your desired background color
+            backgroundColor = Color.White,
             elevation = AppBarDefaults.TopAppBarElevation
         )
     }

@@ -27,6 +27,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.plcoding.daggerhiltcourse.data.model.Course
+import com.plcoding.daggerhiltcourse.data.model.CourseJSON
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
+import com.plcoding.daggerhiltcourse.data.model.SpeakerJSON
 import com.plcoding.daggerhiltcourse.util.UiEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.StateFlow
@@ -40,9 +43,9 @@ fun HomeScreen(
 ) {
     val courses by viewModel.courses.collectAsState(initial = emptyList())
     val tabsContent by viewModel.tabsContent.collectAsState(initial = emptyMap())
-
-    var selectedTabIndex by remember { mutableStateOf(0) }
     var startTime = ""
+    var selectedTabIndex by remember { mutableStateOf(0) }
+
 
     LaunchedEffect(true) {
         viewModel.fetchAllCourses()
@@ -58,14 +61,14 @@ fun HomeScreen(
     }
 
     if (courses.isEmpty()) {
-        topBarState.value = true
-        bottomBarState.value = true
-//        Box(
-//            modifier = Modifier.fillMaxSize(),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            CircularProgressIndicator()
-//        }
+//        topBarState.value = true
+//        bottomBarState.value = true
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
     } else {
         topBarState.value = true
         bottomBarState.value = true
@@ -84,21 +87,21 @@ fun HomeScreen(
             }
             val selectedTabKey = tabsContent.keys.elementAtOrNull(selectedTabIndex)
             val selectedTabCourses = selectedTabKey?.let { tabsContent[it] } ?: emptyList()
-            val isVisibleMap: MutableMap<Int, MutableState<Boolean>> = mutableMapOf()
-            val isBreakMap: MutableMap<Int, MutableState<Boolean>> = mutableMapOf()
-            LazyColumn {
+            val isVisibleMap: MutableMap<Long, MutableState<Boolean>> = mutableMapOf()
+            val isBreakMap: MutableMap<Long, MutableState<Boolean>> = mutableMapOf()
+             LazyColumn {
                 items(selectedTabCourses.sortedBy { it.startTime }) { course ->
-                    if (course.instructor == "") {
-                        isBreakMap[course.id!!] = rememberSaveable { (mutableStateOf(true)) }
+                    if (course.speakers.isEmpty()) {
+                        isBreakMap[course.id] = rememberSaveable { (mutableStateOf(true)) }
                     } else {
-                        isBreakMap[course.id!!] = rememberSaveable { (mutableStateOf(false)) }
+                        isBreakMap[course.id] = rememberSaveable { (mutableStateOf(false)) }
                     }
                     if (startTime != course.startTime) {
                         isVisibleMap[course.id] = rememberSaveable { (mutableStateOf(true)) }
                     } else {
                         isVisibleMap[course.id] = rememberSaveable { (mutableStateOf(false)) }
                     }
-                    CourseItemTest(
+                    CourseItem(
                         course = course,
                         isVisibleMap[course.id]!!,
                         isBreakMap[course.id]!!,

@@ -23,15 +23,14 @@ import com.plcoding.daggerhiltcourse.ui.presentation.course_notifications.Course
 import com.plcoding.daggerhiltcourse.ui.presentation.home.HomeScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.my_agenda.MyAgendaScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseScreen
+import com.plcoding.daggerhiltcourse.ui.presentation.speaker_details.SpeakerDetailsScreen
 import com.plcoding.daggerhiltcourse.ui.theme.DaggerHiltCourseTheme
 import com.plcoding.daggerhiltcourse.util.AlarmScheduler
 import com.plcoding.daggerhiltcourse.util.AndroidAlarmScheduler
 import com.plcoding.daggerhiltcourse.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
-
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val scheduler = AndroidAlarmScheduler(this)
@@ -40,7 +39,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 fun App(scheduler: AlarmScheduler) {
     val bottomBarState = rememberSaveable { (mutableStateOf(false)) }
@@ -72,7 +70,6 @@ fun App(scheduler: AlarmScheduler) {
                             }
                             SplashScreen(navController = navController)
                         }
-
                         composable(Routes.HOME){
                             HomeScreen(
                                 onNavigate = {
@@ -82,7 +79,6 @@ fun App(scheduler: AlarmScheduler) {
                                 bottomBarState
                             )
                         }
-
                         composable(
                             route = Routes.COURSE_DETAILS + "?courseId={courseId}",
                             arguments = listOf(
@@ -103,6 +99,29 @@ fun App(scheduler: AlarmScheduler) {
                                     navController.navigate(it.route)
                                 }
                             )
+                        }
+                        composable(
+                            route = Routes.SPEAKER_DETAILS + "?speakerId={speakerId}",
+                            arguments = listOf(
+                                navArgument(name = "speakerId") {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            )
+                        ) {
+                            LaunchedEffect(Unit) {
+                                topBarState.value = true
+                                bottomBarState.value = false
+                            }
+//                            CourseDetailsScreen(
+//                                onPopBackStack = {
+//                                    navController.popBackStack()
+//                                },
+//                                onNavigate = {
+//                                    navController.navigate(it.route)
+//                                }
+//                            )
+                            SpeakerDetailsScreen()
                         }
 
                         composable(
@@ -125,7 +144,6 @@ fun App(scheduler: AlarmScheduler) {
                                 scheduler
                             )
                         }
-
                         composable(Routes.MY_AGENDA) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = true
@@ -137,7 +155,6 @@ fun App(scheduler: AlarmScheduler) {
                                 }
                             )
                         }
-
                         composable(
                             route = Routes.SAVED_COURSE + "?courseId={courseId}",
                             arguments = listOf(
@@ -154,7 +171,6 @@ fun App(scheduler: AlarmScheduler) {
                                 navController.popBackStack()
                             })
                         }
-
                         composable(Routes.CLIENTS) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = true

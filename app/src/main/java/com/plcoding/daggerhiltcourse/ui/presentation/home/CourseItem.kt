@@ -2,6 +2,7 @@ package com.plcoding.daggerhiltcourse.ui.presentation.home
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -20,10 +21,11 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.plcoding.daggerhiltcourse.data.model.Course
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
 
 @Composable
-fun CourseItemTest(
-    course: Course,
+fun CourseItem(
+    course: CourseWithSpeakersJSON,
     isVisible: MutableState<Boolean>,
     isBreak: MutableState<Boolean>,
     modifier: Modifier = Modifier
@@ -42,7 +44,6 @@ fun CourseItemTest(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column(
-
                 modifier = Modifier
                     .padding(start = 12.dp)
                     .width(screenWidth * 0.13f),
@@ -62,11 +63,16 @@ fun CourseItemTest(
                     style = TextStyle(fontWeight = FontWeight.Bold)
                 )
                 Text(text = course.location)
-                if (!isBreak.value)
-                    Text(
-                        text = course.instructor,
-                        style = TextStyle(fontStyle = FontStyle.Italic)
-                    )
+                if (!isBreak.value) {
+                    Column {
+                        course.speakers.forEach { speaker ->
+                            Text(
+                                text = speaker.name + ", " + speaker.title ,
+                                style = TextStyle(fontStyle = FontStyle.Italic)
+                            )
+                        }
+                    }
+                }
             }
         }
     }

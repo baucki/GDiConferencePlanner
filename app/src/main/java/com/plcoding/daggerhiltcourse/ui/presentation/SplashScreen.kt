@@ -20,8 +20,6 @@ import com.plcoding.daggerhiltcourse.ui.presentation.home.HomeViewModel
 import com.plcoding.daggerhiltcourse.util.Routes
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
-
-
 @Composable
 fun SplashScreen(navController: NavController) {
 

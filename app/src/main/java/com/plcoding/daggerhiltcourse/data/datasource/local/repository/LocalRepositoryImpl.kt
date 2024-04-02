@@ -1,7 +1,8 @@
 package com.plcoding.daggerhiltcourse.data.datasource.local.repository
 
-import com.plcoding.daggerhiltcourse.data.datasource.local.CourseDao
+import com.plcoding.daggerhiltcourse.data.datasource.local.dao.CourseDao
 import com.plcoding.daggerhiltcourse.data.model.Course
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
 import kotlinx.coroutines.flow.Flow
 
 class LocalRepositoryImpl(
@@ -11,15 +12,15 @@ class LocalRepositoryImpl(
         courseDao.insertCourse(course)
     }
 
-    override suspend fun deleteCourse(course: Course) {
-        courseDao.deleteCourse(course)
+    override suspend fun deleteCourseWithSpeakers(course: Course) {
+        courseDao.deleteCourseWithSpeakers(course)
     }
 
-    override suspend fun getCourseById(id: Int): Course? {
+    override suspend fun getCourseById(id: Int): CourseWithSpeakers? {
         return courseDao.getCourseById(id)
     }
 
-    override fun getCourses(): Flow<List<Course>> {
+    override fun getCourses(): Flow<List<CourseWithSpeakers>> {
         return courseDao.getCourses()
     }
 }

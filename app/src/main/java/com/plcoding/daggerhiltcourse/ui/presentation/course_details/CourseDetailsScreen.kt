@@ -1,5 +1,6 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.course_details
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -33,6 +34,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.plcoding.daggerhiltcourse.data.model.Course
+import com.plcoding.daggerhiltcourse.data.model.CourseJSON
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
+import com.plcoding.daggerhiltcourse.data.model.Speaker
 import com.plcoding.daggerhiltcourse.util.UiEvent
 @Composable
 fun CourseDetailsScreen(
@@ -40,7 +44,8 @@ fun CourseDetailsScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: CourseDetailsViewModel = hiltViewModel()
 ) {
-    val course = viewModel.course
+    val courseJSON = viewModel.courseJSON
+
     val scaffoldState = rememberScaffoldState()
     LaunchedEffect(true) {
         viewModel.uiEvent.collect { event ->
@@ -54,15 +59,13 @@ fun CourseDetailsScreen(
     Scaffold(
         scaffoldState = scaffoldState
     ) {
-        if (course != null) {
-            CourseItem(course = course, viewModel = viewModel)
+        if (courseJSON != null) {
+            CourseItem(courseJSON = courseJSON, viewModel = viewModel)
         }
     }
-
 }
-
 @Composable
-fun CourseItem(course: Course, viewModel: CourseDetailsViewModel) {
+fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewModel) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     Surface(
         modifier = Modifier
@@ -80,56 +83,74 @@ fun CourseItem(course: Course, viewModel: CourseDetailsViewModel) {
             Text(
                 modifier = Modifier
                     .padding(top = 8.dp),
-                text = course.title,
+                text = courseJSON.title,
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
                 )
             )
             Row(
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = 4.dp)
             ) {
-                Text(text = course.location + ", ")
-                Text(text = "${course.startTime.split("T")[1].substring(0,5)} - ${course.endTime.split("T")[1].substring(0,5)}")
+                Text(text = courseJSON.location + ", ")
+                Text(text = "${courseJSON.startTime.split("T")[1].substring(0,5)} - ${courseJSON.endTime.split("T")[1].substring(0,5)}")
             }
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 32.dp)
                     .height(screenHeight * 0.3f),
-                text = course.description
+                text = courseJSON.description
             )
             Spacer(modifier = Modifier.height(2.dp))
-            if (course.instructor != "") {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom
-
-                ) {
-                    AsyncImage(
-                        model = course.imageUrl,
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier.size(64.dp)
-                    )
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        text = course.instructor,
-                        style = TextStyle(
-                            fontStyle = FontStyle.Italic,
-                            fontSize = 16.sp
-                        )
-                    )
+            if (courseJSON.speakers.isNotEmpty()) {
+                Column {
+                    courseJSON.speakers.forEach { speaker ->
+                        Row(
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom,
+                            modifier = Modifier.padding(all = 4.dp)
+                        ) {
+                            AsyncImage(
+                                model = speaker.imageUrl,
+                                contentDescription = speaker.name,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier
+                                    .size(64.dp)
+                                    .clickable { viewModel.onEvent(CourseDetailsEvent.OnSpeakerClick(speaker.id)) }
+                            )
+                            Text(
+                                text = speaker.name + ", ${speaker.title}",
+                                style = TextStyle(
+                                    fontStyle = FontStyle.Italic,
+                                    fontSize = 16.sp
+                                ),
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .clickable { viewModel.onEvent(CourseDetailsEvent.OnSpeakerClick(speaker.id)) }
+                            )
+                        }
+                    }
                 }
                 Button(
-                    onClick = { viewModel.onEvent(CourseDetailsEvent.OnSaveClick(course)) },
+                    onClick = {
+                        val course = CourseJSON(
+                            courseJSON.title,
+                            courseJSON.description,
+                            courseJSON.location,
+                            courseJSON.startTime,
+                            courseJSON.endTime,
+                            courseJSON.id
+                        )
+                        viewModel.onEvent(CourseDetailsEvent.OnSaveClick(course, courseJSON.speakers))
+                    },
                     modifier = Modifier
                         .height(64.dp)
                         .fillMaxWidth()
                         .padding(top = 8.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.Black, // Set button color to black
-                        contentColor = Color.White // Set text color to white
+                        backgroundColor = Color.Black,
+                        contentColor = Color.White
                     ),
                     shape = RoundedCornerShape(8.dp),
 

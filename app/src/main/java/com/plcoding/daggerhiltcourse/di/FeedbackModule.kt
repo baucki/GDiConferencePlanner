@@ -16,6 +16,6 @@ abstract class FeedbackModule {
     @Binds
     @Singleton
     abstract fun bindMyFeedbackRepository(
-        myClientRepository: FeedbackRepositoryImpl
+        myFeedbackRepository: FeedbackRepositoryImpl
     ): FeedbackRepository
 }

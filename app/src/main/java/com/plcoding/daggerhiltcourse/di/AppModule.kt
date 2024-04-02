@@ -2,9 +2,14 @@ package com.plcoding.daggerhiltcourse.di
 
 import android.app.Application
 import androidx.room.Room
-import com.plcoding.daggerhiltcourse.data.datasource.local.CourseDatabase
+import com.plcoding.daggerhiltcourse.data.datasource.local.ConferenceDatabase
+import com.plcoding.daggerhiltcourse.data.datasource.local.dao.CourseSpeakerCrossRefDao
+import com.plcoding.daggerhiltcourse.data.datasource.local.repository.CourseSpeakerCrossRefRepository
+import com.plcoding.daggerhiltcourse.data.datasource.local.repository.CourseSpeakerCrossRefRepositoryImpl
 import com.plcoding.daggerhiltcourse.data.datasource.local.repository.LocalRepository
 import com.plcoding.daggerhiltcourse.data.datasource.local.repository.LocalRepositoryImpl
+import com.plcoding.daggerhiltcourse.data.datasource.local.repository.SpeakerRepository
+import com.plcoding.daggerhiltcourse.data.datasource.local.repository.SpeakerRepositoryImpl
 import com.plcoding.daggerhiltcourse.data.datasource.remote.MyApi
 import dagger.Module
 import dagger.Provides
@@ -31,18 +36,30 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideCourseDatabase(app: Application): CourseDatabase {
+    fun provideCourseDatabase(app: Application): ConferenceDatabase {
         return Room.databaseBuilder(
             app,
-            CourseDatabase::class.java,
-            "courses_db",
+            ConferenceDatabase::class.java,
+            "conference_db",
         ).build()
     }
 
     @Provides
     @Singleton
-    fun provideCourseRepository(db: CourseDatabase): LocalRepository {
+    fun provideCourseRepository(db: ConferenceDatabase): LocalRepository {
         return LocalRepositoryImpl(db.courseDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSpeakerRepository(db: ConferenceDatabase): SpeakerRepository {
+        return SpeakerRepositoryImpl(db.speakerDao)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCourseSpeakerCrossRefRepository(db: ConferenceDatabase): CourseSpeakerCrossRefRepository {
+        return CourseSpeakerCrossRefRepositoryImpl(db.crossRefDao)
     }
 
 }

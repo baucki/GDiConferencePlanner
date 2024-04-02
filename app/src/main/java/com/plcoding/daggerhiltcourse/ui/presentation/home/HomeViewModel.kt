@@ -9,6 +9,8 @@ import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.local.repository.LocalRepository
 import com.plcoding.daggerhiltcourse.data.model.Course
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepository
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
 import com.plcoding.daggerhiltcourse.util.DateFormatter
 import com.plcoding.daggerhiltcourse.util.Routes
 import com.plcoding.daggerhiltcourse.util.UiEvent
@@ -26,13 +28,13 @@ class HomeViewModel @Inject constructor(
     private val remoteRepository: Lazy<RemoteRepository>
 ): ViewModel() {
 
-    var course by mutableStateOf<Course?>(null)
+    var course by mutableStateOf<CourseWithSpeakersJSON?>(null)
 
-    private var _tabsContent = MutableStateFlow<Map<String, List<Course>>>(emptyMap())
-    var tabsContent: StateFlow<Map<String, List<Course>>> = _tabsContent
+    private var _tabsContent = MutableStateFlow<Map<String, List<CourseWithSpeakersJSON>>>(emptyMap())
+    var tabsContent: StateFlow<Map<String, List<CourseWithSpeakersJSON>>> = _tabsContent
 
-    private val _courses = MutableStateFlow<List<Course>>(emptyList())
-    val courses: StateFlow<List<Course>> = _courses
+    private val _courses = MutableStateFlow<List<CourseWithSpeakersJSON>>(emptyList())
+    val courses: StateFlow<List<CourseWithSpeakersJSON>> = _courses
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -48,7 +50,7 @@ class HomeViewModel @Inject constructor(
     private fun sortTabsData() {
         viewModelScope.launch {
             courses.collect { coursesList ->
-                val tempTabsContent = mutableMapOf<String, List<Course>>()
+                val tempTabsContent = mutableMapOf<String, List<CourseWithSpeakersJSON>>()
                 for (course in coursesList) {
                     val date = DateFormatter.formatDate(course.startTime.split("T")[0])
                     if (!tempTabsContent.containsKey(date)) {

@@ -1,16 +1,12 @@
 package com.plcoding.daggerhiltcourse.data.model
 
-import androidx.room.Entity
 import androidx.room.PrimaryKey
-import java.time.LocalDateTime
 
-@Entity(tableName = "courses")
-data class Course(
+data class CourseJSON (
     val title: String,
     val description: String,
     val location: String,
     val startTime: String,
     val endTime: String,
-    @PrimaryKey
-    val courseId: Long
+    val id: Long
 )

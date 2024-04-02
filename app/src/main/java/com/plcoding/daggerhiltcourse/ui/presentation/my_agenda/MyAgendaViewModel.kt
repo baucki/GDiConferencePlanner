@@ -23,7 +23,7 @@ class MyAgendaViewModel @Inject constructor(
     fun onEvent(event: MyAgendaEvent) {
         when (event) {
             is MyAgendaEvent.OnCourseClick -> {
-                sendUiEvent(UiEvent.Navigate(Routes.SAVED_COURSE + "?courseId=${event.course.id}") )
+                sendUiEvent(UiEvent.Navigate(Routes.SAVED_COURSE + "?courseId=${event.course.courseId}") )
             }
         }
     }

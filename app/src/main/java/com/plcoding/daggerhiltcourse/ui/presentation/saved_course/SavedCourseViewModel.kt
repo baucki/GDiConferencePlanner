@@ -10,6 +10,9 @@ import com.plcoding.daggerhiltcourse.data.datasource.local.repository.LocalRepos
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.FeedbackRepository
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepository
 import com.plcoding.daggerhiltcourse.data.model.Course
+import com.plcoding.daggerhiltcourse.data.model.CourseJSON
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
 import com.plcoding.daggerhiltcourse.data.model.Feedback
 import com.plcoding.daggerhiltcourse.util.DateFormatter
 import com.plcoding.daggerhiltcourse.util.UiEvent
@@ -23,11 +26,10 @@ import javax.inject.Inject
 @HiltViewModel
 class SavedCourseViewModel @Inject constructor(
     private val localRepository: LocalRepository,
-    private val remoteRepository: RemoteRepository,
     private val feedbackRepository: FeedbackRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    var course by mutableStateOf<Course?>(null)
+    var course by mutableStateOf<CourseWithSpeakers?>(null)
         private set
 
     var isFinished by mutableStateOf(false)
@@ -43,9 +45,9 @@ class SavedCourseViewModel @Inject constructor(
         val courseId = savedStateHandle.get<Int>("courseId")!!
         if (courseId != -1) {
             viewModelScope.launch {
-                remoteRepository.fetchCourseById(courseId)?.let { course ->
+                localRepository.getCourseById(courseId)?.let { course ->
                     this@SavedCourseViewModel.course = course
-                    isFinished = LocalDateTime.now() > DateFormatter.dateToLocalTime(course.startTime)
+                    isFinished = LocalDateTime.now() > DateFormatter.dateToLocalTime(course.course.startTime)
                 }
             }
         }
@@ -57,7 +59,7 @@ class SavedCourseViewModel @Inject constructor(
             }
             is SavedCourseEvent.OnDeleteConfirmClick -> {
                 viewModelScope.launch {
-                    localRepository.deleteCourse(course!!)
+                    localRepository.deleteCourseWithSpeakers(course!!.course)
                     sendUiEvent(UiEvent.PopBackStack)
                 }
             }
@@ -80,15 +82,30 @@ class SavedCourseViewModel @Inject constructor(
                 viewModelScope.launch {
                     if (event.rating != 0) {
                         var ratingString = ""
-                        if (event.rating==1) ratingString = "bad"
-                        if (event.rating==2) ratingString = "neutral"
-                        if (event.rating==3) ratingString = "good"
-                        feedbackRepository.addFeedback(Feedback(ratingString, event.message, course!!))
+                        when (event.rating) {
+                            1 -> {
+                                ratingString = "bad"
+                            }
+                            2 -> {
+                                ratingString = "neutral"
+                            }
+                            3 -> {
+                                ratingString = "good"
+                            }
+                        }
+                        val courseJSON = CourseJSON(
+                            course!!.course.title,
+                            course!!.course.description,
+                            course!!.course.location,
+                            course!!.course.startTime,
+                            course!!.course.endTime,
+                            course!!.course.courseId
+                        )
+                        feedbackRepository.addFeedback(Feedback(ratingString, event.message, courseJSON))
                         sendUiEvent(UiEvent.ShowFeedbackDialog(false))
                     }
                 }
             }
-            else -> Unit
         }
     }
 

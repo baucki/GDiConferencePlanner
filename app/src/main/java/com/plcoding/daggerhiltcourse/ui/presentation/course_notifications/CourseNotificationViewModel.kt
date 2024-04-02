@@ -8,7 +8,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.local.repository.LocalRepository
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepository
 import com.plcoding.daggerhiltcourse.data.model.Course
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
 import com.plcoding.daggerhiltcourse.data.model.Notification
 import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseEvent
 import com.plcoding.daggerhiltcourse.util.DateFormatter
@@ -21,10 +23,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CourseNotificationViewModel @Inject constructor(
-    localRepository: LocalRepository,
+    private val remoteRepository: RemoteRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    var course by mutableStateOf<Course?>(null)
+    var course by mutableStateOf<CourseWithSpeakersJSON?>(null)
         private set
 
     var isNotifiableInSevenDays by mutableStateOf(false)
@@ -37,7 +39,7 @@ class CourseNotificationViewModel @Inject constructor(
         val courseId = savedStateHandle.get<Int>("courseId")!!
         if (courseId != -1) {
             viewModelScope.launch {
-                localRepository.getCourseById(courseId)?.let { course ->
+                remoteRepository.fetchCourseById(courseId)?.let { course ->
                     this@CourseNotificationViewModel.course = course
                 }
             }

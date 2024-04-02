@@ -6,9 +6,16 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.plcoding.daggerhiltcourse.data.datasource.local.repository.CourseSpeakerCrossRefRepository
 import com.plcoding.daggerhiltcourse.data.datasource.local.repository.LocalRepository
+import com.plcoding.daggerhiltcourse.data.datasource.local.repository.SpeakerRepository
 import com.plcoding.daggerhiltcourse.data.model.Course
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepository
+import com.plcoding.daggerhiltcourse.data.model.CourseJSON
+import com.plcoding.daggerhiltcourse.data.model.CourseSpeakerCrossRef
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
+import com.plcoding.daggerhiltcourse.data.model.Speaker
+import com.plcoding.daggerhiltcourse.data.model.SpeakerJSON
 import com.plcoding.daggerhiltcourse.util.Routes
 import com.plcoding.daggerhiltcourse.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,20 +27,17 @@ import javax.inject.Inject
 @HiltViewModel
 class CourseDetailsViewModel @Inject constructor(
     private val localRepository: LocalRepository,
+    private val speakerRepository: SpeakerRepository,
+    private val crossRefRepository: CourseSpeakerCrossRefRepository,
     private val remoteRepository: RemoteRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
+    var courseJSON by mutableStateOf<CourseWithSpeakersJSON?>(null)
+        private set
     var course by mutableStateOf<Course?>(null)
-        private set
-    var title by mutableStateOf("")
-        private set
-    var description by mutableStateOf("")
-        private set
-    var instructor by mutableStateOf("")
-        private set
-    var imageUrl by mutableStateOf("")
-        private set
+    var speaker by mutableStateOf<Speaker?>(null)
+    var courseSpeakerCrossRef by mutableStateOf<CourseSpeakerCrossRef?>(null)
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -43,11 +47,7 @@ class CourseDetailsViewModel @Inject constructor(
         if (courseId != -1) {
             viewModelScope.launch {
                 remoteRepository.fetchCourseById(courseId)?.let { course ->
-                    title = course.title
-                    description = course.description
-                    instructor = course.instructor
-                    imageUrl = course.imageUrl
-                    this@CourseDetailsViewModel.course = course
+                    this@CourseDetailsViewModel.courseJSON = course
                 }
             }
         }
@@ -57,14 +57,43 @@ class CourseDetailsViewModel @Inject constructor(
         when (event) {
             is CourseDetailsEvent.OnSaveClick -> {
                 viewModelScope.launch {
-                    if (course != null) {
+                    if (courseJSON != null) {
+                        course = createCourse(event.courseJSON)
                         localRepository.insertCourse(course!!)
-                        sendUiEvent(UiEvent.Navigate(Routes.COURSE_NOTIFICATIONS + "?courseId=${event.course.id}"))
+                        event.speakersJSON.forEach {
+                            speaker = createSpeaker(it)
+                            speakerRepository.insertSpeaker(speaker!!)
+
+                            courseSpeakerCrossRef = CourseSpeakerCrossRef(course!!.courseId, speaker!!.speakerId)
+                            crossRefRepository.insertCrossRef(courseSpeakerCrossRef!!)
+                        }
+                        sendUiEvent(UiEvent.Navigate(Routes.COURSE_NOTIFICATIONS + "?courseId=${course!!.courseId}"))
                     }
                 }
             }
-            else -> Unit
+            is CourseDetailsEvent.OnSpeakerClick -> {
+                sendUiEvent(UiEvent.Navigate(Routes.SPEAKER_DETAILS + "?speakerId=${event.speakerId}"))
+            }
         }
+    }
+    private fun createCourse(courseJSON: CourseJSON): Course {
+        return Course(
+            courseJSON.title,
+            courseJSON.description,
+            courseJSON.location,
+            courseJSON.startTime,
+            courseJSON.endTime,
+            courseJSON.id
+        )
+    }
+    private fun createSpeaker(speakerJSON: SpeakerJSON): Speaker {
+        return Speaker(
+            speakerJSON.imageUrl,
+            speakerJSON.name,
+            speakerJSON.title,
+            speakerJSON.biography,
+            speakerJSON.id
+        )
     }
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {

@@ -38,6 +38,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.plcoding.daggerhiltcourse.R
 import com.plcoding.daggerhiltcourse.data.model.Course
+import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
 import com.plcoding.daggerhiltcourse.util.UiEvent
 
 @Composable
@@ -66,9 +67,8 @@ fun SavedCourseScreen(
         CourseItem(course = course, viewModel = viewModel)
     }
 }
-
 @Composable
-fun CourseItem(course: Course, viewModel: SavedCourseViewModel) {
+fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
     Surface(
@@ -87,7 +87,7 @@ fun CourseItem(course: Course, viewModel: SavedCourseViewModel) {
             Text(
                 modifier = Modifier
                     .padding(top = 8.dp),
-                text = course.title,
+                text = course.course.title,
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
                     fontSize = 22.sp,
@@ -96,37 +96,41 @@ fun CourseItem(course: Course, viewModel: SavedCourseViewModel) {
             Row(
                 modifier = Modifier.padding(top = 8.dp)
             ) {
-                Text(text = course.location + ", ")
-                Text(text = "${course.startTime.split("T")[1].substring(0,5)} - ${course.endTime.split("T")[1].substring(0,5)}")
+                Text(text = course.course.location + ", ")
+                Text(text = "${course.course.startTime.split("T")[1].substring(0,5)} - ${course.course.endTime.split("T")[1].substring(0,5)}")
             }
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 modifier = Modifier
                     .padding(top = 8.dp, bottom = 32.dp)
                     .height(screenHeight * 0.3f),
-                text = course.description
+                text = course.course.description
             )
             Spacer(modifier = Modifier.height(2.dp))
-            if (course.instructor != "") {
-                Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom
-
-                ) {
-                    AsyncImage(
-                        model = course.imageUrl,
-                        contentDescription = null,
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier.size(64.dp)
-                    )
-                    Text(
-                        modifier = Modifier.align(Alignment.CenterVertically),
-                        text = course.instructor,
-                        style = TextStyle(
-                            fontStyle = FontStyle.Italic,
-                            fontSize = 16.sp
-                        )
-                    )
+            if (course.speakers.isNotEmpty()) {
+                course.speakers.forEach { speaker ->
+                    Column {
+                        Row(
+                            modifier = Modifier.padding(all = 4.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.Bottom
+                        ) {
+                            AsyncImage(
+                                model = speaker.imageUrl,
+                                contentDescription = null,
+                                contentScale = ContentScale.Fit,
+                                modifier = Modifier.size(64.dp)
+                            )
+                            Text(
+                                modifier = Modifier.align(Alignment.CenterVertically),
+                                text = speaker.name + ", " + speaker.title,
+                                style = TextStyle(
+                                    fontStyle = FontStyle.Italic,
+                                    fontSize = 16.sp
+                                )
+                            )
+                        }
+                    }
                 }
                 if (viewModel.isFinished) {
                     Button(
@@ -210,8 +214,8 @@ fun DeleteComponentButton(viewModel: SavedCourseViewModel) {
         dismissButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black, // Set button color to black
-                    contentColor = Color.White // Set text color to white
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White
                 ),
                 onClick = {
                     viewModel.onEvent(SavedCourseEvent.OnDeleteDismissClick)
@@ -274,7 +278,6 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
         dismissButton = {
             Button(
                 onClick = {
-//                    isVisible = false
                     viewModel.onEvent(SavedCourseEvent.OnFeedbackDismissClick)
                 },
                 colors = ButtonDefaults.buttonColors(
