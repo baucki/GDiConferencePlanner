@@ -6,8 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.SpeakerRepository
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepository
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.speaker.SpeakerRepository
 import com.plcoding.daggerhiltcourse.data.model.SpeakerJSON
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -18,7 +17,8 @@ class SpeakerDetailsViewModel @Inject constructor(
     private val speakerRepository: SpeakerRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-     var speakerJSON by mutableStateOf<SpeakerJSON?>(null)
+
+    var speakerJSON by mutableStateOf<SpeakerJSON?>(null)
 
     init {
         val speakerId = savedStateHandle.get<Long>("speakerId")!!

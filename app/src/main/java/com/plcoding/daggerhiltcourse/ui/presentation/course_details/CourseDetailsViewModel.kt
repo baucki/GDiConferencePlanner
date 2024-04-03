@@ -6,11 +6,11 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.plcoding.daggerhiltcourse.data.datasource.local.repository.CourseSpeakerCrossRefRepository
-import com.plcoding.daggerhiltcourse.data.datasource.local.repository.LocalRepository
-import com.plcoding.daggerhiltcourse.data.datasource.local.repository.SpeakerRepository
+import com.plcoding.daggerhiltcourse.data.datasource.local.repository.course_speaker.CourseSpeakerCrossRefRepository
+import com.plcoding.daggerhiltcourse.data.datasource.local.repository.course.LocalRepository
+import com.plcoding.daggerhiltcourse.data.datasource.local.repository.speaker.SpeakerRepository
 import com.plcoding.daggerhiltcourse.data.model.Course
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepository
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.course.RemoteRepository
 import com.plcoding.daggerhiltcourse.data.model.CourseJSON
 import com.plcoding.daggerhiltcourse.data.model.CourseSpeakerCrossRef
 import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON

@@ -1,4 +1,4 @@
-package com.plcoding.daggerhiltcourse.data.datasource.local.repository
+package com.plcoding.daggerhiltcourse.data.datasource.local.repository.course_speaker
 
 import com.plcoding.daggerhiltcourse.data.datasource.local.dao.CourseSpeakerCrossRefDao
 import com.plcoding.daggerhiltcourse.data.model.CourseSpeakerCrossRef

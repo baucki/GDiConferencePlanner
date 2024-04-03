@@ -2,8 +2,7 @@ package com.plcoding.daggerhiltcourse.ui.presentation.clients
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.ClientRepository
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.client.ClientRepository
 
 import com.plcoding.daggerhiltcourse.data.model.Client
 import dagger.hilt.android.lifecycle.HiltViewModel

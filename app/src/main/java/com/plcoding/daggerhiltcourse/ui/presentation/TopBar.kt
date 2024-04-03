@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.plcoding.daggerhiltcourse.util.Routes
 
 @Composable
 fun TopBar(
@@ -26,10 +27,13 @@ fun TopBar(
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
     val title: String = when (backStackEntry?.destination?.route) {
-        "home" -> "Konferencija Beograd 2024"
-        "my_agenda" -> "Konferencija Beograd 2024"
-        "clients" -> "Clients"
-        "splash_screen" -> ""
+        Routes.HOME -> "Konferencija Beograd 2024"
+        Routes.MY_AGENDA -> "Konferencija Beograd 2024"
+        Routes.CLIENTS -> "Clients"
+        Routes.SPLASH_SCREEN -> ""
+        Routes.LOGIN -> "Login"
+        Routes.REGISTER -> "Register"
+        Routes.ACCOUNT -> "Account"
         else -> "Details"
     }
     AnimatedVisibility(
@@ -41,7 +45,15 @@ fun TopBar(
             modifier = modifier,
             title = { Text(text = title) },
             navigationIcon = {
-                if (backStackEntry?.destination?.route !in listOf("home", "my_agenda", "clients", "settings", "splash_screen")) {
+                if (backStackEntry?.destination?.route !in listOf(
+                        Routes.HOME,
+                        Routes.MY_AGENDA,
+                        Routes.CLIENTS,
+                        Routes.ACCOUNT,
+                        Routes.SPLASH_SCREEN,
+                        Routes.LOGIN,
+                        Routes.REGISTER,
+                )) {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }

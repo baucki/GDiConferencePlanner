@@ -1,9 +1,7 @@
 package com.plcoding.daggerhiltcourse.di
 
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.ClientRepository
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.ClientRepositoryImpl
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepositoryImpl
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepository
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.course.RemoteRepositoryImpl
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.course.RemoteRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

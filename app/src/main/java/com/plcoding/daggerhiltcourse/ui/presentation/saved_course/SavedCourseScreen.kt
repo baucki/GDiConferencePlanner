@@ -1,6 +1,7 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.saved_course
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
+import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -39,11 +41,13 @@ import coil.compose.AsyncImage
 import com.plcoding.daggerhiltcourse.R
 import com.plcoding.daggerhiltcourse.data.model.Course
 import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
+import com.plcoding.daggerhiltcourse.ui.presentation.course_details.CourseDetailsEvent
 import com.plcoding.daggerhiltcourse.util.UiEvent
 
 @Composable
 fun SavedCourseScreen(
     onPopBackStack: () -> Unit,
+    onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: SavedCourseViewModel = hiltViewModel()
 ) {
     val course = viewModel.course
@@ -58,7 +62,9 @@ fun SavedCourseScreen(
                 is UiEvent.ShowFeedbackDialog -> {
                     viewModel.showFeedbackDialog = event.state
                 }
-                else -> Unit
+                is UiEvent.Navigate -> {
+                    onNavigate(event)
+                }
             }
         }
     }
@@ -120,14 +126,16 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                                 contentDescription = null,
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier.size(64.dp)
+                                    .clickable { viewModel.onEvent(SavedCourseEvent.OnSpeakerClick(speaker.speakerId)) }
                             )
                             Text(
-                                modifier = Modifier.align(Alignment.CenterVertically),
                                 text = speaker.name + ", " + speaker.title,
                                 style = TextStyle(
                                     fontStyle = FontStyle.Italic,
                                     fontSize = 16.sp
-                                )
+                                ),
+                                modifier = Modifier.align(Alignment.CenterVertically)
+                                    .clickable { viewModel.onEvent(SavedCourseEvent.OnSpeakerClick(speaker.speakerId)) }
                             )
                         }
                     }
@@ -174,7 +182,6 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                             text = "Delete",
                             style = TextStyle(
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp,
                             )
                         )
                     }
@@ -239,7 +246,12 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
                 TextField(
                     value = viewModel.feedbackText,
                     onValueChange = { viewModel.onEvent(SavedCourseEvent.OnFeedbackTextChangeClick(it)) },
-                    label = { Text("Feedback") }
+                    label = { Text("Feedback") },
+                    colors = TextFieldDefaults.textFieldColors(
+                        focusedLabelColor = Color.Black,
+                        cursorColor = Color.Black,
+                        focusedIndicatorColor = Color.Black,
+                    )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 Text("How was your experience?")

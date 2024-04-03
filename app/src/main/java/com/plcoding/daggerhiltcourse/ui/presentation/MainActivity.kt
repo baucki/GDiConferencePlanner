@@ -1,5 +1,6 @@
 package com.plcoding.daggerhiltcourse.ui.presentation
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,28 +13,38 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.plcoding.daggerhiltcourse.ui.presentation.account.AccountScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.clients.ClientsScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.course_details.CourseDetailsScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.course_notifications.CourseNotificationsScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.home.HomeScreen
+import com.plcoding.daggerhiltcourse.ui.presentation.login.LoginScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.my_agenda.MyAgendaScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.speaker_details.SpeakerDetailsScreen
 import com.plcoding.daggerhiltcourse.ui.theme.DaggerHiltCourseTheme
 import com.plcoding.daggerhiltcourse.util.AlarmScheduler
 import com.plcoding.daggerhiltcourse.util.AndroidAlarmScheduler
+import com.plcoding.daggerhiltcourse.util.DataStoreHandler
 import com.plcoding.daggerhiltcourse.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val scheduler = AndroidAlarmScheduler(this)
+        val myDataStore: DataStore<Preferences> = dataStore
+        DataStoreHandler.dataStore = myDataStore
         setContent {
             App(scheduler)
         }
@@ -62,13 +73,24 @@ fun App(scheduler: AlarmScheduler) {
             },
             content = {
                 Box(Modifier.padding(bottom = 64.dp)) {
-                    NavHost(navController = navController, startDestination = Routes.SPLASH_SCREEN) {
+                    NavHost(navController = navController, startDestination = Routes.LOGIN) {
                         composable(Routes.SPLASH_SCREEN) {
                             LaunchedEffect(Unit) {
                                 topBarState.value = false
                                 bottomBarState.value = false
                             }
                             SplashScreen(navController = navController)
+                        }
+                        composable(Routes.LOGIN) {
+                            LaunchedEffect(key1 = Unit) {
+                                topBarState.value = true
+                                bottomBarState.value = true
+                            }
+                            LoginScreen(
+                                onNavigate = {
+                                    navController.navigate(it.route)
+                                }
+                            )
                         }
                         composable(Routes.HOME){
                             HomeScreen(
@@ -113,14 +135,6 @@ fun App(scheduler: AlarmScheduler) {
                                 topBarState.value = true
                                 bottomBarState.value = false
                             }
-//                            CourseDetailsScreen(
-//                                onPopBackStack = {
-//                                    navController.popBackStack()
-//                                },
-//                                onNavigate = {
-//                                    navController.navigate(it.route)
-//                                }
-//                            )
                             SpeakerDetailsScreen()
                         }
 
@@ -167,9 +181,14 @@ fun App(scheduler: AlarmScheduler) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = false
                             }
-                            SavedCourseScreen(onPopBackStack = {
-                                navController.popBackStack()
-                            })
+                            SavedCourseScreen(
+                                onPopBackStack = {
+                                    navController.popBackStack()
+                                },
+                                onNavigate = {
+                                    navController.navigate(it.route)
+                                }
+                            )
                         }
                         composable(Routes.CLIENTS) {
                             LaunchedEffect(Unit) {
@@ -177,6 +196,13 @@ fun App(scheduler: AlarmScheduler) {
                                 topBarState.value = true
                             }
                             ClientsScreen()
+                        }
+                        composable(Routes.ACCOUNT) {
+                            LaunchedEffect(Unit) {
+                                bottomBarState.value = true
+                                topBarState.value = true
+                            }
+                            AccountScreen()
                         }
                     }
                 }

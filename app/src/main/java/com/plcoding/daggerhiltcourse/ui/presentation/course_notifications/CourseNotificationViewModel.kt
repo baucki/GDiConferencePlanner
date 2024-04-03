@@ -2,17 +2,13 @@ package com.plcoding.daggerhiltcourse.ui.presentation.course_notifications
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.plcoding.daggerhiltcourse.data.datasource.local.repository.LocalRepository
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepository
-import com.plcoding.daggerhiltcourse.data.model.Course
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.course.RemoteRepository
 import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
 import com.plcoding.daggerhiltcourse.data.model.Notification
-import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseEvent
 import com.plcoding.daggerhiltcourse.util.DateFormatter
 import com.plcoding.daggerhiltcourse.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

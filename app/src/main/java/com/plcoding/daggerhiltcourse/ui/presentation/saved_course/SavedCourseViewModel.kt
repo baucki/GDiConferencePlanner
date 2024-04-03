@@ -6,15 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.plcoding.daggerhiltcourse.data.datasource.local.repository.LocalRepository
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.FeedbackRepository
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.RemoteRepository
-import com.plcoding.daggerhiltcourse.data.model.Course
+import com.plcoding.daggerhiltcourse.data.datasource.local.repository.course.LocalRepository
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.feedback.FeedbackRepository
 import com.plcoding.daggerhiltcourse.data.model.CourseJSON
 import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
-import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
 import com.plcoding.daggerhiltcourse.data.model.Feedback
 import com.plcoding.daggerhiltcourse.util.DateFormatter
+import com.plcoding.daggerhiltcourse.util.Routes
 import com.plcoding.daggerhiltcourse.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -105,6 +103,9 @@ class SavedCourseViewModel @Inject constructor(
                         sendUiEvent(UiEvent.ShowFeedbackDialog(false))
                     }
                 }
+            }
+            is SavedCourseEvent.OnSpeakerClick -> {
+                sendUiEvent(UiEvent.Navigate(Routes.SPEAKER_DETAILS + "?speakerId=${event.speakerId}"))
             }
         }
     }

@@ -100,5 +100,10 @@ val bottomNavItems = listOf(
         name = "Clients",
         route = Routes.CLIENTS,
         icon = Icons.Default.Info
+    ),
+    BottomNavItem(
+        name = "Account",
+        route = Routes.ACCOUNT,
+        icon = Icons.Default.AccountBox
     )
 )

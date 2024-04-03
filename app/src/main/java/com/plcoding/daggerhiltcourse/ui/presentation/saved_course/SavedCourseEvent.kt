@@ -9,4 +9,5 @@ sealed class SavedCourseEvent {
     data class OnFeedbackTextChangeClick(val value: String): SavedCourseEvent()
     data class OnFeedbackRatingClick(val rating: Int): SavedCourseEvent()
     data class OnFeedbackSubmitClick(val rating: Int, val message: String): SavedCourseEvent()
+    data class OnSpeakerClick(val speakerId: Long): SavedCourseEvent()
 }

@@ -1,7 +1,7 @@
 package com.plcoding.daggerhiltcourse.di
 
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.SpeakerRepository
-import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.SpeakerRepositoryImpl
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.speaker.SpeakerRepository
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.speaker.SpeakerRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

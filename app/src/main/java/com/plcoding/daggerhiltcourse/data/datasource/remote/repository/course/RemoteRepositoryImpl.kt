@@ -1,9 +1,6 @@
-package com.plcoding.daggerhiltcourse.data.datasource.remote.repository
+package com.plcoding.daggerhiltcourse.data.datasource.remote.repository.course
 
-import com.plcoding.daggerhiltcourse.data.model.Course
 import com.plcoding.daggerhiltcourse.data.datasource.remote.MyApi
-import com.plcoding.daggerhiltcourse.data.model.CourseJSON
-import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
 import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
 import javax.inject.Inject
 

@@ -1,4 +1,4 @@
-package com.plcoding.daggerhiltcourse.data.datasource.local.repository
+package com.plcoding.daggerhiltcourse.data.datasource.local.repository.course
 
 import com.plcoding.daggerhiltcourse.data.model.Course
 import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
