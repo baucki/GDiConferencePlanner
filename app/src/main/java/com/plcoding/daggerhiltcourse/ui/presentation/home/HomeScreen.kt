@@ -38,7 +38,6 @@ import kotlinx.coroutines.flow.StateFlow
 fun HomeScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     topBarState: MutableState<Boolean>,
-    bottomBarState: MutableState<Boolean>,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val courses by viewModel.courses.collectAsState(initial = emptyList())
@@ -61,8 +60,6 @@ fun HomeScreen(
     }
 
     if (courses.isEmpty()) {
-//        topBarState.value = true
-//        bottomBarState.value = true
         Box(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
@@ -71,7 +68,6 @@ fun HomeScreen(
         }
     } else {
         topBarState.value = true
-        bottomBarState.value = true
         Column {
             TabRow(
                 selectedTabIndex = selectedTabIndex,

@@ -82,7 +82,7 @@ fun App(scheduler: AlarmScheduler) {
                             SplashScreen(navController = navController)
                         }
                         composable(Routes.LOGIN) {
-                            LaunchedEffect(key1 = Unit) {
+                            LaunchedEffect(Unit) {
                                 topBarState.value = true
                                 bottomBarState.value = true
                             }
@@ -93,12 +93,14 @@ fun App(scheduler: AlarmScheduler) {
                             )
                         }
                         composable(Routes.HOME){
+                            LaunchedEffect(Unit) {
+                                bottomBarState.value = true
+                            }
                             HomeScreen(
                                 onNavigate = {
                                     navController.navigate(it.route)
                                 },
-                                topBarState,
-                                bottomBarState
+                                topBarState
                             )
                         }
                         composable(
@@ -112,6 +114,7 @@ fun App(scheduler: AlarmScheduler) {
                         ) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = false
+                                topBarState.value = true
                             }
                             CourseDetailsScreen(
                                 onPopBackStack = {
@@ -180,6 +183,7 @@ fun App(scheduler: AlarmScheduler) {
                         ) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = false
+                                topBarState.value = true
                             }
                             SavedCourseScreen(
                                 onPopBackStack = {

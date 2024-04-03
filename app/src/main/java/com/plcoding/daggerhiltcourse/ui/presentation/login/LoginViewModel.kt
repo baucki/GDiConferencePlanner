@@ -35,12 +35,11 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.OnLoginClick -> {
                 viewModelScope.launch {
                     val requestUser = User(usernameTextField.value, passwordTextField.value)
-                    val user = userRepository.login(requestUser)
-                    if (user == requestUser) {
-                        DataStoreHandler.write("${user.username}-${user.password}")
+                    if (userRepository.login(requestUser)) {
+                        DataStoreHandler.write("${requestUser.username}-${requestUser.password}")
                         sendUiEvent(UiEvent.Navigate(Routes.HOME))
                     } else {
-                        // handle error
+                        println("promasio si")
                     }
                 }
             }

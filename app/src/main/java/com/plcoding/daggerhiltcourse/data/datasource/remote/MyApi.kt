@@ -15,7 +15,7 @@ import retrofit2.http.Path
 
 interface MyApi {
     @POST("users/login")
-    suspend fun login(@Body user: User): User?
+    suspend fun login(@Body user: User): Boolean
     @POST("users/add")
     suspend fun addUser(@Body user: User): User?
     @GET("clients/all")

@@ -10,8 +10,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun addUser(user: User): User? {
         return api.addUser(user)
     }
-
-    override suspend fun login(user: User): User? {
+    override suspend fun login(user: User): Boolean {
         return api.login(user)
     }
 }
