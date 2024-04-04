@@ -1,5 +1,6 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.speaker_details
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,7 +22,8 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+
 @Composable
 fun SpeakerDetailsScreen(viewModel: SpeakerDetailsViewModel = hiltViewModel()) {
     val speaker = viewModel.speakerJSON
@@ -40,8 +42,8 @@ fun SpeakerDetailsScreen(viewModel: SpeakerDetailsViewModel = hiltViewModel()) {
                     verticalAlignment = Alignment.Bottom,
                     modifier = Modifier.padding(all = 16.dp)
                 ) {
-                    AsyncImage(
-                        model = speaker.imageUrl,
+                    Image(
+                        painter = rememberAsyncImagePainter(speaker.imageUrl),
                         contentDescription = speaker.name,
                         contentScale = ContentScale.Fit,
                         modifier = Modifier

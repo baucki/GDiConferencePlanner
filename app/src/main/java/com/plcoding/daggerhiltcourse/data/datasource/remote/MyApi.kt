@@ -18,6 +18,8 @@ interface MyApi {
     suspend fun login(@Body user: User): Boolean
     @POST("users/add")
     suspend fun addUser(@Body user: User): User?
+    @GET("/users/find/{username}")
+    suspend fun fetchUserByUsername(@Path("username") username: String): User?
     @GET("clients/all")
     suspend fun fetchAllClients(): List<Client>
     @POST("feedbacks/add")

@@ -12,6 +12,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -22,12 +23,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.plcoding.daggerhiltcourse.ui.presentation.account.AccountScreen
+import com.plcoding.daggerhiltcourse.ui.presentation.account.EditAccountButton
 import com.plcoding.daggerhiltcourse.ui.presentation.clients.ClientsScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.course_details.CourseDetailsScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.course_notifications.CourseNotificationsScreen
+import com.plcoding.daggerhiltcourse.ui.presentation.edit_account.EditAccountScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.home.HomeScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.login.LoginScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.my_agenda.MyAgendaScreen
+import com.plcoding.daggerhiltcourse.ui.presentation.register.RegisterScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.speaker_details.SpeakerDetailsScreen
 import com.plcoding.daggerhiltcourse.ui.theme.DaggerHiltCourseTheme
@@ -73,7 +77,7 @@ fun App(scheduler: AlarmScheduler) {
             },
             content = {
                 Box(Modifier.padding(bottom = 64.dp)) {
-                    NavHost(navController = navController, startDestination = Routes.LOGIN) {
+                    NavHost(navController = navController, startDestination = Routes.SPLASH_SCREEN) {
                         composable(Routes.SPLASH_SCREEN) {
                             LaunchedEffect(Unit) {
                                 topBarState.value = false
@@ -84,14 +88,29 @@ fun App(scheduler: AlarmScheduler) {
                         composable(Routes.LOGIN) {
                             LaunchedEffect(Unit) {
                                 topBarState.value = true
-                                bottomBarState.value = true
+                                bottomBarState.value = false
                             }
                             LoginScreen(
+                                onPopBackStack = {
+                                    navController.popBackStack()
+                                },
                                 onNavigate = {
                                     navController.navigate(it.route)
                                 }
                             )
                         }
+                        composable(Routes.REGISTER) {
+                            LaunchedEffect(Unit) {
+                                topBarState.value = true
+                                bottomBarState.value = false
+                            }
+                            RegisterScreen(
+                                onNavigate = {
+                                    navController.navigate(it.route)
+                                }
+                            )
+                        }
+
                         composable(Routes.HOME){
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = true
@@ -206,7 +225,21 @@ fun App(scheduler: AlarmScheduler) {
                                 bottomBarState.value = true
                                 topBarState.value = true
                             }
-                            AccountScreen()
+                            AccountScreen(
+                                onPopBackStack = {
+                                    navController.popBackStack()
+                                },
+                                onNavigate = {
+                                    navController.navigate(it.route)
+                                }
+                            )
+                        }
+                        composable(Routes.EDIT_ACCOUNT) {
+                            LaunchedEffect(Unit) {
+                                bottomBarState.value = true
+                                topBarState.value = true
+                            }
+                            EditAccountScreen()
                         }
                     }
                 }

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -38,9 +39,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.plcoding.daggerhiltcourse.R
 import com.plcoding.daggerhiltcourse.data.model.Course
 import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
+import com.plcoding.daggerhiltcourse.data.model.Feedback
 import com.plcoding.daggerhiltcourse.ui.presentation.course_details.CourseDetailsEvent
 import com.plcoding.daggerhiltcourse.util.UiEvent
 
@@ -113,6 +116,14 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                 text = course.course.description
             )
             Spacer(modifier = Modifier.height(2.dp))
+
+        }
+        Column(
+            modifier = Modifier
+                .padding(all = 16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom
+        ) {
             if (course.speakers.isNotEmpty()) {
                 course.speakers.forEach { speaker ->
                     Column {
@@ -121,12 +132,19 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.Bottom
                         ) {
-                            AsyncImage(
-                                model = speaker.imageUrl,
-                                contentDescription = null,
+                            Image(
+                                painter = rememberAsyncImagePainter(speaker.imageUrl),
+                                contentDescription = speaker.name,
                                 contentScale = ContentScale.Fit,
-                                modifier = Modifier.size(64.dp)
-                                    .clickable { viewModel.onEvent(SavedCourseEvent.OnSpeakerClick(speaker.speakerId)) }
+                                modifier = Modifier
+                                    .size(64.dp)
+                                    .clickable {
+                                        viewModel.onEvent(
+                                            SavedCourseEvent.OnSpeakerClick(
+                                                speaker.speakerId
+                                            )
+                                        )
+                                    }
                             )
                             Text(
                                 text = speaker.name + ", " + speaker.title,
@@ -134,57 +152,23 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                                     fontStyle = FontStyle.Italic,
                                     fontSize = 16.sp
                                 ),
-                                modifier = Modifier.align(Alignment.CenterVertically)
-                                    .clickable { viewModel.onEvent(SavedCourseEvent.OnSpeakerClick(speaker.speakerId)) }
+                                modifier = Modifier
+                                    .align(Alignment.CenterVertically)
+                                    .clickable {
+                                        viewModel.onEvent(
+                                            SavedCourseEvent.OnSpeakerClick(
+                                                speaker.speakerId
+                                            )
+                                        )
+                                    }
                             )
                         }
                     }
                 }
                 if (viewModel.isFinished) {
-                    Button(
-                        onClick = {
-                            viewModel.onEvent(SavedCourseEvent.OnFeedbackClick)
-                        },
-                        modifier = Modifier
-                            .height(64.dp)
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Black,
-                            contentColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(8.dp),
-
-                        ) {
-                        Text(
-                            text = "Feedback",
-                            style = TextStyle(
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 16.sp,
-                            )
-                        )
-                    }
+                    FeedbackButton(viewModel)
                 } else {
-                    Button(
-                        onClick = { viewModel.onEvent(SavedCourseEvent.OnDeleteCourseClick) },
-                        modifier = Modifier
-                            .height(64.dp)
-                            .fillMaxWidth()
-                            .padding(top = 8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color.Black,
-                            contentColor = Color.White
-                        ),
-                        shape = RoundedCornerShape(8.dp),
-
-                        ) {
-                        Text(
-                            text = "Delete",
-                            style = TextStyle(
-                                fontWeight = FontWeight.Bold,
-                            )
-                        )
-                    }
+                    DeleteButton(viewModel)
                 }
             }
         }
@@ -302,6 +286,61 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
             }
         }
     )
+}
+
+@Composable
+fun DeleteButton(
+    viewModel: SavedCourseViewModel
+) {
+    Button(
+        onClick = { viewModel.onEvent(SavedCourseEvent.OnDeleteCourseClick) },
+        modifier = Modifier
+            .height(64.dp)
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.Black,
+            contentColor = Color.White
+        ),
+        shape = RoundedCornerShape(8.dp),
+
+        ) {
+        Text(
+            text = "Delete",
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+            )
+        )
+    }
+}
+
+@Composable
+fun FeedbackButton(
+    viewModel: SavedCourseViewModel
+) {
+    Button(
+        onClick = {
+            viewModel.onEvent(SavedCourseEvent.OnFeedbackClick)
+        },
+        modifier = Modifier
+            .height(64.dp)
+            .fillMaxWidth()
+            .padding(top = 8.dp),
+        colors = ButtonDefaults.buttonColors(
+            backgroundColor = Color.Black,
+            contentColor = Color.White
+        ),
+        shape = RoundedCornerShape(8.dp),
+
+        ) {
+        Text(
+            text = "Feedback",
+            style = TextStyle(
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
+            )
+        )
+    }
 }
 
 @Composable

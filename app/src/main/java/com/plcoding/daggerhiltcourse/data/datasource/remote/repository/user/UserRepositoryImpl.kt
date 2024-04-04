@@ -13,4 +13,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun login(user: User): Boolean {
         return api.login(user)
     }
+    override suspend fun findUserByUsername(username: String): User? {
+        return api.fetchUserByUsername(username)
+    }
 }

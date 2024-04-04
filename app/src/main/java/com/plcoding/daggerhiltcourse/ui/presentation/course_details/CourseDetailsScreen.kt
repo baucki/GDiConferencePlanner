@@ -1,10 +1,12 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.course_details
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -33,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.plcoding.daggerhiltcourse.data.model.Course
 import com.plcoding.daggerhiltcourse.data.model.CourseJSON
 import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
@@ -69,7 +72,7 @@ fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewM
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     Surface(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(16.dp),
         elevation = 4.dp,
         color = Color.White,
@@ -78,7 +81,7 @@ fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewM
         Column(
             modifier = Modifier
                 .padding(16.dp)
-                .fillMaxWidth()
+                .fillMaxSize()
         ) {
             Text(
                 modifier = Modifier
@@ -103,6 +106,13 @@ fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewM
                 text = courseJSON.description
             )
             Spacer(modifier = Modifier.height(2.dp))
+        }
+        Column(
+            modifier = Modifier
+                .padding(all = 16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Bottom,
+        ) {
             if (courseJSON.speakers.isNotEmpty()) {
                 Column {
                     courseJSON.speakers.forEach { speaker ->
@@ -111,8 +121,8 @@ fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewM
                             verticalAlignment = Alignment.Bottom,
                             modifier = Modifier.padding(all = 4.dp)
                         ) {
-                            AsyncImage(
-                                model = speaker.imageUrl,
+                            Image(
+                                painter = rememberAsyncImagePainter(speaker.imageUrl),
                                 contentDescription = speaker.name,
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier
@@ -132,6 +142,7 @@ fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewM
                         }
                     }
                 }
+
                 Button(
                     onClick = {
                         val course = CourseJSON(
@@ -145,15 +156,14 @@ fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewM
                         viewModel.onEvent(CourseDetailsEvent.OnSaveClick(course, courseJSON.speakers))
                     },
                     modifier = Modifier
-                        .height(64.dp)
                         .fillMaxWidth()
+                        .height(64.dp)
                         .padding(top = 8.dp),
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Black,
                         contentColor = Color.White
                     ),
                     shape = RoundedCornerShape(8.dp),
-
                     ) {
                     Text(
                         text = "Save",

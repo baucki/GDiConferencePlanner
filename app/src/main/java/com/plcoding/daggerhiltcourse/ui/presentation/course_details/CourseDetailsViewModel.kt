@@ -16,6 +16,7 @@ import com.plcoding.daggerhiltcourse.data.model.CourseSpeakerCrossRef
 import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
 import com.plcoding.daggerhiltcourse.data.model.Speaker
 import com.plcoding.daggerhiltcourse.data.model.SpeakerJSON
+import com.plcoding.daggerhiltcourse.util.DataStoreHandler
 import com.plcoding.daggerhiltcourse.util.Routes
 import com.plcoding.daggerhiltcourse.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -57,17 +58,23 @@ class CourseDetailsViewModel @Inject constructor(
         when (event) {
             is CourseDetailsEvent.OnSaveClick -> {
                 viewModelScope.launch {
-                    if (courseJSON != null) {
-                        course = createCourse(event.courseJSON)
-                        localRepository.insertCourse(course!!)
-                        event.speakersJSON.forEach {
-                            speaker = createSpeaker(it)
-                            speakerRepository.insertSpeaker(speaker!!)
-
-                            courseSpeakerCrossRef = CourseSpeakerCrossRef(course!!.courseId, speaker!!.speakerId)
-                            crossRefRepository.insertCrossRef(courseSpeakerCrossRef!!)
+                    val flow = DataStoreHandler.read()
+                    flow.collect { userInfo ->
+                        if (userInfo == "") {
+                            sendUiEvent(UiEvent.Navigate(Routes.LOGIN))
+                        } else {
+                            if (courseJSON != null) {
+                                course = createCourse(event.courseJSON)
+                                localRepository.insertCourse(course!!)
+                                event.speakersJSON.forEach {
+                                    speaker = createSpeaker(it)
+                                    speakerRepository.insertSpeaker(speaker!!)
+                                    courseSpeakerCrossRef = CourseSpeakerCrossRef(course!!.courseId, speaker!!.speakerId)
+                                    crossRefRepository.insertCrossRef(courseSpeakerCrossRef!!)
+                                }
+                                sendUiEvent(UiEvent.Navigate(Routes.COURSE_NOTIFICATIONS + "?courseId=${course!!.courseId}"))
+                            }
                         }
-                        sendUiEvent(UiEvent.Navigate(Routes.COURSE_NOTIFICATIONS + "?courseId=${course!!.courseId}"))
                     }
                 }
             }

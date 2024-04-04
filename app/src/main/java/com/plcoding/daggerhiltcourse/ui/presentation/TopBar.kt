@@ -51,8 +51,6 @@ fun TopBar(
                         Routes.CLIENTS,
                         Routes.ACCOUNT,
                         Routes.SPLASH_SCREEN,
-                        Routes.LOGIN,
-                        Routes.REGISTER,
                 )) {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")

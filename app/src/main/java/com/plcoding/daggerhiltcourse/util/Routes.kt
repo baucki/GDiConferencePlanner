@@ -12,4 +12,5 @@ object Routes {
     const val SPEAKER_DETAILS = "speaker_details"
     const val LOGIN = "login"
     const val REGISTER = "register"
+    const val EDIT_ACCOUNT = "edit_account"
 }
