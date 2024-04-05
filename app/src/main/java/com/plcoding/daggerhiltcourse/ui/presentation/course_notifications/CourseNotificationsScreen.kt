@@ -87,7 +87,11 @@ fun CourseNotificationsScreen(
                 Text(
                     modifier = Modifier
                         .padding(top = 8.dp, bottom = 32.dp),
-                    text = "Uspesno ste sacuvali predavanje u svoj planer"
+                    text = "Uspesno ste sacuvali predavanje u svoj planer",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row() {
@@ -128,7 +132,7 @@ fun CourseNotificationsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Button(
-                    onClick = { CourseNotificationsEvent.OnConfirmClick(scheduler) },
+                    onClick = { viewModel.onEvent(CourseNotificationsEvent.OnConfirmClick(scheduler)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(64.dp),
@@ -139,7 +143,7 @@ fun CourseNotificationsScreen(
                     shape = RoundedCornerShape(8.dp),
                 ) {
                     Text(
-                        text = "Confirm",
+                        text = "Potvrdi",
                         style = TextStyle(
                             fontWeight = FontWeight.Bold,
                         )

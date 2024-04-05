@@ -14,6 +14,7 @@ import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.course.Re
 import com.plcoding.daggerhiltcourse.data.model.CourseJSON
 import com.plcoding.daggerhiltcourse.data.model.CourseSpeakerCrossRef
 import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
+import com.plcoding.daggerhiltcourse.data.model.Notification
 import com.plcoding.daggerhiltcourse.data.model.Speaker
 import com.plcoding.daggerhiltcourse.data.model.SpeakerJSON
 import com.plcoding.daggerhiltcourse.util.DataStoreHandler
@@ -23,6 +24,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -72,6 +74,13 @@ class CourseDetailsViewModel @Inject constructor(
                                     courseSpeakerCrossRef = CourseSpeakerCrossRef(course!!.courseId, speaker!!.speakerId)
                                     crossRefRepository.insertCrossRef(courseSpeakerCrossRef!!)
                                 }
+                                val now = LocalDateTime.now()
+                                val messageNotification = Notification(
+                                    time = now,
+                                    message = "now"
+                                )
+                                messageNotification.let(event.scheduler::schedule)
+
                                 sendUiEvent(UiEvent.Navigate(Routes.COURSE_NOTIFICATIONS + "?courseId=${course!!.courseId}"))
                             }
                         }

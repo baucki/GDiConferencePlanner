@@ -15,6 +15,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.plcoding.daggerhiltcourse.util.Routes
@@ -29,12 +30,12 @@ fun TopBar(
     val title: String = when (backStackEntry?.destination?.route) {
         Routes.HOME -> "Konferencija Beograd 2024"
         Routes.MY_AGENDA -> "Konferencija Beograd 2024"
-        Routes.CLIENTS -> "Clients"
+        Routes.CLIENTS -> "Klijenti"
         Routes.SPLASH_SCREEN -> ""
-        Routes.LOGIN -> "Login"
-        Routes.REGISTER -> "Register"
-        Routes.ACCOUNT -> "Account"
-        else -> "Details"
+        Routes.LOGIN -> "Prijava"
+        Routes.REGISTER -> "Registracija"
+        Routes.ACCOUNT -> "Nalog"
+        else -> "Detalji"
     }
     AnimatedVisibility(
         visible = topBarState.value,
@@ -58,7 +59,7 @@ fun TopBar(
                 }
             },
             backgroundColor = Color.White,
-            elevation = AppBarDefaults.TopAppBarElevation
+            elevation = 6.dp
         )
     }
 

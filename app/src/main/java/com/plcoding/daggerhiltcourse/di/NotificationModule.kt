@@ -9,7 +9,7 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.plcoding.daggerhiltcourse.R
 import com.plcoding.daggerhiltcourse.ui.presentation.MainActivity
-import com.plcoding.daggerhiltcourse.util.AlarmReceiver
+import com.plcoding.daggerhiltcourse.util.MessageNotification
 import com.plcoding.daggerhiltcourse.util.SevenDaysNotification
 import com.plcoding.daggerhiltcourse.util.TwoDaysNotification
 import dagger.Module
@@ -17,7 +17,6 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
@@ -39,7 +38,6 @@ object NotificationModule {
 
         return NotificationCompat.Builder(context, "Main Channel ID")
             .setContentTitle("GDi Konferencija 2024")
-            .setContentText("Konferencija pocinje za sedam dana")
             .setSmallIcon(R.drawable.ic_baseline_notifications_24)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -79,7 +77,6 @@ object NotificationModule {
 
         return NotificationCompat.Builder(context, "Second Channel ID")
             .setContentTitle("GDi Konferencija 2024")
-            .setContentText("Konferencija pocinje za dva dana")
             .setSmallIcon(R.drawable.ic_baseline_notifications_24)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
@@ -95,6 +92,44 @@ object NotificationModule {
         val notificationManager = NotificationManagerCompat.from(context)
         val channel = NotificationChannel(
             "Second Channel ID",
+            "second channel",
+            NotificationManager.IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(channel)
+        return notificationManager
+    }
+
+    @MessageNotification
+    @Singleton
+    @Provides
+    fun provideMessageNotificationBuilder(
+        @ApplicationContext context: Context
+    ): NotificationCompat.Builder {
+        val clickIntent = Intent(context,MainActivity::class.java)
+        val clickPendingIntent = PendingIntent.getActivity(
+            context,
+            1,
+            clickIntent,
+            PendingIntent.FLAG_IMMUTABLE
+        )
+
+        return NotificationCompat.Builder(context, "Third Channel ID")
+            .setContentTitle("GDi Konferencija 2024")
+            .setSmallIcon(R.drawable.ic_baseline_notifications_24)
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+            .addAction(0,"OPEN", clickPendingIntent)
+            .setContentIntent(clickPendingIntent)
+    }
+    @MessageNotification
+    @Singleton
+    @Provides
+    fun provideMessageNotificationManager(
+        @ApplicationContext context: Context
+    ): NotificationManagerCompat {
+        val notificationManager = NotificationManagerCompat.from(context)
+        val channel = NotificationChannel(
+            "Third Channel ID",
             "second channel",
             NotificationManager.IMPORTANCE_DEFAULT
         )

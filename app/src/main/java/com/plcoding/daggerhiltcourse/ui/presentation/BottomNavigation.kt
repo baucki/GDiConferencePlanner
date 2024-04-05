@@ -3,31 +3,23 @@ package com.plcoding.daggerhiltcourse.ui.presentation
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.BottomNavigation
 import androidx.compose.material.BottomNavigationItem
-import androidx.compose.material.Icon
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Info
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.List
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.plcoding.daggerhiltcourse.R
 import com.plcoding.daggerhiltcourse.util.Routes
 
 
@@ -49,28 +41,25 @@ fun BottomNavigationBar(
         BottomNavigation(
             modifier = modifier,
             backgroundColor = Color.DarkGray,
-            elevation = 5.dp
+            elevation = 6.dp
         ) {
             items.forEach { item ->
                 val selected = item.route == backStackEntry.value?.destination?.route
                 BottomNavigationItem(
                     selected = selected,
                     onClick = { onItemClick(item) },
-                    selectedContentColor = Color.White,
-                    unselectedContentColor = Color.Gray,
                     icon = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Icon(
-                                imageVector = item.icon,
-                                contentDescription = item.name
+                            Image(
+                                painter = painterResource(id = if (selected) item.iconSelected else item.iconUnselected),
+                                contentDescription = item.name,
                             )
-                            if (selected) {
-                                Text(
-                                    text = item.name,
-                                    textAlign = TextAlign.Center,
-                                    fontSize = 10.sp
-                                )
-                            }
+                            Text(
+                                text = item.name,
+                                textAlign = TextAlign.Center,
+                                fontSize = 10.sp,
+                                color = if (selected) Color.White else Color.Gray
+                            )
                         }
                     }
                 )
@@ -82,28 +71,34 @@ fun BottomNavigationBar(
 data class BottomNavItem(
     val name: String,
     val route: String,
-    val icon: ImageVector
+    val iconSelected: Int,
+    val iconUnselected: Int
 )
 
 val bottomNavItems = listOf(
     BottomNavItem(
-        name = "Home",
+        name = "Raspored",
         route = Routes.HOME,
-        icon = Icons.Default.Home
+        iconSelected = R.drawable.ic_schedule_selected,
+        iconUnselected = R.drawable.ic_schedule_unselected,
     ),
     BottomNavItem(
-        name = "My Agenda",
+        name = "Moj planer",
         route = Routes.MY_AGENDA,
-        icon = Icons.Default.List
+        iconSelected = R.drawable.ic_baseline_event_24_selected,
+        iconUnselected = R.drawable.ic_baseline_event_24_unselected,
+
     ),
     BottomNavItem(
-        name = "Clients",
+        name = "Klijenti",
         route = Routes.CLIENTS,
-        icon = Icons.Default.Info
+        iconSelected = R.drawable.ic_clients_selected,
+        iconUnselected = R.drawable.ic_clients_unselected,
     ),
     BottomNavItem(
-        name = "Account",
+        name = "Nalog",
         route = Routes.ACCOUNT,
-        icon = Icons.Default.AccountBox
+        iconSelected = R.drawable.ic_account_selected,
+        iconUnselected = R.drawable.ic_account_unselected,
     )
 )

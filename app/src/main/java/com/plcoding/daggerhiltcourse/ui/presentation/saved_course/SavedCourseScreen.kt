@@ -128,7 +128,7 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                 course.speakers.forEach { speaker ->
                     Column {
                         Row(
-                            modifier = Modifier.padding(all = 4.dp),
+                            modifier = Modifier.padding(vertical = 4.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.Bottom
                         ) {
@@ -150,9 +150,10 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                                 text = speaker.name + ", " + speaker.title,
                                 style = TextStyle(
                                     fontStyle = FontStyle.Italic,
-                                    fontSize = 16.sp
                                 ),
+                                fontWeight = FontWeight.Bold,
                                 modifier = Modifier
+                                    .padding(start = 16.dp)
                                     .align(Alignment.CenterVertically)
                                     .clickable {
                                         viewModel.onEvent(
@@ -187,8 +188,8 @@ fun DeleteComponentButton(viewModel: SavedCourseViewModel) {
         onDismissRequest = {
             viewModel.onEvent(SavedCourseEvent.OnDeleteDismissClick)
         },
-        title = { Text("Confirm Delete") },
-        text = { Text("Are you sure you want to delete this course from the agenda?") },
+        title = { Text("Brisanje Kursa") },
+        text = { Text("Jeste li sigurni da zelite da izbrisete ovaj kurs iz planera?") },
         confirmButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
@@ -199,7 +200,7 @@ fun DeleteComponentButton(viewModel: SavedCourseViewModel) {
                     viewModel.onEvent(SavedCourseEvent.OnDeleteConfirmClick)
                 }
             ) {
-                Text("Confirm")
+                Text("Potvrdi")
             }
         },
         dismissButton = {
@@ -212,7 +213,7 @@ fun DeleteComponentButton(viewModel: SavedCourseViewModel) {
                     viewModel.onEvent(SavedCourseEvent.OnDeleteDismissClick)
                 }
             ) {
-                Text("Cancel")
+                Text("Ponisti")
             }
         }
     )
@@ -223,14 +224,15 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
         onDismissRequest = {
             viewModel.onEvent(SavedCourseEvent.OnFeedbackDismissClick)
         },
-        title = { Text(text = "Send Feedback") },
+        title = { Text(text = "Recenzija") },
         text = {
             Column {
-                Text("We'd love to hear your feedback!")
+                Text("\n" +
+                        "Voleli bismo da čujemo vašu povratnu informaciju!")
                 TextField(
                     value = viewModel.feedbackText,
                     onValueChange = { viewModel.onEvent(SavedCourseEvent.OnFeedbackTextChangeClick(it)) },
-                    label = { Text("Feedback") },
+                    label = { Text("Recenzija") },
                     colors = TextFieldDefaults.textFieldColors(
                         focusedLabelColor = Color.Black,
                         cursorColor = Color.Black,
@@ -238,7 +240,7 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("How was your experience?")
+                Text("Kakvi su vasi utisci?")
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     modifier=Modifier.fillMaxWidth(),
@@ -268,7 +270,7 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
                     contentColor = Color.White
                 )
             ) {
-                Text("Submit")
+                Text("Posalji")
             }
         },
         dismissButton = {
@@ -282,7 +284,7 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
                 )
             )
             {
-                Text("Cancel")
+                Text("Ponisti")
             }
         }
     )
@@ -306,7 +308,7 @@ fun DeleteButton(
 
         ) {
         Text(
-            text = "Delete",
+            text = "Izbrisi",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
             )
@@ -334,7 +336,7 @@ fun FeedbackButton(
 
         ) {
         Text(
-            text = "Feedback",
+            text = "Recenzija",
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,

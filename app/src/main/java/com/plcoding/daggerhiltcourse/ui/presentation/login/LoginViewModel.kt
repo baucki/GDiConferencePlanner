@@ -40,7 +40,18 @@ class LoginViewModel @Inject constructor(
             }
             is LoginEvent.OnLoginClick -> {
                 viewModelScope.launch {
-                    val requestUser = User(usernameTextField.value, passwordTextField.value)
+                    val requestUser = User(
+                        usernameTextField.value,
+                        passwordTextField.value,
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                        )
                     if (inputIsValid(requestUser)) {
                         if (userRepository.login(requestUser)) {
                             DataStoreHandler.write("${requestUser.username}-${requestUser.password}")

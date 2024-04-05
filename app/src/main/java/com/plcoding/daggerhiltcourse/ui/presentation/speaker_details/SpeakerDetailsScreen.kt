@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -36,10 +38,12 @@ fun SpeakerDetailsScreen(viewModel: SpeakerDetailsViewModel = hiltViewModel()) {
             shape = RoundedCornerShape(16.dp),
             color = Color.White,
         ) {
-            Column {
+            Column(
+                modifier = Modifier.padding(all = 16.dp)
+            ) {
                 Row(
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.Bottom,
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(all = 16.dp)
                 ) {
                     Image(
@@ -53,13 +57,16 @@ fun SpeakerDetailsScreen(viewModel: SpeakerDetailsViewModel = hiltViewModel()) {
                         text = speaker.name + ", ${speaker.title}",
                         style = TextStyle(
                             fontStyle = FontStyle.Italic,
-                            fontSize = 16.sp
+                            fontSize = 18.sp
                         ),
+                        fontWeight = FontWeight.Bold,
                         modifier = Modifier
                             .align(Alignment.CenterVertically)
+                            .padding(start = 16.dp)
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
+                Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(bottom = 8.dp))
                 Text(
                     modifier = Modifier.padding(16.dp),
                     text = speaker.biography

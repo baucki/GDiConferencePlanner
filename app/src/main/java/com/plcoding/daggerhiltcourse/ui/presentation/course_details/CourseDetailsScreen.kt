@@ -40,11 +40,13 @@ import com.plcoding.daggerhiltcourse.data.model.Course
 import com.plcoding.daggerhiltcourse.data.model.CourseJSON
 import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
 import com.plcoding.daggerhiltcourse.data.model.Speaker
+import com.plcoding.daggerhiltcourse.util.AlarmScheduler
 import com.plcoding.daggerhiltcourse.util.UiEvent
 @Composable
 fun CourseDetailsScreen(
     onPopBackStack: () -> Unit,
     onNavigate: (UiEvent.Navigate) -> Unit,
+    scheduler: AlarmScheduler,
     viewModel: CourseDetailsViewModel = hiltViewModel()
 ) {
     val courseJSON = viewModel.courseJSON
@@ -63,12 +65,12 @@ fun CourseDetailsScreen(
         scaffoldState = scaffoldState
     ) {
         if (courseJSON != null) {
-            CourseItem(courseJSON = courseJSON, viewModel = viewModel)
+            CourseItem(courseJSON = courseJSON, viewModel = viewModel, scheduler = scheduler)
         }
     }
 }
 @Composable
-fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewModel) {
+fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewModel, scheduler: AlarmScheduler) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
     Surface(
         modifier = Modifier
@@ -117,9 +119,9 @@ fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewM
                 Column {
                     courseJSON.speakers.forEach { speaker ->
                         Row(
+                            modifier = Modifier.padding(vertical = 4.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.Bottom,
-                            modifier = Modifier.padding(all = 4.dp)
                         ) {
                             Image(
                                 painter = rememberAsyncImagePainter(speaker.imageUrl),
@@ -133,9 +135,10 @@ fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewM
                                 text = speaker.name + ", ${speaker.title}",
                                 style = TextStyle(
                                     fontStyle = FontStyle.Italic,
-                                    fontSize = 16.sp
                                 ),
+                                fontWeight = FontWeight.Bold,
                                 modifier = Modifier
+                                    .padding(start = 16.dp)
                                     .align(Alignment.CenterVertically)
                                     .clickable { viewModel.onEvent(CourseDetailsEvent.OnSpeakerClick(speaker.id)) }
                             )
@@ -153,7 +156,7 @@ fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewM
                             courseJSON.endTime,
                             courseJSON.id
                         )
-                        viewModel.onEvent(CourseDetailsEvent.OnSaveClick(course, courseJSON.speakers))
+                        viewModel.onEvent(CourseDetailsEvent.OnSaveClick(course, courseJSON.speakers, scheduler))
                     },
                     modifier = Modifier
                         .fillMaxWidth()
@@ -166,7 +169,7 @@ fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewM
                     shape = RoundedCornerShape(8.dp),
                     ) {
                     Text(
-                        text = "Save",
+                        text = "Sacuvaj u Moj Planer",
                         style = TextStyle(
                             fontWeight = FontWeight.Bold,
                         )

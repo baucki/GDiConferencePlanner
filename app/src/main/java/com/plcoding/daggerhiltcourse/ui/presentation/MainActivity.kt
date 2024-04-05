@@ -141,7 +141,8 @@ fun App(scheduler: AlarmScheduler) {
                                 },
                                 onNavigate = {
                                     navController.navigate(it.route)
-                                }
+                                },
+                                scheduler
                             )
                         }
                         composable(
@@ -239,7 +240,14 @@ fun App(scheduler: AlarmScheduler) {
                                 bottomBarState.value = true
                                 topBarState.value = true
                             }
-                            EditAccountScreen()
+                            EditAccountScreen(
+                                onPopBackStack = {
+                                    navController.popBackStack()
+                                },
+                                onNavigate = {
+                                    navController.navigate(it.route)
+                                }
+                            )
                         }
                     }
                 }

@@ -1,5 +1,8 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.my_agenda
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.local.repository.course.LocalRepository
@@ -9,6 +12,7 @@ import com.plcoding.daggerhiltcourse.util.Routes
 import com.plcoding.daggerhiltcourse.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
@@ -17,8 +21,9 @@ import javax.inject.Inject
 class MyAgendaViewModel @Inject constructor(
     private val localRepository: LocalRepository
 ): ViewModel() {
-    var courses = flowOf<List<CourseWithSpeakers>>(emptyList())
-//    val courses = localRepository.getCourses()
+    val courses = localRepository.getCourses()
+    var isLoggedIn = mutableStateOf(false)
+    var isDataFetched = mutableStateOf(false)
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -27,7 +32,10 @@ class MyAgendaViewModel @Inject constructor(
             val flow = DataStoreHandler.read()
             flow.collect { userInfo ->
                 if (userInfo != "") {
-                    courses = localRepository.getCourses()
+                    isDataFetched.value = true
+                    isLoggedIn.value = true
+                } else {
+                    isLoggedIn.value = false
                 }
             }
         }

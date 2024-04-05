@@ -1,8 +1,10 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.course_notifications
 
+import android.app.NotificationManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.app.NotificationCompat
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,12 +17,13 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
 class CourseNotificationViewModel @Inject constructor(
     private val remoteRepository: RemoteRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
 ): ViewModel() {
     var course by mutableStateOf<CourseWithSpeakersJSON?>(null)
         private set
@@ -46,19 +49,33 @@ class CourseNotificationViewModel @Inject constructor(
             is CourseNotificationsEvent.OnConfirmClick -> {
                 if (isNotifiableInSevenDays) {
                     val date = DateFormatter.dateToLocalTime(course!!.startTime).minusDays(7)
-                    val item = Notification(
+                    val sevenDaysNotification = Notification(
                         time = date,
                         message = "seven days"
                     )
-                    item.let(event.scheduler::schedule)
+                    sevenDaysNotification.let(event.scheduler::schedule)
+
+                    val now = LocalDateTime.now().plusSeconds(1)
+                    val messageNotification = Notification(
+                        time = now,
+                        message = "seven days now"
+                    )
+                    messageNotification.let( event.scheduler::schedule )
                 }
                 if (isNotifiableInTwoDays) {
                     val date = DateFormatter.dateToLocalTime(course!!.startTime).minusDays(2)
-                    val item = Notification(
+                    val twoDaysNotification = Notification(
                         time = date,
                         message = "two days"
                     )
-                    item.let(event.scheduler::schedule)
+                    twoDaysNotification.let(event.scheduler::schedule)
+//
+                    val now = LocalDateTime.now().plusSeconds(1)
+                    val messageNotification = Notification(
+                        time = now,
+                        message = "two days now"
+                    )
+                    messageNotification.let( event.scheduler::schedule )
                 }
                 sendUiEvent(UiEvent.PopBackStack)
             }

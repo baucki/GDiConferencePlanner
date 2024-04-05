@@ -23,9 +23,6 @@ class AccountViewModel @Inject constructor(
 ): ViewModel() {
 
     var isLoggedIn by mutableStateOf(false)
-    var username by mutableStateOf("")
-    var email by mutableStateOf("")
-    var profileImageUrl by mutableStateOf("")
     var user by mutableStateOf<User?>(null)
 
     private val _uiEvent = Channel<UiEvent>()
@@ -36,7 +33,7 @@ class AccountViewModel @Inject constructor(
             val flow = DataStoreHandler.read()
             flow.collect { userInfo ->
                 isLoggedIn = if (userInfo != "") {
-                    username = userInfo.split("-")[0]
+                    val username = userInfo.split("-")[0]
                     user = userRepository.findUserByUsername(username)
                     true
                 } else {
@@ -53,8 +50,8 @@ class AccountViewModel @Inject constructor(
                 viewModelScope.launch {
                     sendUiEvent(UiEvent.Navigate(Routes.LOGIN))
                     // pravim mali delay pre nego sto resetujem vrednosti u
-                    // datastore da ne bi doslo do update slike pre redirekcije na drugu starnicu
-                    delay(50)
+                    // datastore da ne bi doslo do update slike pre redirekcije na Login
+                    delay(250)
                     DataStoreHandler.write("")
                 }
             }

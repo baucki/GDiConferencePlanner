@@ -60,7 +60,7 @@ fun LoginComponent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                label = { Text("Username") },
+                label = { Text("Korisnicko ime") },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     cursorColor = Color.Black,
                     focusedBorderColor = if (viewModel.isError.value) Color.Red else Color.Black,
@@ -75,7 +75,7 @@ fun LoginComponent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                label = { Text("Password") },
+                label = { Text("Sifra") },
                 visualTransformation = PasswordVisualTransformation(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     cursorColor = Color.Black,
@@ -124,7 +124,7 @@ fun LoginComponent(
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
-                    text = "Login",
+                    text = "Prijavi se",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                     )
@@ -132,5 +132,4 @@ fun LoginComponent(
             }
         }
     }
-
 }
