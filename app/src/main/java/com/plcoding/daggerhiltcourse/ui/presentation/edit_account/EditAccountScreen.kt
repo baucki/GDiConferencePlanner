@@ -137,6 +137,12 @@ fun SignInInformation(viewModel: AccountViewModel) {
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
+        Text(
+            text = "Korisnicko Ime",
+            fontSize = 18.sp,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
         if (viewModel.user != null) {
             EditTextField(label = "Staro Korisnicko Ime", value = viewModel.user!!.username)
             EditTextField(label = "Novo Korisnicko Ime", value = "")
@@ -160,7 +166,12 @@ fun SignInInformation(viewModel: AccountViewModel) {
                     )
                 )
             }
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+            Text(
+                text = "Sifra",
+                fontSize = 18.sp,
+                modifier = Modifier.padding(bottom = 16.dp)
+            )
             EditTextField(label = "Stara Sifra", value = "")
             EditTextField(label = "Nova Sifra", value = "")
             EditTextField(label = "Ponovljena Sifra", value = "")
