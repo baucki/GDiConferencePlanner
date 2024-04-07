@@ -58,6 +58,7 @@ class MainActivity : ComponentActivity() {
 fun App(scheduler: AlarmScheduler) {
     val bottomBarState = rememberSaveable { (mutableStateOf(false)) }
     val topBarState = rememberSaveable { (mutableStateOf(false)) }
+    val paddingState = rememberSaveable { (mutableStateOf(64)) }
     DaggerHiltCourseTheme {
         val navController = rememberNavController()
         Scaffold(
@@ -76,12 +77,13 @@ fun App(scheduler: AlarmScheduler) {
                 )
             },
             content = {
-                Box(Modifier.padding(bottom = 64.dp)) {
+                Box(Modifier.padding(bottom = paddingState.value.dp)) {
                     NavHost(navController = navController, startDestination = Routes.SPLASH_SCREEN) {
                         composable(Routes.SPLASH_SCREEN) {
                             LaunchedEffect(Unit) {
                                 topBarState.value = false
                                 bottomBarState.value = false
+                                paddingState.value = 0
                             }
                             SplashScreen(navController = navController)
                         }
@@ -89,6 +91,7 @@ fun App(scheduler: AlarmScheduler) {
                             LaunchedEffect(Unit) {
                                 topBarState.value = true
                                 bottomBarState.value = false
+                                paddingState.value = 0
                             }
                             LoginScreen(
                                 onPopBackStack = {
@@ -103,6 +106,7 @@ fun App(scheduler: AlarmScheduler) {
                             LaunchedEffect(Unit) {
                                 topBarState.value = true
                                 bottomBarState.value = false
+                                paddingState.value = 0
                             }
                             RegisterScreen(
                                 onNavigate = {
@@ -114,6 +118,8 @@ fun App(scheduler: AlarmScheduler) {
                         composable(Routes.HOME){
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = true
+                                topBarState.value = true
+                                paddingState.value = 64
                             }
                             HomeScreen(
                                 onNavigate = {
@@ -134,6 +140,7 @@ fun App(scheduler: AlarmScheduler) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = false
                                 topBarState.value = true
+                                paddingState.value = 0
                             }
                             CourseDetailsScreen(
                                 onPopBackStack = {
@@ -157,6 +164,7 @@ fun App(scheduler: AlarmScheduler) {
                             LaunchedEffect(Unit) {
                                 topBarState.value = true
                                 bottomBarState.value = false
+                                paddingState.value = 0
                             }
                             SpeakerDetailsScreen()
                         }
@@ -173,6 +181,7 @@ fun App(scheduler: AlarmScheduler) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = false
                                 topBarState.value = true
+                                paddingState.value = 0
                             }
                             CourseNotificationsScreen(
                                 onPopBackStack = {
@@ -185,6 +194,7 @@ fun App(scheduler: AlarmScheduler) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = true
                                 topBarState.value = true
+                                paddingState.value = 64
                             }
                             MyAgendaScreen(
                                 onNavigate = {
@@ -204,6 +214,7 @@ fun App(scheduler: AlarmScheduler) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = false
                                 topBarState.value = true
+                                paddingState.value = 0
                             }
                             SavedCourseScreen(
                                 onPopBackStack = {
@@ -218,6 +229,7 @@ fun App(scheduler: AlarmScheduler) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = true
                                 topBarState.value = true
+                                paddingState.value = 64
                             }
                             ClientsScreen()
                         }
@@ -225,6 +237,7 @@ fun App(scheduler: AlarmScheduler) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = true
                                 topBarState.value = true
+                                paddingState.value = 64
                             }
                             AccountScreen(
                                 onPopBackStack = {
@@ -237,8 +250,9 @@ fun App(scheduler: AlarmScheduler) {
                         }
                         composable(Routes.EDIT_ACCOUNT) {
                             LaunchedEffect(Unit) {
-                                bottomBarState.value = true
+                                bottomBarState.value = false
                                 topBarState.value = true
+                                paddingState.value = 0
                             }
                             EditAccountScreen(
                                 onPopBackStack = {

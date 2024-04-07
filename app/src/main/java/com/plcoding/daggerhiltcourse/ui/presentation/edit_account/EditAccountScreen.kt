@@ -58,14 +58,25 @@ fun EditAccountScreen(
                 shape = RoundedCornerShape(16.dp),
                 color = Color.White,
             ) {
-                EditAccountComponent(viewModel)
+                PersonalInformationComponent(viewModel)
+            }
+        }
+        item {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp),
+                elevation = 6.dp,
+                shape = RoundedCornerShape(16.dp),
+                color = Color.White,
+            ) {
+                SignInInformation(viewModel)
             }
         }
     }
 }
-
 @Composable
-fun EditAccountComponent(
+fun PersonalInformationComponent(
     viewModel: AccountViewModel
 ) {
     Column(
@@ -73,21 +84,20 @@ fun EditAccountComponent(
             .padding(all = 16.dp)
     ) {
         Text(
-            text = "Edit Account",
+            text = "Podaci o korisniku",
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
         if (viewModel.user != null) {
-            EditTextField(label = "username", value = viewModel.user!!.username)
-            EditTextField(label = "Name", value = viewModel.user!!.name)
-            EditTextField(label = "Last Name", value = viewModel.user!!.lastName)
-            EditTextField(label = "email", value = viewModel.user!!.email)
-            EditTextField(label = "country", value = viewModel.user!!.country)
-            EditTextField(label = "city", value = viewModel.user!!.city)
-            EditTextField(label = "phone", value = viewModel.user!!.phone)
-            EditTextField(label = "profession", value = viewModel.user!!.profession)
+            EditTextField(label = "Ime", value = viewModel.user!!.name)
+            EditTextField(label = "Prezime", value = viewModel.user!!.lastName)
+            EditTextField(label = "Email", value = viewModel.user!!.email)
+            EditTextField(label = "Drzava", value = viewModel.user!!.country)
+            EditTextField(label = "Grad", value = viewModel.user!!.city)
+            EditTextField(label = "Telefon", value = viewModel.user!!.phone)
+            EditTextField(label = "Zanimanje", value = viewModel.user!!.profession)
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -104,14 +114,79 @@ fun EditAccountComponent(
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
-                    text = "Save Changes",
+                    text = "Sacuvaj promene",
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                     )
                 )
             }
         }
+    }
+}
 
+@Composable
+fun SignInInformation(viewModel: AccountViewModel) {
+    Column(
+        modifier = Modifier
+            .padding(all = 16.dp)
+    ) {
+        Text(
+            text = "Podaci o prijavi",
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
+
+        if (viewModel.user != null) {
+            EditTextField(label = "Staro Korisnicko Ime", value = viewModel.user!!.username)
+            EditTextField(label = "Novo Korisnicko Ime", value = "")
+            Spacer(modifier = Modifier.height(24.dp))
+            Button(
+                onClick = {  },
+                modifier = Modifier
+                    .height(64.dp)
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(8.dp),
+            ) {
+                Text(
+                    text = "Sacuvaj Promene",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                    )
+                )
+            }
+            Spacer(modifier = Modifier.height(48.dp))
+            EditTextField(label = "Stara Sifra", value = "")
+            EditTextField(label = "Nova Sifra", value = "")
+            EditTextField(label = "Ponovljena Sifra", value = "")
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Button(
+                onClick = {  },
+                modifier = Modifier
+                    .height(64.dp)
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White
+                ),
+                shape = RoundedCornerShape(8.dp),
+            ) {
+                Text(
+                    text = "Sacuvaj promene",
+                    style = TextStyle(
+                        fontWeight = FontWeight.Bold,
+                    )
+                )
+            }
+        }
     }
 }
 
@@ -130,7 +205,7 @@ fun EditTextField(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
-            label = { label },
+            label = { Text(label) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 cursorColor = Color.Black,
                 focusedBorderColor = Color.Black,

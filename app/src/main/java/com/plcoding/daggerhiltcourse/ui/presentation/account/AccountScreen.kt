@@ -69,7 +69,6 @@ fun AccountScreen(
 fun AccountComponent(
     viewModel: AccountViewModel
 ) {
-
     Column(
         modifier = Modifier.padding(all = 16.dp)
     ) {
@@ -79,7 +78,7 @@ fun AccountComponent(
                 horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                if (viewModel.user!!.imagePath != "") {
+                if (viewModel.user != null && viewModel.user!!.imagePath != "") {
                     Image(
                         painter = rememberAsyncImagePainter(viewModel.user!!.imagePath),
                         contentDescription = "${viewModel.user!!.name} ${viewModel.user!!.lastName}",
