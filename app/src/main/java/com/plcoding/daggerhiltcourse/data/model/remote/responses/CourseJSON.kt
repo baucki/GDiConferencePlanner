@@ -1,6 +1,4 @@
-package com.plcoding.daggerhiltcourse.data.model
-
-import androidx.room.PrimaryKey
+package com.plcoding.daggerhiltcourse.data.model.remote.responses
 
 data class CourseJSON (
     val title: String,

@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.user.UserRepository
-import com.plcoding.daggerhiltcourse.data.model.User
-import com.plcoding.daggerhiltcourse.util.DataStoreHandler
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.User
+import com.plcoding.daggerhiltcourse.util.handlers.DataStoreHandler
 import com.plcoding.daggerhiltcourse.util.Routes
 import com.plcoding.daggerhiltcourse.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -31,9 +31,8 @@ class AccountViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val flow = DataStoreHandler.read()
-            flow.collect { userInfo ->
-                isLoggedIn = if (userInfo != "") {
-                    val username = userInfo.split("-")[0]
+            flow.collect { username ->
+                isLoggedIn = if (username != "") {
                     user = userRepository.findUserByUsername(username)
                     true
                 } else {
@@ -62,7 +61,7 @@ class AccountViewModel @Inject constructor(
                 sendUiEvent(UiEvent.Navigate(Routes.REGISTER))
             }
             is AccountEvent.OnEditAccountClick -> {
-                sendUiEvent(UiEvent.Navigate(Routes.EDIT_ACCOUNT))
+                sendUiEvent(UiEvent.Navigate(Routes.EDIT_ACCOUNT + "?username=${user!!.username}"))
             }
         }
     }

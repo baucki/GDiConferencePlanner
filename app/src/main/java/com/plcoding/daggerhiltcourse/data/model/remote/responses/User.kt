@@ -1,4 +1,4 @@
-package com.plcoding.daggerhiltcourse.data.model
+package com.plcoding.daggerhiltcourse.data.model.remote.responses
 
 data class User(
     val username: String,

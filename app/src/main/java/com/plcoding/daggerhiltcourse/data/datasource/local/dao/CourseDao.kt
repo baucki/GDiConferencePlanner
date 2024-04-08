@@ -6,9 +6,8 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.plcoding.daggerhiltcourse.data.model.Course
-import com.plcoding.daggerhiltcourse.data.model.CourseSpeakerCrossRef
-import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
+import com.plcoding.daggerhiltcourse.data.model.local.entities.Course
+import com.plcoding.daggerhiltcourse.data.model.local.CourseWithSpeakers
 import kotlinx.coroutines.flow.Flow
 
 @Dao

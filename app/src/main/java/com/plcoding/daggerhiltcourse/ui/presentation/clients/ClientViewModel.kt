@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.client.ClientRepository
 
-import com.plcoding.daggerhiltcourse.data.model.Client
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.Client
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

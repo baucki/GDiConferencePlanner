@@ -12,7 +12,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.booleanResource
 import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
@@ -23,7 +22,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.plcoding.daggerhiltcourse.ui.presentation.account.AccountScreen
-import com.plcoding.daggerhiltcourse.ui.presentation.account.EditAccountButton
 import com.plcoding.daggerhiltcourse.ui.presentation.clients.ClientsScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.course_details.CourseDetailsScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.course_notifications.CourseNotificationsScreen
@@ -37,7 +35,7 @@ import com.plcoding.daggerhiltcourse.ui.presentation.speaker_details.SpeakerDeta
 import com.plcoding.daggerhiltcourse.ui.theme.DaggerHiltCourseTheme
 import com.plcoding.daggerhiltcourse.util.AlarmScheduler
 import com.plcoding.daggerhiltcourse.util.AndroidAlarmScheduler
-import com.plcoding.daggerhiltcourse.util.DataStoreHandler
+import com.plcoding.daggerhiltcourse.util.handlers.DataStoreHandler
 import com.plcoding.daggerhiltcourse.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -248,7 +246,15 @@ fun App(scheduler: AlarmScheduler) {
                                 }
                             )
                         }
-                        composable(Routes.EDIT_ACCOUNT) {
+                        composable(
+                            route = Routes.EDIT_ACCOUNT +"?username={username}",
+                            arguments = listOf(
+                                navArgument(name = "username") {
+                                    type = NavType.StringType
+                                    defaultValue = ""
+                                }
+                            )
+                        ) {
                             LaunchedEffect(Unit) {
                                 bottomBarState.value = false
                                 topBarState.value = true

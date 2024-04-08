@@ -4,8 +4,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.user.UserRepository
-import com.plcoding.daggerhiltcourse.data.model.User
-import com.plcoding.daggerhiltcourse.util.DataStoreHandler
+import com.plcoding.daggerhiltcourse.data.model.remote.requests.LoginRequest
+import com.plcoding.daggerhiltcourse.util.handlers.DataStoreHandler
 import com.plcoding.daggerhiltcourse.util.Routes
 import com.plcoding.daggerhiltcourse.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -40,39 +40,18 @@ class LoginViewModel @Inject constructor(
             }
             is LoginEvent.OnLoginClick -> {
                 viewModelScope.launch {
-                    val requestUser = User(
+                    val requestUser = LoginRequest(
                         usernameTextField.value,
                         passwordTextField.value,
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        "",
-                        ""
                         )
-                    if (inputIsValid(requestUser)) {
-                        if (userRepository.login(requestUser)) {
-                            DataStoreHandler.write("${requestUser.username}-${requestUser.password}")
-                            sendUiEvent(UiEvent.PopBackStack)
-                            sendUiEvent(UiEvent.Navigate(Routes.HOME))
-                        } else {
-                            isError.value = true
-                            errorMessage.value= "Podatke koje ste uneli nisu validni"
-                        }
+                    if (userRepository.login(requestUser)) {
+                        DataStoreHandler.write(requestUser.username)
+                        sendUiEvent(UiEvent.PopBackStack)
+                        sendUiEvent(UiEvent.Navigate(Routes.HOME))
                     }
                 }
             }
         }
-    }
-    private fun inputIsValid(user: User): Boolean {
-        if (user.username.length < 4) {
-            isError.value = true
-            errorMessage.value= "Username mora biti duzi od 3 karaktera"
-            return false
-        }
-        return true
     }
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {

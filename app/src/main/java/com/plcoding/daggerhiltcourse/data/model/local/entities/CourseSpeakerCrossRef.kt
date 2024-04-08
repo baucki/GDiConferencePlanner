@@ -1,4 +1,4 @@
-package com.plcoding.daggerhiltcourse.data.model
+package com.plcoding.daggerhiltcourse.data.model.local.entities
 
 import androidx.room.Entity
 @Entity(primaryKeys = ["courseId", "speakerId"])

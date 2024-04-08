@@ -1,7 +1,7 @@
 package com.plcoding.daggerhiltcourse.data.datasource.remote.repository.client
 
 import com.plcoding.daggerhiltcourse.data.datasource.remote.MyApi
-import com.plcoding.daggerhiltcourse.data.model.Client
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.Client
 import javax.inject.Inject
 
 class ClientRepositoryImpl @Inject constructor(

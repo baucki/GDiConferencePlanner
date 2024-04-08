@@ -1,15 +1,12 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.home
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.MaterialTheme
 import androidx.compose.ui.Modifier
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -26,13 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.plcoding.daggerhiltcourse.data.model.Course
-import com.plcoding.daggerhiltcourse.data.model.CourseJSON
-import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
-import com.plcoding.daggerhiltcourse.data.model.SpeakerJSON
 import com.plcoding.daggerhiltcourse.util.UiEvent
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.StateFlow
 
 @Composable
 fun HomeScreen(

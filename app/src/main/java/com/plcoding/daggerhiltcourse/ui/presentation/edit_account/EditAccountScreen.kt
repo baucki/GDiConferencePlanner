@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedTextField
@@ -20,22 +21,26 @@ import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.plcoding.daggerhiltcourse.ui.presentation.account.AccountViewModel
+import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseEvent
+import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseViewModel
 import com.plcoding.daggerhiltcourse.util.UiEvent
 
 @Composable
 fun EditAccountScreen(
     onPopBackStack: () -> Unit,
     onNavigate: (UiEvent.Navigate) -> Unit,
-    viewModel: AccountViewModel = hiltViewModel()
+    viewModel: EditAccountViewModel = hiltViewModel()
 ) {
     val user = viewModel.user
 
@@ -44,6 +49,9 @@ fun EditAccountScreen(
             when (event) {
                 is UiEvent.Navigate -> onNavigate(event)
                 is UiEvent.PopBackStack -> onPopBackStack()
+                is UiEvent.ShowChangePasswordDialog -> {
+                    viewModel.isChangePasswordPopupVisible = event.state
+                }
             }
         }
     }
@@ -71,13 +79,16 @@ fun EditAccountScreen(
                 color = Color.White,
             ) {
                 SignInInformation(viewModel)
+                if (viewModel.isChangePasswordPopupVisible) {
+                    ChangePasswordPopup(viewModel)
+                }
             }
         }
     }
 }
 @Composable
 fun PersonalInformationComponent(
-    viewModel: AccountViewModel
+    viewModel: EditAccountViewModel
 ) {
     Column(
         modifier = Modifier
@@ -91,18 +102,18 @@ fun PersonalInformationComponent(
         )
 
         if (viewModel.user != null) {
-            EditTextField(label = "Ime", value = viewModel.user!!.name)
-            EditTextField(label = "Prezime", value = viewModel.user!!.lastName)
-            EditTextField(label = "Email", value = viewModel.user!!.email)
-            EditTextField(label = "Drzava", value = viewModel.user!!.country)
-            EditTextField(label = "Grad", value = viewModel.user!!.city)
-            EditTextField(label = "Telefon", value = viewModel.user!!.phone)
-            EditTextField(label = "Zanimanje", value = viewModel.user!!.profession)
+            EditTextField("Ime", viewModel.name, viewModel.nameErrorMessage, viewModel)
+            EditTextField("Prezime", viewModel.lastName, viewModel.lastNameErrorMessage, viewModel)
+            EditTextField("Zanimanje", viewModel.profession, viewModel.professionErrorMessage, viewModel)
+            EditTextField("Email", viewModel.email, viewModel.emailErrorMessage, viewModel)
+            EditTextField("Telefon", viewModel.phone, viewModel.phoneErrorMessage, viewModel)
+            EditTextField("Drzava", viewModel.country, viewModel.countryErrorMessage, viewModel)
+            EditTextField("Grad", viewModel.city, viewModel.cityErrorMessage, viewModel)
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = {  },
+                onClick = { viewModel.onEvent(EditAccountEvent.OnChangePersonalInformationSaveClick) },
                 modifier = Modifier
                     .height(64.dp)
                     .fillMaxWidth()
@@ -125,7 +136,7 @@ fun PersonalInformationComponent(
 }
 
 @Composable
-fun SignInInformation(viewModel: AccountViewModel) {
+fun SignInInformation(viewModel: EditAccountViewModel) {
     Column(
         modifier = Modifier
             .padding(all = 16.dp)
@@ -144,11 +155,10 @@ fun SignInInformation(viewModel: AccountViewModel) {
         )
 
         if (viewModel.user != null) {
-            EditTextField(label = "Staro Korisnicko Ime", value = viewModel.user!!.username)
-            EditTextField(label = "Novo Korisnicko Ime", value = "")
+            EditTextField("Korisnicko Ime",viewModel.newUsername, viewModel.usernameErrorMessage, viewModel)
             Spacer(modifier = Modifier.height(24.dp))
             Button(
-                onClick = {  },
+                onClick = { viewModel.onEvent(EditAccountEvent.OnChangeUsernameSaveClick) },
                 modifier = Modifier
                     .height(64.dp)
                     .fillMaxWidth()
@@ -172,14 +182,13 @@ fun SignInInformation(viewModel: AccountViewModel) {
                 fontSize = 18.sp,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
-            EditTextField(label = "Stara Sifra", value = "")
-            EditTextField(label = "Nova Sifra", value = "")
-            EditTextField(label = "Ponovljena Sifra", value = "")
-
+            EditPasswordTextField("Stara Sifra", viewModel.oldPassword, viewModel.oldPasswordErrorMessage, viewModel)
+            EditPasswordTextField("Nova Sifra", viewModel.newPassword, viewModel.newPasswordErrorMessage, viewModel)
+            EditPasswordTextField("Ponovljena Sifra", viewModel.repeatedPassword, viewModel.repeatedPasswordErrorMessage,viewModel)
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = {  },
+                onClick = { viewModel.onEvent(EditAccountEvent.OnChangePasswordSaveClick) },
                 modifier = Modifier
                     .height(64.dp)
                     .fillMaxWidth()
@@ -201,29 +210,102 @@ fun SignInInformation(viewModel: AccountViewModel) {
     }
 }
 
+
+@Composable
+fun ChangePasswordPopup(viewModel: EditAccountViewModel) {
+    AlertDialog(
+        onDismissRequest = {
+            viewModel.onEvent(EditAccountEvent.OnChangePasswordDismissClick)
+        },
+        title = { Text("Promena Sifre") },
+        text = { Text("Jeste li sigurni da zelite da promenite sifru?") },
+        confirmButton = {
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White
+                ),
+                onClick = {
+                    viewModel.onEvent(EditAccountEvent.OnChangePasswordConfirmClick)
+                }
+            ) {
+                Text("Potvrdi")
+            }
+        },
+        dismissButton = {
+            Button(
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color.Black,
+                    contentColor = Color.White
+                ),
+                onClick = {
+                    viewModel.onEvent(EditAccountEvent.OnChangePasswordDismissClick)
+                }
+            ) {
+                Text("Ponisti")
+            }
+        }
+    )
+}
+
 @Composable
 fun EditTextField(
     label: String,
-    value: String,
+    value: MutableState<String>,
+    errorMessage: MutableState<String>,
+    viewModel: EditAccountViewModel
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.padding(vertical = 4.dp)
     ) {
         OutlinedTextField(
-            value = value,
-            onValueChange = {  },
+            value = value.value,
+            onValueChange = { viewModel.onEvent(EditAccountEvent.OnTextFieldChanged(label, it)) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 16.dp),
             label = { Text(label) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 cursorColor = Color.Black,
-                focusedBorderColor = Color.Black,
-                focusedLabelColor =  Color.Black,
-                unfocusedBorderColor = Color.Black,
-                unfocusedLabelColor = Color.Black,
+                focusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
+                focusedLabelColor =  if (errorMessage.value == "") Color.Black else Color.Red,
+                unfocusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
+                unfocusedLabelColor = if (errorMessage.value == "") Color.Black else Color.Red,
             )
         )
+        Text(text = errorMessage.value, color = Color.Red)
     }
 }
+
+@Composable
+fun EditPasswordTextField(
+    label: String,
+    value: MutableState<String>,
+    errorMessage: MutableState<String>,
+    viewModel: EditAccountViewModel
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.padding(vertical = 4.dp)
+    ) {
+        OutlinedTextField(
+            value = value.value,
+            onValueChange = { viewModel.onEvent(EditAccountEvent.OnTextFieldChanged(label, it)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
+            label = { Text(label) },
+            visualTransformation = PasswordVisualTransformation(),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                cursorColor = Color.Black,
+                focusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
+                focusedLabelColor =  if (errorMessage.value == "") Color.Black else Color.Red,
+                unfocusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
+                unfocusedLabelColor = if (errorMessage.value == "") Color.Black else Color.Red,
+            )
+        )
+        Text(text = errorMessage.value, color = Color.Red)
+    }
+}
+

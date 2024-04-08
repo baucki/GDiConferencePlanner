@@ -8,10 +8,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.local.repository.course.LocalRepository
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.feedback.FeedbackRepository
-import com.plcoding.daggerhiltcourse.data.model.CourseJSON
-import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
-import com.plcoding.daggerhiltcourse.data.model.Feedback
-import com.plcoding.daggerhiltcourse.util.DateFormatter
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.CourseJSON
+import com.plcoding.daggerhiltcourse.data.model.local.CourseWithSpeakers
+import com.plcoding.daggerhiltcourse.data.model.remote.requests.Feedback
+import com.plcoding.daggerhiltcourse.util.handlers.DateFormatter
 import com.plcoding.daggerhiltcourse.util.Routes
 import com.plcoding.daggerhiltcourse.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel

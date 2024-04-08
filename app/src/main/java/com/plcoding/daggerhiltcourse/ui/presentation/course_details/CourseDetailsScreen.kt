@@ -11,11 +11,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -30,16 +28,12 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.substring
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
-import com.plcoding.daggerhiltcourse.data.model.Course
-import com.plcoding.daggerhiltcourse.data.model.CourseJSON
-import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
-import com.plcoding.daggerhiltcourse.data.model.Speaker
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.CourseJSON
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.CourseWithSpeakersJSON
 import com.plcoding.daggerhiltcourse.util.AlarmScheduler
 import com.plcoding.daggerhiltcourse.util.UiEvent
 @Composable

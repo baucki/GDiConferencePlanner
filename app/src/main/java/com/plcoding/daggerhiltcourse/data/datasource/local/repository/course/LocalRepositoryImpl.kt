@@ -1,8 +1,8 @@
 package com.plcoding.daggerhiltcourse.data.datasource.local.repository.course
 
 import com.plcoding.daggerhiltcourse.data.datasource.local.dao.CourseDao
-import com.plcoding.daggerhiltcourse.data.model.Course
-import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakers
+import com.plcoding.daggerhiltcourse.data.model.local.entities.Course
+import com.plcoding.daggerhiltcourse.data.model.local.CourseWithSpeakers
 import kotlinx.coroutines.flow.Flow
 
 class LocalRepositoryImpl(

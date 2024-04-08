@@ -5,9 +5,9 @@ import androidx.room.RoomDatabase
 import com.plcoding.daggerhiltcourse.data.datasource.local.dao.CourseDao
 import com.plcoding.daggerhiltcourse.data.datasource.local.dao.CourseSpeakerCrossRefDao
 import com.plcoding.daggerhiltcourse.data.datasource.local.dao.SpeakerDao
-import com.plcoding.daggerhiltcourse.data.model.Course
-import com.plcoding.daggerhiltcourse.data.model.CourseSpeakerCrossRef
-import com.plcoding.daggerhiltcourse.data.model.Speaker
+import com.plcoding.daggerhiltcourse.data.model.local.entities.Course
+import com.plcoding.daggerhiltcourse.data.model.local.entities.CourseSpeakerCrossRef
+import com.plcoding.daggerhiltcourse.data.model.local.entities.Speaker
 
 @Database(
     entities = [Course::class, Speaker::class, CourseSpeakerCrossRef::class],

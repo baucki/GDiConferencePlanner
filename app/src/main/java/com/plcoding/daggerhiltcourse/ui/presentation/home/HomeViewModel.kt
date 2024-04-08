@@ -6,8 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.course.RemoteRepository
-import com.plcoding.daggerhiltcourse.data.model.CourseWithSpeakersJSON
-import com.plcoding.daggerhiltcourse.util.DateFormatter
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.CourseWithSpeakersJSON
+import com.plcoding.daggerhiltcourse.util.handlers.DateFormatter
 import com.plcoding.daggerhiltcourse.util.Routes
 import com.plcoding.daggerhiltcourse.util.UiEvent
 import dagger.Lazy

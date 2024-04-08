@@ -13,15 +13,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.plcoding.daggerhiltcourse.R
-import com.plcoding.daggerhiltcourse.ui.presentation.home.HomeViewModel
-import com.plcoding.daggerhiltcourse.util.DataStoreHandler
 import com.plcoding.daggerhiltcourse.util.Routes
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.map
 
 @Composable
 fun SplashScreen(navController: NavController) {
