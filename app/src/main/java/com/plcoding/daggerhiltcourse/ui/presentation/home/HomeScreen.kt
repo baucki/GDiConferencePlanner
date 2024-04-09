@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
@@ -56,13 +57,10 @@ fun HomeScreen(
     val selectedTabKey = tabsContent.keys.elementAtOrNull(viewModel.selectedTabIndex)
     val selectedTabCourses = selectedTabKey?.let { tabsContent[it] } ?: emptyList()
     viewModel.tabsCourses = selectedTabCourses
-    val isVisibleMap: MutableMap<Long, MutableState<Boolean>> = mutableMapOf()
-    val isBreakMap: MutableMap<Long, MutableState<Boolean>> = mutableMapOf()
 
     LaunchedEffect(true) {
         viewModel.fetchAllCourses()
     }
-
 
     LaunchedEffect(true) {
         viewModel.uiEvent.collect { event ->
@@ -96,21 +94,10 @@ fun HomeScreen(
                 }
             }
             SearchComponent(viewModel)
-
-
+            Divider(color = Color.Black, thickness = 2.dp)
             LazyColumn {
                 if (viewModel.searchText != "") {
                     items(viewModel.filteredData) { course ->
-                        val isBreak = course.speakers.isEmpty()
-                        viewModel.isTimeVisibleMap.value = viewModel.isTimeVisibleMap.value.toMutableMap().apply {
-                            put(course.id, isBreak)
-                        }
-
-                        val isVisible = startTime != course.startTime
-                        viewModel.IsBreakMap.value = viewModel.IsBreakMap.value.toMutableMap().apply {
-                            put(course.id, isVisible)
-                        }
-
                         CourseItemFiltered(
                             viewModel,
                             course = course,
@@ -120,23 +107,9 @@ fun HomeScreen(
                     }
                 } else {
                     items(selectedTabCourses.sortedBy { it.startTime }) { course ->
-                        val isBreak = course.speakers.isEmpty()
-                        viewModel.isTimeVisibleMap.value = viewModel.isTimeVisibleMap.value.toMutableMap().apply {
-                            put(course.id, isBreak)
-                        }
-                        isBreakMap[course.id] = rememberSaveable { mutableStateOf(isBreak) }
-
-                        val isVisible = startTime != course.startTime
-                        viewModel.IsBreakMap.value = viewModel.IsBreakMap.value.toMutableMap().apply {
-                            put(course.id, isVisible)
-                        }
-                        isVisibleMap[course.id] = rememberSaveable { mutableStateOf(isVisible) }
-
                         CourseItem(
                             viewModel,
                             course = course,
-                            isVisibleMap[course.id]!!,
-                            isBreakMap[course.id]!!,
                             modifier = Modifier.clickable { viewModel.onEvent(HomeEvent.OnCourseClick(course)) }
                         )
                         startTime = course.startTime
@@ -153,7 +126,7 @@ fun SearchComponent(viewModel: HomeViewModel) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(end = 16.dp, start = 16.dp, top = 16.dp, bottom = 4.dp),
+            .padding(end = 16.dp, start = 16.dp, top = 8.dp, bottom = 8.dp),
         elevation = 6.dp,
         shape = RoundedCornerShape(16.dp),
         color = Color.White,

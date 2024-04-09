@@ -39,8 +39,6 @@ class HomeViewModel @Inject constructor(
     var isTimeVisibleMap = mutableStateOf<Map<Long, Boolean>>(emptyMap())
     var IsBreakMap = mutableStateOf<Map<Long, Boolean>>(emptyMap())
 
-    var isListLoaded by mutableStateOf(false)
-
     var searchText by mutableStateOf("")
     val filteredData by derivedStateOf { filterData(tabsCourses.sortedBy { it.startTime }, searchText) }
 
@@ -59,7 +57,6 @@ class HomeViewModel @Inject constructor(
         return if (query.isEmpty()) {
             data
         } else {
-            isListLoaded = true
             data.filter {course ->
                 course.title.contains(query, ignoreCase = true)
                     || course.startTime.contains(query, ignoreCase = true)

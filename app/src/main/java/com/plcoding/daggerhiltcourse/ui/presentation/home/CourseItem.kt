@@ -25,8 +25,6 @@ import com.plcoding.daggerhiltcourse.data.model.remote.responses.CourseWithSpeak
 fun CourseItem(
     viewModel: HomeViewModel,
     course: CourseWithSpeakersJSON,
-    isVisible: MutableState<Boolean>,
-    isBreak: MutableState<Boolean>,
     modifier: Modifier = Modifier
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
@@ -47,11 +45,12 @@ fun CourseItem(
                     .padding(start = 12.dp)
                     .width(screenWidth * 0.13f),
             ) {
-                if (isVisible.value) {
-                    Text(text = course.startTime.split("T")[1].substring(0, 5))
-                } else {
-                    Text(text = "")
-                }
+                Text(text = course.startTime.split("T")[1].substring(0, 5))
+//                if (isVisible.value) {
+//                    Text(text = course.startTime.split("T")[1].substring(0, 5))
+//                } else {
+//                    Text(text = "")
+//                }
             }
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -62,7 +61,7 @@ fun CourseItem(
                     style = TextStyle(fontWeight = FontWeight.Bold)
                 )
                 Text(text = course.location)
-                if (!isBreak.value) {
+                if (course.speakers.isNotEmpty()) {
                     Column {
                         course.speakers.forEach { speaker ->
                             Text(
@@ -83,8 +82,6 @@ fun CourseItemFiltered(
     modifier: Modifier = Modifier
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
-    val isBreak =  viewModel.isTimeVisibleMap.value[course.id]
-    val isVisible = viewModel.IsBreakMap.value[course.id]
     Surface(
         modifier = modifier
             .fillMaxWidth()
@@ -102,12 +99,7 @@ fun CourseItemFiltered(
                     .padding(start = 12.dp)
                     .width(screenWidth * 0.13f),
             ) {
-                if (isVisible!!) {
-//                if (viewModel.isVisibleMap.value[course.id]!!) {
-                    Text(text = course.startTime.split("T")[1].substring(0, 5))
-                } else {
-                    Text(text = "")
-                }
+                Text(text = course.startTime.split("T")[1].substring(0, 5))
             }
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -118,8 +110,7 @@ fun CourseItemFiltered(
                     style = TextStyle(fontWeight = FontWeight.Bold)
                 )
                 Text(text = course.location)
-                if (!isBreak!!) {
-//                if (!viewModel.isBreakMap.value[course.id]!!) {
+                if (course.speakers.isNotEmpty()) {
                     Column {
                         course.speakers.forEach { speaker ->
                             Text(
