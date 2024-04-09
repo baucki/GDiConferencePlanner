@@ -23,6 +23,7 @@ import com.plcoding.daggerhiltcourse.data.model.remote.responses.CourseWithSpeak
 
 @Composable
 fun CourseItem(
+    viewModel: HomeViewModel,
     course: CourseWithSpeakersJSON,
     isVisible: MutableState<Boolean>,
     isBreak: MutableState<Boolean>,
@@ -32,7 +33,7 @@ fun CourseItem(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .padding(12.dp),
+            .padding(16.dp),
         elevation = 6.dp,
         shape = RoundedCornerShape(16.dp),
         color = Color.White,
@@ -75,4 +76,60 @@ fun CourseItem(
         }
     }
 }
-
+@Composable
+fun CourseItemFiltered(
+    viewModel: HomeViewModel,
+    course: CourseWithSpeakersJSON,
+    modifier: Modifier = Modifier
+) {
+    val screenWidth = LocalConfiguration.current.screenWidthDp.dp
+    val isBreak =  viewModel.isTimeVisibleMap.value[course.id]
+    val isVisible = viewModel.IsBreakMap.value[course.id]
+    Surface(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        elevation = 6.dp,
+        shape = RoundedCornerShape(16.dp),
+        color = Color.White,
+    ) {
+        Row(
+            modifier = modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(start = 12.dp)
+                    .width(screenWidth * 0.13f),
+            ) {
+                if (isVisible!!) {
+//                if (viewModel.isVisibleMap.value[course.id]!!) {
+                    Text(text = course.startTime.split("T")[1].substring(0, 5))
+                } else {
+                    Text(text = "")
+                }
+            }
+            Column(
+                verticalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.padding(all = 8.dp)
+            ) {
+                Text(
+                    text = course.title,
+                    style = TextStyle(fontWeight = FontWeight.Bold)
+                )
+                Text(text = course.location)
+                if (!isBreak!!) {
+//                if (!viewModel.isBreakMap.value[course.id]!!) {
+                    Column {
+                        course.speakers.forEach { speaker ->
+                            Text(
+                                text = speaker.name + ", " + speaker.title ,
+                                style = TextStyle(fontStyle = FontStyle.Italic)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

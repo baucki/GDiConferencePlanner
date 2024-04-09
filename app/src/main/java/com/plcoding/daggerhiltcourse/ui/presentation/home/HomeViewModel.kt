@@ -1,5 +1,6 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.home
 
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -32,6 +33,17 @@ class HomeViewModel @Inject constructor(
     private val _courses = MutableStateFlow<List<CourseWithSpeakersJSON>>(emptyList())
     val courses: StateFlow<List<CourseWithSpeakersJSON>> = _courses
 
+    var selectedTabIndex by mutableStateOf(0)
+    var tabsCourses by mutableStateOf<List<CourseWithSpeakersJSON>>(emptyList())
+
+    var isTimeVisibleMap = mutableStateOf<Map<Long, Boolean>>(emptyMap())
+    var IsBreakMap = mutableStateOf<Map<Long, Boolean>>(emptyMap())
+
+    var isListLoaded by mutableStateOf(false)
+
+    var searchText by mutableStateOf("")
+    val filteredData by derivedStateOf { filterData(tabsCourses.sortedBy { it.startTime }, searchText) }
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -41,6 +53,22 @@ class HomeViewModel @Inject constructor(
                 sendUiEvent(UiEvent.Navigate(Routes.COURSE_DETAILS + "?courseId=${event.course.id}"))
             }
             else -> Unit
+        }
+    }
+    private fun filterData(data: List<CourseWithSpeakersJSON>, query: String): List<CourseWithSpeakersJSON> {
+        return if (query.isEmpty()) {
+            data
+        } else {
+            isListLoaded = true
+            data.filter {course ->
+                course.title.contains(query, ignoreCase = true)
+                    || course.startTime.contains(query, ignoreCase = true)
+                    || course.location.contains(query, ignoreCase = true)
+                    || course.speakers.any { speaker ->
+                        speaker.name.contains(query, ignoreCase = true)
+                        || speaker.title.contains(query, ignoreCase = true)
+                }
+            }
         }
     }
     private fun sortTabsData() {

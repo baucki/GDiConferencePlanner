@@ -48,6 +48,9 @@ class LoginViewModel @Inject constructor(
                         DataStoreHandler.write(requestUser.username)
                         sendUiEvent(UiEvent.PopBackStack)
                         sendUiEvent(UiEvent.Navigate(Routes.HOME))
+                    } else {
+                        isError.value = true
+                        errorMessage.value = "Pogresno korisnicko ime ili lozinka. Molimo pokusajte ponovo."
                     }
                 }
             }

@@ -113,7 +113,7 @@ fun CourseItem(
     Surface(
         modifier = modifier
             .fillMaxWidth()
-            .padding(12.dp),
+            .padding(16.dp),
         elevation = 6.dp,
         color = Color.White,
         shape = RoundedCornerShape(16.dp),

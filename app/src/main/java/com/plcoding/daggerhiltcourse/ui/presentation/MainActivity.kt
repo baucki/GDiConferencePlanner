@@ -29,7 +29,7 @@ import com.plcoding.daggerhiltcourse.ui.presentation.edit_account.EditAccountScr
 import com.plcoding.daggerhiltcourse.ui.presentation.home.HomeScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.login.LoginScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.my_agenda.MyAgendaScreen
-import com.plcoding.daggerhiltcourse.ui.presentation.register.RegisterScreen
+import com.plcoding.daggerhiltcourse.ui.presentation.registration.RegistrationScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.speaker_details.SpeakerDetailsScreen
 import com.plcoding.daggerhiltcourse.ui.theme.DaggerHiltCourseTheme
@@ -106,7 +106,10 @@ fun App(scheduler: AlarmScheduler) {
                                 bottomBarState.value = false
                                 paddingState.value = 0
                             }
-                            RegisterScreen(
+                            RegistrationScreen(
+                                onPopBackStack = {
+                                    navController.popBackStack()
+                                },
                                 onNavigate = {
                                     navController.navigate(it.route)
                                 }

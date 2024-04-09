@@ -88,7 +88,9 @@ fun AccountComponent(
                 } else {
                     Image(
                         painter = painterResource(id = R.drawable.ic_baseline_account_circle_24),
-                        contentDescription = null)
+                        contentDescription = null,
+                        modifier = Modifier.size(64.dp)
+                    )
                 }
                 Column(
                     modifier = Modifier.padding(start = 16.dp),
@@ -127,9 +129,9 @@ fun AccountComponent(
             Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(bottom = 8.dp))
 
             ContactDetail(label = "Email:", value = viewModel.user!!.email)
+            ContactDetail(label = "Phone:", value = viewModel.user!!.phone)
             ContactDetail(label = "Country:", value = viewModel.user!!.country)
             ContactDetail(label = "City:", value = viewModel.user!!.city)
-            ContactDetail(label = "Phone:", value = viewModel.user!!.phone)
 
         } else {
             Column(

@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.plcoding.daggerhiltcourse.util.UiEvent
 
@@ -47,6 +48,20 @@ fun LoginComponent(
         shape = RoundedCornerShape(16.dp),
         color = Color.White,
     ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(
+                text = "Prijava",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                modifier = Modifier
+                    .padding(top = 16.dp)
+            )
+        }
         Column(
             modifier = Modifier
                 .padding(16.dp)

@@ -63,6 +63,7 @@ class CourseDetailsViewModel @Inject constructor(
                     val flow = DataStoreHandler.read()
                     flow.collect { userInfo ->
                         if (userInfo == "") {
+                            sendUiEvent(UiEvent.PopBackStack)
                             sendUiEvent(UiEvent.Navigate(Routes.LOGIN))
                         } else {
                             if (courseJSON != null) {
