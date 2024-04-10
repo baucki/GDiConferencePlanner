@@ -60,30 +60,28 @@ class CourseDetailsViewModel @Inject constructor(
         when (event) {
             is CourseDetailsEvent.OnSaveClick -> {
                 viewModelScope.launch {
-                    val flow = DataStoreHandler.read()
-                    flow.collect { userInfo ->
-                        if (userInfo == "") {
-                            sendUiEvent(UiEvent.PopBackStack)
-                            sendUiEvent(UiEvent.Navigate(Routes.LOGIN))
-                        } else {
-                            if (courseJSON != null) {
-                                course = createCourse(event.courseJSON)
-                                localRepository.insertCourse(course!!)
-                                event.speakersJSON.forEach {
-                                    speaker = createSpeaker(it)
-                                    speakerRepository.insertSpeaker(speaker!!)
-                                    courseSpeakerCrossRef = CourseSpeakerCrossRef(course!!.courseId, speaker!!.speakerId)
-                                    crossRefRepository.insertCrossRef(courseSpeakerCrossRef!!)
-                                }
-                                val now = LocalDateTime.now()
-                                val messageNotification = Notification(
-                                    time = now,
-                                    message = "now"
-                                )
-                                messageNotification.let(event.scheduler::schedule)
-
-                                sendUiEvent(UiEvent.Navigate(Routes.COURSE_NOTIFICATIONS + "?courseId=${course!!.courseId}"))
+                    val userInfo = DataStoreHandler.read()
+                    if (userInfo == "") {
+                        sendUiEvent(UiEvent.PopBackStack)
+                        sendUiEvent(UiEvent.Navigate(Routes.LOGIN))
+                    } else {
+                        if (courseJSON != null) {
+                            course = createCourse(event.courseJSON)
+                            localRepository.insertCourse(course!!)
+                            event.speakersJSON.forEach {
+                                speaker = createSpeaker(it)
+                                speakerRepository.insertSpeaker(speaker!!)
+                                courseSpeakerCrossRef = CourseSpeakerCrossRef(course!!.courseId, speaker!!.speakerId)
+                                crossRefRepository.insertCrossRef(courseSpeakerCrossRef!!)
                             }
+                            val now = LocalDateTime.now()
+                            val messageNotification = Notification(
+                                time = now,
+                                message = "now"
+                            )
+                            messageNotification.let(event.scheduler::schedule)
+
+                            sendUiEvent(UiEvent.Navigate(Routes.COURSE_NOTIFICATIONS + "?courseId=${course!!.courseId}"))
                         }
                     }
                 }

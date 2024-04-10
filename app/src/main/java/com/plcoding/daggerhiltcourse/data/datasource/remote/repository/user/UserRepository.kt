@@ -5,10 +5,11 @@ import com.plcoding.daggerhiltcourse.data.model.remote.requests.ChangePersonalIn
 import com.plcoding.daggerhiltcourse.data.model.remote.requests.ChangeUsernameRequest
 import com.plcoding.daggerhiltcourse.data.model.remote.responses.User
 import com.plcoding.daggerhiltcourse.data.model.remote.requests.LoginRequest
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.Token
 
 interface UserRepository {
     suspend fun addUser(user: User): Boolean
-    suspend fun login(user: LoginRequest): Boolean
+    suspend fun login(user: LoginRequest): Token
     suspend fun changeUsername(request: ChangeUsernameRequest): Boolean
     suspend fun changePassword(request: ChangePasswordRequest): Boolean
     suspend fun changePersonalInformation(request: ChangePersonalInformationRequest): Boolean

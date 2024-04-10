@@ -9,6 +9,7 @@ import com.plcoding.daggerhiltcourse.data.model.remote.requests.ChangePasswordRe
 import com.plcoding.daggerhiltcourse.data.model.remote.requests.ChangePersonalInformationRequest
 import com.plcoding.daggerhiltcourse.data.model.remote.requests.ChangeUsernameRequest
 import com.plcoding.daggerhiltcourse.data.model.remote.requests.LoginRequest
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.Token
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
@@ -16,7 +17,7 @@ import retrofit2.http.Path
 
 interface MyApi {
     @POST("users/login")
-    suspend fun login(@Body user: LoginRequest): Boolean
+    suspend fun login(@Body user: LoginRequest): Token
     @POST("users/add")
     suspend fun addUser(@Body user: User): Boolean
     @POST("users/change-username")

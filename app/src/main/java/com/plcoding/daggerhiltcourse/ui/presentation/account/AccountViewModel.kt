@@ -1,5 +1,6 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.account
 
+import android.media.session.MediaSession.Token
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -10,11 +11,13 @@ import com.plcoding.daggerhiltcourse.data.model.remote.responses.User
 import com.plcoding.daggerhiltcourse.util.handlers.DataStoreHandler
 import com.plcoding.daggerhiltcourse.util.Routes
 import com.plcoding.daggerhiltcourse.util.UiEvent
+import com.plcoding.daggerhiltcourse.util.handlers.TokenHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import javax.inject.Inject
 
 @HiltViewModel
@@ -30,15 +33,19 @@ class AccountViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val flow = DataStoreHandler.read()
-            flow.collect { username ->
-                isLoggedIn = if (username != "") {
-                    user = userRepository.findUserByUsername(username)
-                    true
-                } else {
-                    user = null
-                    false
-                }
+            val token = DataStoreHandler.read()
+//            val jwtDecoded = TokenHandler.decodeToken(token)
+//            val username = JSONObject(jwtDecoded).getString("username")
+//            println(username)
+//            isLoggedIn = false
+            isLoggedIn = if (token != "") {
+                val jwtDecoded = TokenHandler.decodeToken(token)
+                val username = JSONObject(jwtDecoded).getString("username")
+                user = userRepository.findUserByUsername(username)
+                true
+            } else {
+                user = null
+                false
             }
         }
     }
@@ -48,9 +55,8 @@ class AccountViewModel @Inject constructor(
             is  AccountEvent.OnLogoutClick -> {
                 viewModelScope.launch {
                     sendUiEvent(UiEvent.Navigate(Routes.LOGIN))
-                    // pravim mali delay pre nego sto resetujem vrednosti u
-                    // datastore da ne bi doslo do update slike pre redirekcije na Login
-                    delay(250)
+                    delay(300)
+                    isLoggedIn = false
                     DataStoreHandler.write("")
                 }
             }

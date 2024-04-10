@@ -6,6 +6,7 @@ import com.plcoding.daggerhiltcourse.data.model.remote.requests.ChangePersonalIn
 import com.plcoding.daggerhiltcourse.data.model.remote.requests.ChangeUsernameRequest
 import com.plcoding.daggerhiltcourse.data.model.remote.responses.User
 import com.plcoding.daggerhiltcourse.data.model.remote.requests.LoginRequest
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.Token
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
@@ -14,7 +15,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun addUser(user: User): Boolean {
         return api.addUser(user)
     }
-    override suspend fun login(user: LoginRequest): Boolean {
+    override suspend fun login(user: LoginRequest): Token {
         return api.login(user)
     }
 

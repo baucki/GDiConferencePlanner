@@ -39,7 +39,7 @@ import com.plcoding.daggerhiltcourse.util.handlers.DataStoreHandler
 import com.plcoding.daggerhiltcourse.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "user")
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "token")
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

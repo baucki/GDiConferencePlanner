@@ -115,7 +115,8 @@ class RegistrationViewModel @Inject constructor(
                             country.value,
                             city.value,
                             profession.value,
-                            phone.value
+                            phone.value,
+                            "USER"
                         )
                         if (userRepository.addUser(user)) {
                             DataStoreHandler.write(username.value)

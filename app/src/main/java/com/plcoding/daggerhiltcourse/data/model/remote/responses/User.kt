@@ -10,5 +10,6 @@ data class User(
     val country: String,
     val city: String,
     val profession: String,
-    val phone: String
+    val phone: String,
+    val type: String
 )

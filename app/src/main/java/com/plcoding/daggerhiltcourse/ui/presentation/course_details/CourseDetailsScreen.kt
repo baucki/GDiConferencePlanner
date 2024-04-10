@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -22,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
@@ -123,6 +125,7 @@ fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewM
                                 contentScale = ContentScale.Fit,
                                 modifier = Modifier
                                     .size(64.dp)
+                                    .clip(CircleShape)
                                     .clickable { viewModel.onEvent(CourseDetailsEvent.OnSpeakerClick(speaker.id)) }
                             )
                             Text(

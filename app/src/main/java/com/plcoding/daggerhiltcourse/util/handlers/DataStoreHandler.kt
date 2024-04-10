@@ -5,19 +5,18 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
 object DataStoreHandler {
 
-    val PREFERENCE_KEY = stringPreferencesKey("user")
+    val PREFERENCE_KEY = stringPreferencesKey("token")
 
     lateinit var dataStore: DataStore<Preferences>
-    fun read(): Flow<String> {
-        val flow: Flow<String> = dataStore.data
-            .map { user ->
-                user[PREFERENCE_KEY] ?: ""
-            }
-        return flow
+    suspend fun read(): String {
+        return dataStore.data.map {
+            it[PREFERENCE_KEY] ?: ""
+        }.first()
     }
     suspend fun write(value: String) {
             dataStore.edit { user ->

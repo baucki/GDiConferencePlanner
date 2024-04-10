@@ -5,13 +5,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.user.UserRepository
 import com.plcoding.daggerhiltcourse.data.model.remote.requests.LoginRequest
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.Token
 import com.plcoding.daggerhiltcourse.util.handlers.DataStoreHandler
 import com.plcoding.daggerhiltcourse.util.Routes
 import com.plcoding.daggerhiltcourse.util.UiEvent
+import com.plcoding.daggerhiltcourse.util.handlers.TokenHandler
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.util.Base64
 import javax.inject.Inject
 
 @HiltViewModel
@@ -44,8 +48,9 @@ class LoginViewModel @Inject constructor(
                         usernameTextField.value,
                         passwordTextField.value,
                         )
-                    if (userRepository.login(requestUser)) {
-                        DataStoreHandler.write(requestUser.username)
+                    val token: Token = userRepository.login(requestUser)
+                    if (token.value != "") {
+                        DataStoreHandler.write(token.value)
                         sendUiEvent(UiEvent.PopBackStack)
                         sendUiEvent(UiEvent.Navigate(Routes.HOME))
                     } else {

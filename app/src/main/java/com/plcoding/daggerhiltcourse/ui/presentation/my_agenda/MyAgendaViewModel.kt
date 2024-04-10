@@ -24,14 +24,12 @@ class MyAgendaViewModel @Inject constructor(
     val uiEvent = _uiEvent.receiveAsFlow()
     init {
         viewModelScope.launch {
-            val flow = DataStoreHandler.read()
-            flow.collect { userInfo ->
-                if (userInfo != "") {
-                    isDataFetched.value = true
-                    isLoggedIn.value = true
-                } else {
-                    isLoggedIn.value = false
-                }
+            val userInfo = DataStoreHandler.read()
+            if (userInfo != "") {
+                isDataFetched.value = true
+                isLoggedIn.value = true
+            } else {
+                isLoggedIn.value = false
             }
         }
     }
