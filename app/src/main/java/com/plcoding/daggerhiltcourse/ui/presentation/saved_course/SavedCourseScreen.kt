@@ -3,6 +3,7 @@ package com.plcoding.daggerhiltcourse.ui.presentation.saved_course
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,11 +12,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -74,107 +77,128 @@ fun SavedCourseScreen(
 fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
 
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        elevation = 4.dp,
-        color = Color.White,
-        shape = RoundedCornerShape(16.dp)
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(top = 8.dp),
-                text = course.course.title,
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp,
-                )
-            )
-            Row(
-                modifier = Modifier.padding(top = 8.dp)
+    LazyColumn {
+        item {
+            Box(
+                modifier = Modifier.fillMaxSize()
             ) {
-                Text(text = course.course.location + ", ")
-                Text(text = "${course.course.startTime.split("T")[1].substring(0,5)} - ${course.course.endTime.split("T")[1].substring(0,5)}")
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                modifier = Modifier
-                    .padding(top = 8.dp, bottom = 32.dp)
-                    .height(screenHeight * 0.3f),
-                text = course.course.description
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-
-        }
-        Column(
-            modifier = Modifier
-                .padding(all = 16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom
-        ) {
-            if (course.speakers.isNotEmpty()) {
-                course.speakers.forEach { speaker ->
-                    Column {
-                        Row(
-                            modifier = Modifier.padding(vertical = 4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.Bottom
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    elevation = 4.dp,
+                    color = Color.White,
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .fillMaxWidth()
                         ) {
-                            Image(
-                                painter = rememberAsyncImagePainter(speaker.imageUrl),
-                                contentDescription = speaker.name,
-                                contentScale = ContentScale.Fit,
-                                modifier = Modifier
-                                    .size(64.dp)
-                                    .clip(CircleShape)
-                                    .clickable {
-                                        viewModel.onEvent(
-                                            SavedCourseEvent.OnSpeakerClick(
-                                                speaker.speakerId
-                                            )
-                                        )
-                                    }
-                            )
                             Text(
-                                text = speaker.name + ", " + speaker.title,
-                                style = TextStyle(
-                                    fontStyle = FontStyle.Italic,
-                                ),
-                                fontWeight = FontWeight.Bold,
                                 modifier = Modifier
-                                    .padding(start = 16.dp)
-                                    .align(Alignment.CenterVertically)
-                                    .clickable {
-                                        viewModel.onEvent(
-                                            SavedCourseEvent.OnSpeakerClick(
-                                                speaker.speakerId
-                                            )
-                                        )
-                                    }
+                                    .padding(top = 8.dp),
+                                text = course.course.title,
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 22.sp,
+                                )
                             )
+                            Row(
+                                modifier = Modifier.padding(top = 8.dp)
+                            ) {
+                                Text(text = course.course.location + ", ")
+                                Text(
+                                    text = "${
+                                        course.course.startTime.split("T")[1].substring(
+                                            0,
+                                            5
+                                        )
+                                    } - ${course.course.endTime.split("T")[1].substring(0, 5)}"
+                                )
+                            }
+                            Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(bottom = 4.dp))
+                            Text(
+                                modifier = Modifier
+                                    .padding(top = 8.dp, bottom = 32.dp)
+                                    .height(screenHeight * 0.3f),
+                                text = course.course.description
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+
+                        }
+                        Column(
+                            modifier = Modifier
+                                .padding(all = 16.dp)
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.Bottom
+                        ) {
+                            if (course.speakers.isNotEmpty()) {
+                                course.speakers.forEach { speaker ->
+                                    Column {
+                                        Row(
+                                            modifier = Modifier.padding(vertical = 4.dp),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.Bottom
+                                        ) {
+                                            Image(
+                                                painter = rememberAsyncImagePainter(speaker.imageUrl),
+                                                contentDescription = speaker.name,
+                                                contentScale = ContentScale.Fit,
+                                                modifier = Modifier
+                                                    .size(64.dp)
+                                                    .clip(CircleShape)
+                                                    .clickable {
+                                                        viewModel.onEvent(
+                                                            SavedCourseEvent.OnSpeakerClick(
+                                                                speaker.speakerId
+                                                            )
+                                                        )
+                                                    }
+                                            )
+                                            Text(
+                                                text = speaker.name + ", " + speaker.title,
+                                                style = TextStyle(
+                                                    fontStyle = FontStyle.Italic,
+                                                ),
+                                                fontWeight = FontWeight.Bold,
+                                                modifier = Modifier
+                                                    .padding(start = 16.dp)
+                                                    .align(Alignment.CenterVertically)
+                                                    .clickable {
+                                                        viewModel.onEvent(
+                                                            SavedCourseEvent.OnSpeakerClick(
+                                                                speaker.speakerId
+                                                            )
+                                                        )
+                                                    }
+                                            )
+                                        }
+                                    }
+                                }
+                                if (viewModel.isFinished) {
+                                    FeedbackButton(viewModel)
+                                } else {
+                                    DeleteButton(viewModel)
+                                }
+                            }
+                        }
+                        if (viewModel.showDeleteDialog) {
+                            DeleteComponentButton(viewModel)
+                        }
+                        if (viewModel.showFeedbackDialog) {
+                            FeedbackDialog(viewModel)
                         }
                     }
                 }
-                if (viewModel.isFinished) {
-                    FeedbackButton(viewModel)
-                } else {
-                    DeleteButton(viewModel)
-                }
             }
-        }
-        if (viewModel.showDeleteDialog) {
-            DeleteComponentButton(viewModel)
-        }
-        if (viewModel.showFeedbackDialog) {
-            FeedbackDialog(viewModel)
+
         }
     }
+
 }
 
 @Composable

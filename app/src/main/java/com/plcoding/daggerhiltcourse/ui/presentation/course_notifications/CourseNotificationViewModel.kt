@@ -53,7 +53,7 @@ class CourseNotificationViewModel @Inject constructor(
                     )
                     sevenDaysNotification.let(event.scheduler::schedule)
 
-                    val now = LocalDateTime.now().plusSeconds(1)
+                    val now = LocalDateTime.now().minusMinutes(1)
                     val messageNotification = Notification(
                         time = now,
                         message = "seven days now"
@@ -68,7 +68,7 @@ class CourseNotificationViewModel @Inject constructor(
                     )
                     twoDaysNotification.let(event.scheduler::schedule)
 //
-                    val now = LocalDateTime.now().plusSeconds(1)
+                    val now = LocalDateTime.now().minusMinutes(1)
                     val messageNotification = Notification(
                         time = now,
                         message = "two days now"

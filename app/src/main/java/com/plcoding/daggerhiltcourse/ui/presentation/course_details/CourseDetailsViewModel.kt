@@ -74,7 +74,7 @@ class CourseDetailsViewModel @Inject constructor(
                                 courseSpeakerCrossRef = CourseSpeakerCrossRef(course!!.courseId, speaker!!.speakerId)
                                 crossRefRepository.insertCrossRef(courseSpeakerCrossRef!!)
                             }
-                            val now = LocalDateTime.now()
+                            val now = LocalDateTime.now().minusMinutes(1)
                             val messageNotification = Notification(
                                 time = now,
                                 message = "now"

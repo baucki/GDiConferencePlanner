@@ -34,10 +34,6 @@ class AccountViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val token = DataStoreHandler.read()
-//            val jwtDecoded = TokenHandler.decodeToken(token)
-//            val username = JSONObject(jwtDecoded).getString("username")
-//            println(username)
-//            isLoggedIn = false
             isLoggedIn = if (token != "") {
                 val jwtDecoded = TokenHandler.decodeToken(token)
                 val username = JSONObject(jwtDecoded).getString("username")

@@ -16,6 +16,7 @@ import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxColors
 import androidx.compose.material.CheckboxDefaults
+import androidx.compose.material.Divider
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -83,7 +84,7 @@ fun CourseNotificationsScreen(
                     Text(text = course.location + ", ")
                     Text(text = "${course.startTime.split("T")[1].substring(0,5)} - ${course.endTime.split("T")[1].substring(0,5)}")
                 }
-                Spacer(modifier = Modifier.height(8.dp))
+                Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
                 Text(
                     modifier = Modifier
                         .padding(top = 8.dp, bottom = 32.dp),

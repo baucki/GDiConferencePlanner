@@ -13,4 +13,5 @@ object Routes {
     const val LOGIN = "login"
     const val REGISTER = "register"
     const val EDIT_ACCOUNT = "edit_account"
+    const val QR_CODE = "qr_code"
 }

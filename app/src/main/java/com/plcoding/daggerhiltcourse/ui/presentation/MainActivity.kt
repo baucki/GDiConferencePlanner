@@ -1,12 +1,15 @@
 package com.plcoding.daggerhiltcourse.ui.presentation
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.material.icons.Icons
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -16,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -29,6 +33,8 @@ import com.plcoding.daggerhiltcourse.ui.presentation.edit_account.EditAccountScr
 import com.plcoding.daggerhiltcourse.ui.presentation.home.HomeScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.login.LoginScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.my_agenda.MyAgendaScreen
+import com.plcoding.daggerhiltcourse.ui.presentation.qr_code.QrCodeScreen
+import com.plcoding.daggerhiltcourse.ui.presentation.qr_code.QrCodeViewModel
 import com.plcoding.daggerhiltcourse.ui.presentation.registration.RegistrationScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseScreen
 import com.plcoding.daggerhiltcourse.ui.presentation.speaker_details.SpeakerDetailsScreen
@@ -42,18 +48,25 @@ import dagger.hilt.android.AndroidEntryPoint
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "token")
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val viewModel: QrCodeViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val scheduler = AndroidAlarmScheduler(this)
         val myDataStore: DataStore<Preferences> = dataStore
         DataStoreHandler.dataStore = myDataStore
         setContent {
-            App(scheduler)
+            App(scheduler, viewModel)
         }
+    }
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        viewModel.handleActivityResult(requestCode, resultCode, data)
     }
 }
 @Composable
-fun App(scheduler: AlarmScheduler) {
+fun App(scheduler: AlarmScheduler, viewModel: QrCodeViewModel) {
     val bottomBarState = rememberSaveable { (mutableStateOf(false)) }
     val topBarState = rememberSaveable { (mutableStateOf(false)) }
     val paddingState = rememberSaveable { (mutableStateOf(64)) }
@@ -271,6 +284,14 @@ fun App(scheduler: AlarmScheduler) {
                                     navController.navigate(it.route)
                                 }
                             )
+                        }
+                        composable(Routes.QR_CODE) {
+                            LaunchedEffect(Unit) {
+                                bottomBarState.value = true
+                                topBarState.value = true
+                                paddingState.value = 64
+                            }
+                            QrCodeScreen(viewModel)
                         }
                     }
                 }

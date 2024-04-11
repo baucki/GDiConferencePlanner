@@ -35,6 +35,7 @@ fun TopBar(
         Routes.LOGIN -> "Prijava"
         Routes.REGISTER -> "Registracija"
         Routes.ACCOUNT -> "Nalog"
+        Routes.QR_CODE -> "QR Kod"
         else -> "Detalji"
     }
     AnimatedVisibility(
@@ -52,6 +53,7 @@ fun TopBar(
                         Routes.CLIENTS,
                         Routes.ACCOUNT,
                         Routes.SPLASH_SCREEN,
+                        Routes.QR_CODE
                 )) {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")

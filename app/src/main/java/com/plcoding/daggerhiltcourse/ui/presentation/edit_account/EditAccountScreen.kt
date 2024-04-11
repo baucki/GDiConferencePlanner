@@ -56,7 +56,7 @@ fun EditAccountScreen(
         }
     }
 
-    LazyColumn() {
+    LazyColumn {
         item {
             Surface(
                 modifier = Modifier

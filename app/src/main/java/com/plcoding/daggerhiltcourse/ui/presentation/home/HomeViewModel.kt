@@ -36,9 +36,6 @@ class HomeViewModel @Inject constructor(
     var selectedTabIndex by mutableStateOf(0)
     var tabsCourses by mutableStateOf<List<CourseWithSpeakersJSON>>(emptyList())
 
-    var isTimeVisibleMap = mutableStateOf<Map<Long, Boolean>>(emptyMap())
-    var IsBreakMap = mutableStateOf<Map<Long, Boolean>>(emptyMap())
-
     var searchText by mutableStateOf("")
     val filteredData by derivedStateOf { filterData(tabsCourses.sortedBy { it.startTime }, searchText) }
 

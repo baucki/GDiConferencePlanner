@@ -3,6 +3,7 @@ package com.plcoding.daggerhiltcourse.ui.presentation.course_details
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,22 +12,27 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -66,113 +72,144 @@ fun CourseDetailsScreen(
     }
 }
 @Composable
-fun CourseItem(courseJSON: CourseWithSpeakersJSON, viewModel: CourseDetailsViewModel, scheduler: AlarmScheduler) {
+fun CourseItem(
+    courseJSON: CourseWithSpeakersJSON,
+    viewModel: CourseDetailsViewModel,
+    scheduler: AlarmScheduler,
+) {
     val screenHeight = LocalConfiguration.current.screenHeightDp.dp
-    Surface(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp),
-        elevation = 4.dp,
-        color = Color.White,
-        shape = RoundedCornerShape(16.dp)
+    LazyColumn(
+        modifier = Modifier.fillMaxSize()
     ) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .fillMaxSize()
-        ) {
-            Text(
-                modifier = Modifier
-                    .padding(top = 8.dp),
-                text = courseJSON.title,
-                style = TextStyle(
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 22.sp,
-                )
-            )
-            Row(
-                modifier = Modifier.padding(top = 4.dp)
+        item(1) {
+            Box(
+                modifier = Modifier.fillMaxSize()
             ) {
-                Text(text = courseJSON.location + ", ")
-                Text(text = "${courseJSON.startTime.split("T")[1].substring(0,5)} - ${courseJSON.endTime.split("T")[1].substring(0,5)}")
-            }
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(
-                modifier = Modifier
-                    .padding(top = 8.dp, bottom = 32.dp)
-                    .height(screenHeight * 0.3f),
-                text = courseJSON.description
-            )
-            Spacer(modifier = Modifier.height(2.dp))
-        }
-        Column(
-            modifier = Modifier
-                .padding(all = 16.dp)
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.Bottom,
-        ) {
-            if (courseJSON.speakers.isNotEmpty()) {
-                Column {
-                    courseJSON.speakers.forEach { speaker ->
-                        Row(
-                            modifier = Modifier.padding(vertical = 4.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.Bottom,
+                Surface(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp),
+                    elevation = 4.dp,
+                    color = Color.White,
+                    shape = RoundedCornerShape(16.dp),
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .padding(16.dp)
+//                                .fillMaxSize()
                         ) {
-                            Image(
-                                painter = rememberAsyncImagePainter(speaker.imageUrl),
-                                contentDescription = speaker.name,
-                                contentScale = ContentScale.Fit,
-                                modifier = Modifier
-                                    .size(64.dp)
-                                    .clip(CircleShape)
-                                    .clickable { viewModel.onEvent(CourseDetailsEvent.OnSpeakerClick(speaker.id)) }
-                            )
                             Text(
-                                text = speaker.name + ", ${speaker.title}",
-                                style = TextStyle(
-                                    fontStyle = FontStyle.Italic,
-                                ),
-                                fontWeight = FontWeight.Bold,
                                 modifier = Modifier
-                                    .padding(start = 16.dp)
-                                    .align(Alignment.CenterVertically)
-                                    .clickable { viewModel.onEvent(CourseDetailsEvent.OnSpeakerClick(speaker.id)) }
+                                    .padding(top = 8.dp),
+                                text = courseJSON.title,
+                                style = TextStyle(
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 22.sp,
+                                )
                             )
+                            Row(
+                                modifier = Modifier.padding(top = 4.dp)
+                            ) {
+                                Text(text = courseJSON.location + ", ")
+                                Text(text = "${courseJSON.startTime.split("T")[1].substring(0,5)} - ${courseJSON.endTime.split("T")[1].substring(0,5)}")
+                            }
+                            Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(vertical = 4.dp))
+                            Text(
+                                modifier = Modifier
+                                    .padding(top = 8.dp, bottom = 32.dp)
+                                    .height(screenHeight * 0.3f),
+                                text = courseJSON.description
+                            )
+                            Spacer(modifier = Modifier.height(2.dp))
+                        }
+                        Column(
+                            modifier = Modifier
+                                .padding(all = 16.dp)
+                                .fillMaxSize(),
+                            verticalArrangement = Arrangement.Bottom,
+                        ) {
+                            if (courseJSON.speakers.isNotEmpty()) {
+                                Column {
+                                    courseJSON.speakers.forEach { speaker ->
+                                        Row(
+                                            modifier = Modifier.padding(vertical = 4.dp),
+                                            horizontalArrangement = Arrangement.SpaceBetween,
+                                            verticalAlignment = Alignment.Bottom,
+                                        ) {
+                                            Image(
+                                                painter = rememberAsyncImagePainter(speaker.imageUrl),
+                                                contentDescription = speaker.name,
+                                                contentScale = ContentScale.Fit,
+                                                modifier = Modifier
+                                                    .size(64.dp)
+                                                    .clip(CircleShape)
+                                                    .clickable {
+                                                        viewModel.onEvent(
+                                                            CourseDetailsEvent.OnSpeakerClick(
+                                                                speaker.id
+                                                            )
+                                                        )
+                                                    }
+                                            )
+                                            Text(
+                                                text = speaker.name + ", ${speaker.title}",
+                                                style = TextStyle(
+                                                    fontStyle = FontStyle.Italic,
+                                                ),
+                                                fontWeight = FontWeight.Bold,
+                                                modifier = Modifier
+                                                    .padding(start = 16.dp)
+                                                    .align(Alignment.CenterVertically)
+                                                    .clickable {
+                                                        viewModel.onEvent(
+                                                            CourseDetailsEvent.OnSpeakerClick(
+                                                                speaker.id
+                                                            )
+                                                        )
+                                                    }
+                                            )
+                                        }
+                                    }
+                                }
+
+                                Button(
+                                    onClick = {
+                                        val course = CourseJSON(
+                                            courseJSON.title,
+                                            courseJSON.description,
+                                            courseJSON.location,
+                                            courseJSON.startTime,
+                                            courseJSON.endTime,
+                                            courseJSON.id
+                                        )
+                                        viewModel.onEvent(CourseDetailsEvent.OnSaveClick(course, courseJSON.speakers, scheduler))
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(64.dp)
+                                        .padding(top = 8.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        backgroundColor = Color.Black,
+                                        contentColor = Color.White
+                                    ),
+                                    shape = RoundedCornerShape(8.dp),
+                                ) {
+                                    Text(
+                                        text = "Sacuvaj u Moj Planer",
+                                        style = TextStyle(
+                                            fontWeight = FontWeight.Bold,
+                                        )
+                                    )
+                                }
+                            }
                         }
                     }
-                }
-
-                Button(
-                    onClick = {
-                        val course = CourseJSON(
-                            courseJSON.title,
-                            courseJSON.description,
-                            courseJSON.location,
-                            courseJSON.startTime,
-                            courseJSON.endTime,
-                            courseJSON.id
-                        )
-                        viewModel.onEvent(CourseDetailsEvent.OnSaveClick(course, courseJSON.speakers, scheduler))
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(64.dp)
-                        .padding(top = 8.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.Black,
-                        contentColor = Color.White
-                    ),
-                    shape = RoundedCornerShape(8.dp),
-                    ) {
-                    Text(
-                        text = "Sacuvaj u Moj Planer",
-                        style = TextStyle(
-                            fontWeight = FontWeight.Bold,
-                        )
-                    )
                 }
             }
         }
     }
+
 }

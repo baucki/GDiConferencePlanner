@@ -96,6 +96,13 @@ val bottomNavItems = listOf(
         iconUnselected = R.drawable.ic_clients_unselected,
     ),
     BottomNavItem(
+        name = "QrCode",
+        route = Routes.QR_CODE,
+        iconSelected = R.drawable.ic_qr_code_generator_selected,
+        iconUnselected = R.drawable.ic_qr_code_generator_unselected,
+    ),
+
+    BottomNavItem(
         name = "Nalog",
         route = Routes.ACCOUNT,
         iconSelected = R.drawable.ic_account_selected,
