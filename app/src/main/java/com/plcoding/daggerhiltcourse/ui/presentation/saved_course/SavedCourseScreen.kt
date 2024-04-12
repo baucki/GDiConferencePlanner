@@ -80,7 +80,7 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
     LazyColumn {
         item {
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillParentMaxSize()
             ) {
                 Surface(
                     modifier = Modifier
@@ -113,10 +113,7 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                                 Text(text = course.course.location + ", ")
                                 Text(
                                     text = "${
-                                        course.course.startTime.split("T")[1].substring(
-                                            0,
-                                            5
-                                        )
+                                        course.course.startTime.split("T")[1].substring(0, 5)
                                     } - ${course.course.endTime.split("T")[1].substring(0, 5)}"
                                 )
                             }

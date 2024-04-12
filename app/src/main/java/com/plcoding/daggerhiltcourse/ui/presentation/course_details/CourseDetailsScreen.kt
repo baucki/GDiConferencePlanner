@@ -81,9 +81,9 @@ fun CourseItem(
     LazyColumn(
         modifier = Modifier.fillMaxSize()
     ) {
-        item(1) {
+        item {
             Box(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillParentMaxSize()
             ) {
                 Surface(
                     modifier = Modifier

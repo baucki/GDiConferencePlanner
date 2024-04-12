@@ -30,11 +30,11 @@ fun QrCodeAdminScreen(viewModel: QrCodeViewModel) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(onClick = { viewModel.startScan(context) }) {
-            Text("Scan QR Code")
+            Text("Skenirajte QR Kod")
         }
 
         scannedResult?.let { result ->
-            Text(text = "Scanned Result: $result")
+            Text(text = "Rezultati skeniranja: $result")
         }
     }
 }

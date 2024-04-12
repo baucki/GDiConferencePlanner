@@ -118,11 +118,15 @@ class RegistrationViewModel @Inject constructor(
                             phone.value,
                             "USER"
                         )
-                        if (userRepository.addUser(user)) {
-                            DataStoreHandler.write(username.value)
+                        val token = userRepository.addUser(user)
+                        println(token.value)
+                        if (token.value != "") {
+                            DataStoreHandler.write(token.value)
                             sendUiEvent(UiEvent.PopBackStack)
                             sendUiEvent(UiEvent.PopBackStack)
                             sendUiEvent(UiEvent.Navigate(Routes.HOME))
+                        } else {
+                            repeatedPasswordErrorMessage.value = "Korisnicko ime je zauzeto, molimo vas pokusajte ponovo"
                         }
                     }
                 }

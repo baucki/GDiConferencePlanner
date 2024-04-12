@@ -111,7 +111,7 @@ fun CourseItem(
 ) {
     val screenWidth = LocalConfiguration.current.screenWidthDp.dp
     Surface(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         elevation = 6.dp,

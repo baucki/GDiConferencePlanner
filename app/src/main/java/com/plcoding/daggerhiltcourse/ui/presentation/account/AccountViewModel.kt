@@ -33,6 +33,7 @@ class AccountViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
+//            DataStoreHandler.write("")
             val token = DataStoreHandler.read()
             isLoggedIn = if (token != "") {
                 val jwtDecoded = TokenHandler.decodeToken(token)

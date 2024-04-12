@@ -37,5 +37,8 @@ fun QrCodeScreen(viewModel: QrCodeViewModel) {
         "ADMIN" -> {
             QrCodeAdminScreen(viewModel)
         }
+        else -> {
+            QrCodeNoAccessScreen()
+        }
     }
 }

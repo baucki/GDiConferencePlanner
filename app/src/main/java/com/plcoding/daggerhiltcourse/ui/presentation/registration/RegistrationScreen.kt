@@ -38,7 +38,12 @@ fun RegistrationScreen(
     viewModel: RegistrationViewModel = hiltViewModel()
 ) {
     LaunchedEffect(true) {
-
+        viewModel.uiEvent.collect { event ->
+            when (event) {
+                is UiEvent.PopBackStack -> onPopBackStack()
+                is UiEvent.Navigate -> onNavigate(event)
+            }
+        }
     }
     LazyColumn() {
         item {

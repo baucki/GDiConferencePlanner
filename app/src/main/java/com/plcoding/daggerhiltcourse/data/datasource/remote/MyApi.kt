@@ -19,7 +19,7 @@ interface MyApi {
     @POST("users/login")
     suspend fun login(@Body user: LoginRequest): Token
     @POST("users/add")
-    suspend fun addUser(@Body user: User): Boolean
+    suspend fun addUser(@Body user: User): Token
     @POST("users/change-username")
     suspend fun changeUsername(@Body request: ChangeUsernameRequest): Boolean
     @POST("users/change-password")

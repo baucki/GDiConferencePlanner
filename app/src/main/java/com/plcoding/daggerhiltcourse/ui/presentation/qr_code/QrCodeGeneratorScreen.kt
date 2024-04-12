@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
@@ -25,13 +28,13 @@ fun QrCodeGeneratorScreen(username: String) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val qrCodeBitmap = generateQRCodeBitmap(username)
-        Image(bitmap = qrCodeBitmap, contentDescription = "QR Code", modifier = Modifier.size(400.dp))
+        Image(bitmap = qrCodeBitmap, contentDescription = "QR Code", modifier = Modifier.size(200.dp))
     }
 }
 
 @Composable
 fun generateQRCodeBitmap(content: String): ImageBitmap {
     val barcodeEncoder = BarcodeEncoder()
-    val bitmap = barcodeEncoder.encodeBitmap(content, BarcodeFormat.QR_CODE, 400, 400)
+    val bitmap = barcodeEncoder.encodeBitmap(content, BarcodeFormat.QR_CODE, 200, 200)
     return bitmap.asImageBitmap()
 }

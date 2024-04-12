@@ -12,7 +12,7 @@ import javax.inject.Inject
 class UserRepositoryImpl @Inject constructor(
     private val api: MyApi
 ): UserRepository {
-    override suspend fun addUser(user: User): Boolean {
+    override suspend fun addUser(user: User): Token {
         return api.addUser(user)
     }
     override suspend fun login(user: LoginRequest): Token {
