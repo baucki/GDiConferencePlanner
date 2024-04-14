@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -38,7 +39,7 @@ fun SpeakerDetailsScreen(viewModel: SpeakerDetailsViewModel = hiltViewModel()) {
                 .padding(16.dp),
             elevation = 6.dp,
             shape = RoundedCornerShape(16.dp),
-            color = Color.White,
+            color = MaterialTheme.colors.surface,
         ) {
             Column(
                 modifier = Modifier.padding(all = 16.dp)
@@ -58,6 +59,7 @@ fun SpeakerDetailsScreen(viewModel: SpeakerDetailsViewModel = hiltViewModel()) {
                     )
                     Text(
                         text = speaker.name + ", ${speaker.title}",
+                        color = MaterialTheme.colors.primary,
                         style = TextStyle(
                             fontStyle = FontStyle.Italic,
                             fontSize = 18.sp
@@ -72,7 +74,8 @@ fun SpeakerDetailsScreen(viewModel: SpeakerDetailsViewModel = hiltViewModel()) {
                 Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(bottom = 8.dp))
                 Text(
                     modifier = Modifier.padding(16.dp),
-                    text = speaker.biography
+                    text = speaker.biography,
+                    color = MaterialTheme.colors.primary,
                 )
             }
         }

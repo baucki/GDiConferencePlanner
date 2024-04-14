@@ -11,6 +11,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -53,7 +54,7 @@ fun RegistrationScreen(
                     .padding(12.dp),
                 elevation = 6.dp,
                 shape = RoundedCornerShape(16.dp),
-                color = Color.White
+                color = MaterialTheme.colors.surface
             ) {
                 RegistrationComponent(viewModel)
             }
@@ -77,6 +78,7 @@ fun RegistrationComponent(
         ) {
             Text(
                 text = "Registracija",
+                color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 modifier = Modifier
@@ -97,7 +99,6 @@ fun RegistrationComponent(
         EditPasswordTextField("Sifra", viewModel.password, viewModel.passwordErrorMessage, viewModel)
         EditPasswordTextField("Ponovljena Sifra", viewModel.repeatedPassword, viewModel.repeatedPasswordErrorMessage, viewModel)
 
-
         Spacer(modifier = Modifier.height(24.dp))
 
         Button(
@@ -107,13 +108,14 @@ fun RegistrationComponent(
                 .fillMaxWidth()
                 .padding(top = 8.dp),
             colors = ButtonDefaults.buttonColors(
-                backgroundColor = Color.Black,
-                contentColor = Color.White
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = MaterialTheme.colors.onPrimary,
             ),
             shape = RoundedCornerShape(8.dp),
         ) {
             Text(
                 text = "Sacuvaj promene",
+                color = MaterialTheme.colors.onPrimary,
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
                 )
@@ -142,14 +144,14 @@ fun EditTextField(
                 .padding(bottom = 16.dp),
             label = { Text(label) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                cursorColor = Color.Black,
-                focusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
-                focusedLabelColor =  if (errorMessage.value == "") Color.Black else Color.Red,
-                unfocusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
-                unfocusedLabelColor = if (errorMessage.value == "") Color.Black else Color.Red,
+                cursorColor = MaterialTheme.colors.primary,
+                focusedBorderColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                focusedLabelColor =  if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                unfocusedBorderColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                unfocusedLabelColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
             )
         )
-        Text(text = errorMessage.value, color = Color.Red)
+        Text(text = errorMessage.value, color = Color(0xFFF44336))
     }
 }
 
@@ -173,13 +175,13 @@ fun EditPasswordTextField(
             label = { Text(label) },
             visualTransformation = PasswordVisualTransformation(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                cursorColor = Color.Black,
-                focusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
-                focusedLabelColor =  if (errorMessage.value == "") Color.Black else Color.Red,
-                unfocusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
-                unfocusedLabelColor = if (errorMessage.value == "") Color.Black else Color.Red,
+                cursorColor = MaterialTheme.colors.primary,
+                focusedBorderColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                focusedLabelColor =  if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                unfocusedBorderColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                unfocusedLabelColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
             )
         )
-        Text(text = errorMessage.value, color = Color.Red)
+        Text(text = errorMessage.value, color = Color(0xFFF44336))
     }
 }

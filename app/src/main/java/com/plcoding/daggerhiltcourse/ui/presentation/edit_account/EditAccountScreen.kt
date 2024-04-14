@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -64,7 +65,7 @@ fun EditAccountScreen(
                     .padding(12.dp),
                 elevation = 6.dp,
                 shape = RoundedCornerShape(16.dp),
-                color = Color.White,
+                color = MaterialTheme.colors.surface,
             ) {
                 PersonalInformationComponent(viewModel)
             }
@@ -76,7 +77,7 @@ fun EditAccountScreen(
                     .padding(12.dp),
                 elevation = 6.dp,
                 shape = RoundedCornerShape(16.dp),
-                color = Color.White,
+                color = MaterialTheme.colors.surface,
             ) {
                 SignInInformation(viewModel)
                 if (viewModel.isChangePasswordPopupVisible) {
@@ -96,6 +97,7 @@ fun PersonalInformationComponent(
     ) {
         Text(
             text = "Podaci o korisniku",
+            color = MaterialTheme.colors.primary,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -119,13 +121,14 @@ fun PersonalInformationComponent(
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary,
                 ),
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
                     text = "Sacuvaj promene",
+                    color = MaterialTheme.colors.onPrimary,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                     )
@@ -143,6 +146,7 @@ fun SignInInformation(viewModel: EditAccountViewModel) {
     ) {
         Text(
             text = "Podaci o prijavi",
+            color = MaterialTheme.colors.primary,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -150,6 +154,7 @@ fun SignInInformation(viewModel: EditAccountViewModel) {
 
         Text(
             text = "Korisnicko Ime",
+            color = MaterialTheme.colors.primary,
             fontSize = 18.sp,
             modifier = Modifier.padding(bottom = 16.dp)
         )
@@ -164,13 +169,14 @@ fun SignInInformation(viewModel: EditAccountViewModel) {
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary,
                 ),
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
                     text = "Sacuvaj Promene",
+                    color = MaterialTheme.colors.onPrimary,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                     )
@@ -194,13 +200,14 @@ fun SignInInformation(viewModel: EditAccountViewModel) {
                     .fillMaxWidth()
                     .padding(top = 8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary,
                 ),
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
                     text = "Sacuvaj promene",
+                    color = MaterialTheme.colors.onPrimary,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                     )
@@ -217,32 +224,32 @@ fun ChangePasswordPopup(viewModel: EditAccountViewModel) {
         onDismissRequest = {
             viewModel.onEvent(EditAccountEvent.OnChangePasswordDismissClick)
         },
-        title = { Text("Promena Sifre") },
-        text = { Text("Jeste li sigurni da zelite da promenite sifru?") },
+        title = { Text(text  = "Promena Sifre", color = MaterialTheme.colors.primary) },
+        text = { Text(text = "Jeste li sigurni da zelite da promenite sifru?", color = MaterialTheme.colors.primary,) },
         confirmButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary,
                 ),
                 onClick = {
                     viewModel.onEvent(EditAccountEvent.OnChangePasswordConfirmClick)
                 }
             ) {
-                Text("Potvrdi")
+                Text(text = "Potvrdi", color = MaterialTheme.colors.onPrimary)
             }
         },
         dismissButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary,
                 ),
                 onClick = {
                     viewModel.onEvent(EditAccountEvent.OnChangePasswordDismissClick)
                 }
             ) {
-                Text("Ponisti")
+                Text(text = "Ponisti", color = MaterialTheme.colors.onPrimary)
             }
         }
     )
@@ -267,14 +274,14 @@ fun EditTextField(
                 .padding(bottom = 16.dp),
             label = { Text(label) },
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                cursorColor = Color.Black,
-                focusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
-                focusedLabelColor =  if (errorMessage.value == "") Color.Black else Color.Red,
-                unfocusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
-                unfocusedLabelColor = if (errorMessage.value == "") Color.Black else Color.Red,
+                cursorColor = MaterialTheme.colors.primary,
+                focusedBorderColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                focusedLabelColor =  if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                unfocusedBorderColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                unfocusedLabelColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
             )
         )
-        Text(text = errorMessage.value, color = Color.Red)
+        Text(text = errorMessage.value, color = Color(0xFFF44336))
     }
 }
 
@@ -298,14 +305,14 @@ fun EditPasswordTextField(
             label = { Text(label) },
             visualTransformation = PasswordVisualTransformation(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                cursorColor = Color.Black,
-                focusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
-                focusedLabelColor =  if (errorMessage.value == "") Color.Black else Color.Red,
-                unfocusedBorderColor = if (errorMessage.value == "") Color.Black else Color.Red,
-                unfocusedLabelColor = if (errorMessage.value == "") Color.Black else Color.Red,
+                cursorColor = MaterialTheme.colors.primary,
+                focusedBorderColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                focusedLabelColor =  if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                unfocusedBorderColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
+                unfocusedLabelColor = if (errorMessage.value == "") MaterialTheme.colors.primary else Color(0xFFF44336),
             )
         )
-        Text(text = errorMessage.value, color = Color.Red)
+        Text(text = errorMessage.value, color = Color(0xFFF44336))
     }
 }
 

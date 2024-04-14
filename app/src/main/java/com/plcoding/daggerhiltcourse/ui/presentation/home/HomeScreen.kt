@@ -16,6 +16,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.material.Tab
@@ -83,7 +84,7 @@ fun HomeScreen(
         Column {
             TabRow(
                 selectedTabIndex = viewModel.selectedTabIndex,
-                backgroundColor = Color.White
+                backgroundColor = MaterialTheme.colors.background
             ) {
                 tabsContent.keys.forEachIndexed { index, key ->
                     Tab(
@@ -94,7 +95,7 @@ fun HomeScreen(
                 }
             }
             SearchComponent(viewModel)
-            Divider(color = Color.Black, thickness = 2.dp)
+            Divider(color = MaterialTheme.colors.primary, thickness = 2.dp)
             LazyColumn {
                 if (viewModel.searchText != "") {
                     items(viewModel.filteredData) { course ->
@@ -129,18 +130,18 @@ fun SearchComponent(viewModel: HomeViewModel) {
             .padding(end = 16.dp, start = 16.dp, top = 8.dp, bottom = 8.dp),
         elevation = 6.dp,
         shape = RoundedCornerShape(16.dp),
-        color = Color.White,
+        color = MaterialTheme.colors.surface,
     ) {
         TextField(
             value = viewModel.searchText,
             onValueChange = { viewModel.searchText = it },
             placeholder = { Text("Pretraga", style = TextStyle(color = Color.Gray)) },
             colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color(0xFFFFFFFF),
-                cursorColor = Color.Black,
+                backgroundColor = MaterialTheme.colors.surface,
+                cursorColor = MaterialTheme.colors.primary,
                 focusedIndicatorColor = Color.Transparent,
                 unfocusedIndicatorColor = Color.Transparent,
-                textColor = Color.Black
+                textColor = MaterialTheme.colors.primary
             ),
             keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Done),
             keyboardActions = KeyboardActions(onDone = {  }),

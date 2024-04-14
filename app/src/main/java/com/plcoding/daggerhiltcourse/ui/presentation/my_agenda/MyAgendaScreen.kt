@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +22,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -74,11 +76,13 @@ fun MyAgendaScreen(
                 Image(
                     painter = painterResource(id = R.drawable.ic_my_agenda_empty),
                     contentDescription = null,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                     modifier = Modifier.size(120.dp)
                 )
                 Text(
                     modifier = Modifier.padding(horizontal = 64.dp),
                     text = "Moj planer je prazan",
+                    color = MaterialTheme.colors.primary,
                     textAlign = TextAlign.Center
                 )
             }
@@ -93,11 +97,13 @@ fun MyAgendaScreen(
             Image(
                 painter = painterResource(id = R.drawable.ic_my_agenda_no_access),
                 contentDescription = null,
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                 modifier = Modifier.size(120.dp)
             )
             Text(
                 modifier = Modifier.padding(horizontal = 64.dp),
                 text = "Prijavite se za pristup planeru",
+                color = MaterialTheme.colors.primary,
                 textAlign = TextAlign.Center
             )
         }
@@ -115,7 +121,7 @@ fun CourseItem(
             .fillMaxWidth()
             .padding(16.dp),
         elevation = 6.dp,
-        color = Color.White,
+        color = MaterialTheme.colors.surface,
         shape = RoundedCornerShape(16.dp),
     ) {
         Row(
@@ -131,15 +137,22 @@ fun CourseItem(
             ) {
 
                 val date = DateFormatter.formatDate(course.course.startTime.split("T")[0])
-                Text(text = date)
+                Text(
+                    text = date,
+                    color = MaterialTheme.colors.primary
+                )
 //                        Text(text = date.split(" ")[0])
 //                        Text(text = date.split(" ")[1])
-                Text(text = course.course.startTime.split("T")[1].substring(0, 5))
+                Text(
+                    text = course.course.startTime.split("T")[1].substring(0, 5),
+                    color = MaterialTheme.colors.primary
+                )
 
             }
             Column(modifier = Modifier.padding(all = 8.dp)) {
                 Text(
                     text = course.course.title,
+                    color = MaterialTheme.colors.primary,
                     style = TextStyle(fontWeight = FontWeight.Bold)
                 )
                 Text(text = course.course.location)
@@ -147,6 +160,7 @@ fun CourseItem(
                     Column {
                         Text(
                             text = speaker.name + ", " + speaker.title,
+                            color = MaterialTheme.colors.primary,
                             style = TextStyle(fontStyle = FontStyle.Italic)
                         )
                     }

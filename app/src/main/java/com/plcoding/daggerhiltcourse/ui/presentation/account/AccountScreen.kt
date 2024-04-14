@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -62,7 +64,7 @@ fun AccountScreen(
             .padding(12.dp),
         elevation = 6.dp,
         shape = RoundedCornerShape(16.dp),
-        color = Color.White,
+        color = MaterialTheme.colors.surface,
     ) {
         AccountComponent(viewModel)
     }
@@ -102,6 +104,7 @@ fun AccountComponent(
                 ) {
                     Text(
                         text = "${viewModel.user!!.name} ${viewModel.user!!.lastName}, ${viewModel.user!!.profession}",
+                        color = MaterialTheme.colors.primary,
                         style = TextStyle(fontStyle = FontStyle.Italic),
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp,
@@ -145,12 +148,14 @@ fun AccountComponent(
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.ic_baseline_no_accounts_24),
+                    colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                     contentDescription = null,
                     modifier = Modifier.size(120.dp)
                 )
                 Text(
                     modifier = Modifier.padding(horizontal = 64.dp),
                     text = "Prijavite se za pristup podesavanja naloga",
+                    color = MaterialTheme.colors.primary,
                     textAlign = TextAlign.Center
                 )
             }
@@ -178,6 +183,7 @@ fun ContactDetail(label: String, value: String) {
     ) {
         Text(
             text = label,
+            color = MaterialTheme.colors.primary,
             fontWeight = FontWeight.Bold,
             fontSize = 16.sp,
             modifier = Modifier.width(100.dp)
@@ -185,7 +191,7 @@ fun ContactDetail(label: String, value: String) {
         Text(
             text = value,
             fontSize = 16.sp,
-            color = Color.Black
+            color = MaterialTheme.colors.primary,
         )
     }
 }
@@ -198,14 +204,15 @@ fun EditAccountButton(viewModel: AccountViewModel) {
             .fillMaxWidth()
             .padding(top = 8.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.Black,
-            contentColor = Color.White
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary,
         ),
         shape = RoundedCornerShape(8.dp),
 
         ) {
         Text(
             text = "Podesi Nalog",
+            color = MaterialTheme.colors.onPrimary,
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
             )
@@ -221,14 +228,15 @@ fun LogoutButton(viewModel: AccountViewModel) {
             .fillMaxWidth()
             .padding(top = 8.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.Black,
-            contentColor = Color.White
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary,
         ),
         shape = RoundedCornerShape(8.dp),
 
         ) {
         Text(
             text = "Odjavi se",
+            color = MaterialTheme.colors.onPrimary,
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
             )
@@ -245,14 +253,15 @@ fun RegisterButton(viewModel: AccountViewModel) {
             .fillMaxWidth()
             .padding(top = 8.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.Black,
-            contentColor = Color.White
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary,
         ),
         shape = RoundedCornerShape(8.dp),
 
         ) {
         Text(
             text = "Registruj se",
+            color = MaterialTheme.colors.onPrimary,
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
             )
@@ -269,13 +278,14 @@ fun LoginButton(viewModel: AccountViewModel) {
             .fillMaxWidth()
             .padding(top = 8.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.Black,
-            contentColor = Color.White
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary,
         ),
         shape = RoundedCornerShape(8.dp),
         ) {
         Text(
             text = "Prijavi se",
+            color = MaterialTheme.colors.onPrimary,
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
             )

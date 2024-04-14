@@ -17,6 +17,7 @@ import androidx.compose.material.Checkbox
 import androidx.compose.material.CheckboxColors
 import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -61,7 +62,7 @@ fun CourseNotificationsScreen(
                 .fillMaxWidth()
                 .padding(16.dp),
             elevation = 4.dp,
-            color = Color.White,
+            color = MaterialTheme.colors.surface,
             shape = RoundedCornerShape(16.dp)
         ) {
             Column(
@@ -73,6 +74,7 @@ fun CourseNotificationsScreen(
                     modifier = Modifier
                         .padding(top = 8.dp),
                     text = course.title,
+                    color = MaterialTheme.colors.primary,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         fontSize = 22.sp,
@@ -81,14 +83,21 @@ fun CourseNotificationsScreen(
                 Row(
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
-                    Text(text = course.location + ", ")
-                    Text(text = "${course.startTime.split("T")[1].substring(0,5)} - ${course.endTime.split("T")[1].substring(0,5)}")
+                    Text(
+                        text = course.location + ", ",
+                        color = MaterialTheme.colors.primary,
+                    )
+                    Text(
+                        text = "${course.startTime.split("T")[1].substring(0,5)} - ${course.endTime.split("T")[1].substring(0,5)}",
+                        color = MaterialTheme.colors.primary,
+                    )
                 }
                 Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(vertical = 8.dp))
                 Text(
                     modifier = Modifier
                         .padding(top = 8.dp, bottom = 32.dp),
                     text = "Uspesno ste sacuvali predavanje u svoj planer",
+                    color = MaterialTheme.colors.primary,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                         fontSize = 18.sp
@@ -102,12 +111,15 @@ fun CourseNotificationsScreen(
                             viewModel.onEvent(CourseNotificationsEvent.OnSevenDaysNotificationClick(isChecked))
                         },
                         colors = CheckboxDefaults.colors(
-                            checkedColor = Color.Black
+                            checkedColor = MaterialTheme.colors.primary,
                         )
                     )
                     Text(
                         modifier = Modifier.padding(8.dp),
-                        text = "Napravite notifikaciju kao podsetnik 7 dana pred pocetak predavanja")
+                        text = "Napravite notifikaciju kao podsetnik 7 dana pred pocetak predavanja",
+                        color = MaterialTheme.colors.primary,
+                    )
+
                 }
                 Row() {
                     Checkbox(
@@ -116,12 +128,14 @@ fun CourseNotificationsScreen(
                             viewModel.onEvent(CourseNotificationsEvent.OnTwoDaysNotificationClick(isChecked))
                         },
                         colors = CheckboxDefaults.colors(
-                            checkedColor = Color.Black
+                            checkedColor = MaterialTheme.colors.primary,
                         )
                     )
                     Text(
                         modifier = Modifier.padding(8.dp),
-                        text = "Napravite notifikaciju kao podsetnik 2 dana pred pocetak predavanja")
+                        text = "Napravite notifikaciju kao podsetnik 2 dana pred pocetak predavanja",
+                        color = MaterialTheme.colors.primary,
+                    )
                 }
                 Spacer(modifier = Modifier.height(64.dp))
             }
@@ -138,13 +152,14 @@ fun CourseNotificationsScreen(
                         .fillMaxWidth()
                         .height(64.dp),
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.Black,
-                        contentColor = Color.White
+                        backgroundColor = MaterialTheme.colors.primary,
+                        contentColor = MaterialTheme.colors.onPrimary,
                     ),
                     shape = RoundedCornerShape(8.dp),
                 ) {
                     Text(
                         text = "Potvrdi",
+                        color = MaterialTheme.colors.onPrimary,
                         style = TextStyle(
                             fontWeight = FontWeight.Bold,
                         )

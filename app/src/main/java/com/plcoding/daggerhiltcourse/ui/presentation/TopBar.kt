@@ -6,6 +6,7 @@ import androidx.compose.animation.slideOutVertically
 import androidx.compose.material.AppBarDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -60,7 +61,7 @@ fun TopBar(
                     }
                 }
             },
-            backgroundColor = Color.White,
+            backgroundColor = MaterialTheme.colors.background,
             elevation = 6.dp
         )
     }

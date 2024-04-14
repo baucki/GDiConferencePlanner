@@ -18,6 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -90,7 +91,7 @@ fun CourseItem(
                         .fillMaxSize()
                         .padding(16.dp),
                     elevation = 4.dp,
-                    color = Color.White,
+                    color = MaterialTheme.colors.surface,
                     shape = RoundedCornerShape(16.dp),
                 ) {
                     Column(
@@ -105,6 +106,7 @@ fun CourseItem(
                                 modifier = Modifier
                                     .padding(top = 8.dp),
                                 text = courseJSON.title,
+                                color = MaterialTheme.colors.primary,
                                 style = TextStyle(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 22.sp,
@@ -113,15 +115,22 @@ fun CourseItem(
                             Row(
                                 modifier = Modifier.padding(top = 4.dp)
                             ) {
-                                Text(text = courseJSON.location + ", ")
-                                Text(text = "${courseJSON.startTime.split("T")[1].substring(0,5)} - ${courseJSON.endTime.split("T")[1].substring(0,5)}")
+                                Text(
+                                    text = courseJSON.location + ", ",
+                                    color = MaterialTheme.colors.primary,
+                                )
+                                Text(
+                                    text = "${courseJSON.startTime.split("T")[1].substring(0,5)} - ${courseJSON.endTime.split("T")[1].substring(0,5)}",
+                                    color = MaterialTheme.colors.primary,
+                                )
                             }
                             Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(vertical = 4.dp))
                             Text(
                                 modifier = Modifier
                                     .padding(top = 8.dp, bottom = 32.dp)
                                     .height(screenHeight * 0.3f),
-                                text = courseJSON.description
+                                text = courseJSON.description,
+                                color = MaterialTheme.colors.primary
                             )
                             Spacer(modifier = Modifier.height(2.dp))
                         }
@@ -156,6 +165,7 @@ fun CourseItem(
                                             )
                                             Text(
                                                 text = speaker.name + ", ${speaker.title}",
+                                                color = MaterialTheme.colors.primary,
                                                 style = TextStyle(
                                                     fontStyle = FontStyle.Italic,
                                                 ),
@@ -192,13 +202,14 @@ fun CourseItem(
                                         .height(64.dp)
                                         .padding(top = 8.dp),
                                     colors = ButtonDefaults.buttonColors(
-                                        backgroundColor = Color.Black,
-                                        contentColor = Color.White
+                                        backgroundColor = MaterialTheme.colors.primary,
+                                        contentColor = MaterialTheme.colors.onPrimary
                                     ),
                                     shape = RoundedCornerShape(8.dp),
                                 ) {
                                     Text(
                                         text = "Sacuvaj u Moj Planer",
+                                        color = MaterialTheme.colors.onPrimary,
                                         style = TextStyle(
                                             fontWeight = FontWeight.Bold,
                                         )

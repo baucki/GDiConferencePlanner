@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.plcoding.daggerhiltcourse.R
@@ -25,6 +27,7 @@ fun QrCodeNoAccessScreen() {
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_no_qr_code),
+            colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
             contentDescription = "QR Code No Access",
             modifier = Modifier.size(120.dp)
         )

@@ -18,7 +18,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
-import okhttp3.logging.HttpLoggingInterceptor
+//import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -32,8 +32,8 @@ object AppModule {
     @Singleton
     fun provideMyApi(okHttpClient: OkHttpClient): MyApi {
         return Retrofit.Builder()
-            .baseUrl("http://192.168.5.53:8080/")
-//            .baseUrl("http://192.168.0.28:8080/")
+//            .baseUrl("http://192.168.5.53:8080/")
+            .baseUrl("http://192.168.0.28:8080/")
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
@@ -48,11 +48,11 @@ object AppModule {
         httpClient.connectTimeout(60, TimeUnit.SECONDS)
         httpClient.writeTimeout(60, TimeUnit.SECONDS)
 
-        if (BuildConfig.DEBUG) {
-            val logging = HttpLoggingInterceptor()
-            logging.level = HttpLoggingInterceptor.Level.BODY
-            httpClient.addInterceptor(logging)
-        }
+//        if (BuildConfig.DEBUG) {
+//            val logging = HttpLoggingInterceptor()
+//            logging.level = HttpLoggingInterceptor.Level.BODY
+//            httpClient.addInterceptor(logging)
+//        }
 
         httpClient.addInterceptor(authorizationInterceptor)
 

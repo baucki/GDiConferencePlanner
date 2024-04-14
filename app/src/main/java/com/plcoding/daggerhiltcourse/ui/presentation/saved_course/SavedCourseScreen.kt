@@ -20,6 +20,7 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Divider
 import androidx.compose.material.IconButton
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -30,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
@@ -87,7 +89,7 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                         .fillMaxWidth()
                         .padding(16.dp),
                     elevation = 4.dp,
-                    color = Color.White,
+                    color = MaterialTheme.colors.surface,
                     shape = RoundedCornerShape(16.dp)
                 ) {
                     Column(
@@ -102,6 +104,7 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                                 modifier = Modifier
                                     .padding(top = 8.dp),
                                 text = course.course.title,
+                                color = MaterialTheme.colors.primary,
                                 style = TextStyle(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 22.sp,
@@ -110,11 +113,15 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                             Row(
                                 modifier = Modifier.padding(top = 8.dp)
                             ) {
-                                Text(text = course.course.location + ", ")
+                                Text(
+                                    text = course.course.location + ", ",
+                                    color = MaterialTheme.colors.primary,
+                                )
                                 Text(
                                     text = "${
                                         course.course.startTime.split("T")[1].substring(0, 5)
-                                    } - ${course.course.endTime.split("T")[1].substring(0, 5)}"
+                                    } - ${course.course.endTime.split("T")[1].substring(0, 5)}",
+                                    color = MaterialTheme.colors.primary,
                                 )
                             }
                             Divider(color = Color.Gray, thickness = 1.dp, modifier = Modifier.padding(bottom = 4.dp))
@@ -122,7 +129,8 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                                 modifier = Modifier
                                     .padding(top = 8.dp, bottom = 32.dp)
                                     .height(screenHeight * 0.3f),
-                                text = course.course.description
+                                text = course.course.description,
+                                color = MaterialTheme.colors.primary,
                             )
                             Spacer(modifier = Modifier.height(2.dp))
 
@@ -158,6 +166,7 @@ fun CourseItem(course: CourseWithSpeakers, viewModel: SavedCourseViewModel) {
                                             )
                                             Text(
                                                 text = speaker.name + ", " + speaker.title,
+                                                color = MaterialTheme.colors.primary,
                                                 style = TextStyle(
                                                     fontStyle = FontStyle.Italic,
                                                 ),
@@ -209,27 +218,33 @@ fun DeleteComponentButton(viewModel: SavedCourseViewModel) {
         confirmButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary,
                 ),
                 onClick = {
                     viewModel.onEvent(SavedCourseEvent.OnDeleteConfirmClick)
                 }
             ) {
-                Text("Potvrdi")
+                Text(
+                    text = "Potvrdi",
+                    color = MaterialTheme.colors.onPrimary,
+                )
             }
         },
         dismissButton = {
             Button(
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary,
                 ),
                 onClick = {
                     viewModel.onEvent(SavedCourseEvent.OnDeleteDismissClick)
                 }
             ) {
-                Text("Ponisti")
+                Text(
+                    text = "Ponisti",
+                    color = MaterialTheme.colors.onPrimary,
+                )
             }
         }
     )
@@ -240,23 +255,31 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
         onDismissRequest = {
             viewModel.onEvent(SavedCourseEvent.OnFeedbackDismissClick)
         },
-        title = { Text(text = "Recenzija") },
+        title = { Text(
+            text = "Recenzija",
+            color = MaterialTheme.colors.primary,
+        ) },
         text = {
             Column {
-                Text("\n" +
-                        "Voleli bismo da čujemo vašu povratnu informaciju!")
+                Text(text = "\n" +
+                        "Voleli bismo da čujemo vašu povratnu informaciju!",
+                    color = MaterialTheme.colors.primary,
+                )
                 TextField(
                     value = viewModel.feedbackText,
                     onValueChange = { viewModel.onEvent(SavedCourseEvent.OnFeedbackTextChangeClick(it)) },
-                    label = { Text("Recenzija") },
+                    label = { Text(text = "Recenzija", color = MaterialTheme.colors.primary) },
                     colors = TextFieldDefaults.textFieldColors(
-                        focusedLabelColor = Color.Black,
-                        cursorColor = Color.Black,
-                        focusedIndicatorColor = Color.Black,
+                        focusedLabelColor = MaterialTheme.colors.primary,
+                        cursorColor = MaterialTheme.colors.primary,
+                        focusedIndicatorColor = MaterialTheme.colors.primary,
                     )
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text("Kakvi su vasi utisci?")
+                Text(
+                    text = "Kakvi su vasi utisci?",
+                    color = MaterialTheme.colors.primary,
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     modifier=Modifier.fillMaxWidth(),
@@ -282,11 +305,14 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
                     viewModel.onEvent(SavedCourseEvent.OnFeedbackSubmitClick(viewModel.selectedRating, viewModel.feedbackText))
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary,
                 )
             ) {
-                Text("Posalji")
+                Text(
+                    text = "Posalji",
+                    color = MaterialTheme.colors.onPrimary,
+                )
             }
         },
         dismissButton = {
@@ -295,12 +321,15 @@ fun FeedbackDialog(viewModel: SavedCourseViewModel) {
                     viewModel.onEvent(SavedCourseEvent.OnFeedbackDismissClick)
                 },
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary,
                 )
             )
             {
-                Text("Ponisti")
+                Text(
+                    text = "Ponisti",
+                    color = MaterialTheme.colors.onPrimary,
+                )
             }
         }
     )
@@ -317,14 +346,15 @@ fun DeleteButton(
             .fillMaxWidth()
             .padding(top = 8.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.Black,
-            contentColor = Color.White
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary,
         ),
         shape = RoundedCornerShape(8.dp),
 
         ) {
         Text(
             text = "Izbrisi",
+            color = MaterialTheme.colors.onPrimary,
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
             )
@@ -345,14 +375,15 @@ fun FeedbackButton(
             .fillMaxWidth()
             .padding(top = 8.dp),
         colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.Black,
-            contentColor = Color.White
+            backgroundColor = MaterialTheme.colors.primary,
+            contentColor = MaterialTheme.colors.onPrimary,
         ),
         shape = RoundedCornerShape(8.dp),
 
         ) {
         Text(
             text = "Recenzija",
+            color = MaterialTheme.colors.onPrimary,
             style = TextStyle(
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
@@ -366,6 +397,7 @@ fun SadSmileyButton(isSelected: Boolean, onClick: () -> Unit) {
     IconButton(onClick = onClick) {
         Image(
             painter = painterResource(id = if (isSelected) R.drawable.ic_smiley_sad_selected else R.drawable.ic_smiley_sad_unselected),
+            colorFilter = (if (isSelected) ColorFilter.tint(MaterialTheme.colors.primary) else ColorFilter.tint(Color.Gray)),
             contentDescription = null,
             modifier = Modifier
                 .size(48.dp)
@@ -379,6 +411,7 @@ fun NeutralSmileyButton(isSelected: Boolean, onClick: () -> Unit) {
     IconButton(onClick = onClick) {
         Image(
             painter = painterResource(id = if (isSelected) R.drawable.ic_smiley_neutral_selected else R.drawable.ic_smiley_neutral_unselected),
+            colorFilter = (if (isSelected) ColorFilter.tint(MaterialTheme.colors.primary) else ColorFilter.tint(Color.Gray)),
             contentDescription = null,
             modifier = Modifier
                 .size(48.dp)
@@ -392,6 +425,7 @@ fun HappySmileyButton(isSelected: Boolean, onClick: () -> Unit) {
     IconButton(onClick = onClick) {
         Image(
             painter = painterResource(id = if (isSelected) R.drawable.ic_smiley_happy_selected else R.drawable.ic_smiley_happy_unselected),
+            colorFilter = (if (isSelected) ColorFilter.tint(MaterialTheme.colors.primary) else ColorFilter.tint(Color.Gray)),
             contentDescription = null,
             modifier = Modifier
                 .size(48.dp)

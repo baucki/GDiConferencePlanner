@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -29,7 +30,7 @@ fun ClientItem(client: Client) {
         Surface(
             modifier = Modifier
                 .size(88.dp),
-            color = Color.White,
+            color = MaterialTheme.colors.surface,
         ) {
         }
     } else {
@@ -39,7 +40,8 @@ fun ClientItem(client: Client) {
                     .padding(all = 8.dp)
                     .size(72.dp),
                 shape = RoundedCornerShape(16.dp),
-                elevation = 4.dp
+                elevation = 4.dp,
+                color = MaterialTheme.colors.surface
             ) {
                 Image(
                     painter = painter,

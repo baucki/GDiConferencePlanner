@@ -46,7 +46,7 @@ fun LoginComponent(
             .padding(12.dp),
         elevation = 6.dp,
         shape = RoundedCornerShape(16.dp),
-        color = Color.White,
+        color = MaterialTheme.colors.surface,
     ) {
         Row(
             modifier = Modifier
@@ -56,6 +56,7 @@ fun LoginComponent(
         ) {
             Text(
                 text = "Prijava",
+                color = MaterialTheme.colors.primary,
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp,
                 modifier = Modifier
@@ -75,13 +76,13 @@ fun LoginComponent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                label = { Text("Korisnicko ime") },
+                label = { Text(text = "Korisnicko ime") },
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    cursorColor = Color.Black,
-                    focusedBorderColor = if (viewModel.isError.value) Color.Red else Color.Black,
-                    focusedLabelColor = if (viewModel.isError.value) Color.Red else Color.Black,
-                    unfocusedBorderColor = if (viewModel.isError.value) Color.Red else Color.Black,
-                    unfocusedLabelColor = if (viewModel.isError.value) Color.Red else Color.Black,
+                    cursorColor = MaterialTheme.colors.primary,
+                    focusedBorderColor = if (viewModel.isError.value) Color(0xFFF44336) else MaterialTheme.colors.primary,
+                    focusedLabelColor = if (viewModel.isError.value) Color(0xFFF44336) else MaterialTheme.colors.primary,
+                    unfocusedBorderColor = if (viewModel.isError.value) Color(0xFFF44336) else MaterialTheme.colors.primary,
+                    unfocusedLabelColor = if (viewModel.isError.value) Color(0xFFF44336) else MaterialTheme.colors.primary,
                 )
             )
             OutlinedTextField(
@@ -90,14 +91,14 @@ fun LoginComponent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                label = { Text("Sifra") },
+                label = { Text(text = "Sifra") },
                 visualTransformation = PasswordVisualTransformation(),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    cursorColor = Color.Black,
-                    focusedBorderColor = if (viewModel.isError.value) Color.Red else Color.Black,
-                    focusedLabelColor = if (viewModel.isError.value) Color.Red else Color.Black,
-                    unfocusedBorderColor = if (viewModel.isError.value) Color.Red else Color.Black,
-                    unfocusedLabelColor = if (viewModel.isError.value) Color.Red else Color.Black,
+                    cursorColor = MaterialTheme.colors.primary,
+                    focusedBorderColor = if (viewModel.isError.value) Color(0xFFF44336) else MaterialTheme.colors.primary,
+                    focusedLabelColor = if (viewModel.isError.value) Color(0xFFF44336) else MaterialTheme.colors.primary,
+                    unfocusedBorderColor = if (viewModel.isError.value) Color(0xFFF44336) else MaterialTheme.colors.primary,
+                    unfocusedLabelColor = if (viewModel.isError.value) Color(0xFFF44336) else MaterialTheme.colors.primary,
                 )
             )
             Row(
@@ -105,7 +106,8 @@ fun LoginComponent(
             ) {
                 Text(
                     text = viewModel.errorMessage.value,
-                    color = Color.Red
+                    color = Color(0xFFF44336)
+//                    color = Color.Red
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -114,7 +116,7 @@ fun LoginComponent(
             ) {
                 Text(
                     text = "Nemate nalog, registrujte se ovde",
-                    color = Color.Black,
+                    color = MaterialTheme.colors.primary,
                     modifier = Modifier.clickable { viewModel.onEvent(LoginEvent.OnRegisterTextClick) }
                 )
             }
@@ -133,13 +135,14 @@ fun LoginComponent(
                     .height(64.dp)
                     .fillMaxWidth(),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color.Black,
-                    contentColor = Color.White
+                    backgroundColor = MaterialTheme.colors.primary,
+                    contentColor = MaterialTheme.colors.onPrimary
                 ),
                 shape = RoundedCornerShape(8.dp),
             ) {
                 Text(
                     text = "Prijavi se",
+                    color =  MaterialTheme.colors.onPrimary,
                     style = TextStyle(
                         fontWeight = FontWeight.Bold,
                     )

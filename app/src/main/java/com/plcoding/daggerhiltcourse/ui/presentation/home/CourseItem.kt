@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -34,7 +35,7 @@ fun CourseItem(
             .padding(16.dp),
         elevation = 6.dp,
         shape = RoundedCornerShape(16.dp),
-        color = Color.White,
+        color = MaterialTheme.colors.surface,
     ) {
         Row(
             modifier = modifier,
@@ -45,7 +46,10 @@ fun CourseItem(
                     .padding(start = 12.dp)
                     .width(screenWidth * 0.13f),
             ) {
-                Text(text = course.startTime.split("T")[1].substring(0, 5))
+                Text(
+                    text = course.startTime.split("T")[1].substring(0, 5),
+                    color = MaterialTheme.colors.primary
+                )
 //                if (isVisible.value) {
 //                    Text(text = course.startTime.split("T")[1].substring(0, 5))
 //                } else {
@@ -58,14 +62,19 @@ fun CourseItem(
             ) {
                 Text(
                     text = course.title,
-                    style = TextStyle(fontWeight = FontWeight.Bold)
+                    style = TextStyle(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colors.primary
                 )
-                Text(text = course.location)
+                Text(
+                    text = course.location,
+                    color = MaterialTheme.colors.primary
+                )
                 if (course.speakers.isNotEmpty()) {
                     Column {
                         course.speakers.forEach { speaker ->
                             Text(
-                                text = speaker.name + ", " + speaker.title ,
+                                text = speaker.name + ", " + speaker.title,
+                                color = MaterialTheme.colors.primary,
                                 style = TextStyle(fontStyle = FontStyle.Italic)
                             )
                         }
@@ -88,7 +97,7 @@ fun CourseItemFiltered(
             .padding(16.dp),
         elevation = 6.dp,
         shape = RoundedCornerShape(16.dp),
-        color = Color.White,
+        color = MaterialTheme.colors.surface,
     ) {
         Row(
             modifier = modifier,
@@ -99,7 +108,10 @@ fun CourseItemFiltered(
                     .padding(start = 12.dp)
                     .width(screenWidth * 0.13f),
             ) {
-                Text(text = course.startTime.split("T")[1].substring(0, 5))
+                Text(
+                    text = course.startTime.split("T")[1].substring(0, 5),
+                    color = MaterialTheme.colors.primary
+                )
             }
             Column(
                 verticalArrangement = Arrangement.SpaceBetween,
@@ -107,14 +119,19 @@ fun CourseItemFiltered(
             ) {
                 Text(
                     text = course.title,
-                    style = TextStyle(fontWeight = FontWeight.Bold)
+                    style = TextStyle(fontWeight = FontWeight.Bold),
+                    color = MaterialTheme.colors.primary
                 )
-                Text(text = course.location)
+                Text(
+                    text = course.location,
+                    color = MaterialTheme.colors.primary
+                )
                 if (course.speakers.isNotEmpty()) {
                     Column {
                         course.speakers.forEach { speaker ->
                             Text(
-                                text = speaker.name + ", " + speaker.title ,
+                                text = speaker.name + ", " + speaker.title,
+                                color = MaterialTheme.colors.primary,
                                 style = TextStyle(fontStyle = FontStyle.Italic)
                             )
                         }
