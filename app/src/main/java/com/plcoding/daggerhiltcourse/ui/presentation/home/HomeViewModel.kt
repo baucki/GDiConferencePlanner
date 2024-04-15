@@ -4,6 +4,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.course.RemoteRepository
@@ -18,6 +20,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -38,6 +42,9 @@ class HomeViewModel @Inject constructor(
 
     var searchText by mutableStateOf("")
     val filteredData by derivedStateOf { filterData(tabsCourses.sortedBy { it.startTime }, searchText) }
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -84,10 +91,17 @@ class HomeViewModel @Inject constructor(
         }
     }
     suspend fun fetchAllCourses() {
-        _courses.value = remoteRepository.get().fetchAllCourses()
-        sortTabsData()
+        viewModelScope.launch {
+            try {
+                _courses.value = remoteRepository.get().fetchAllCourses()
+                sortTabsData()
+            } catch (e: IOException) {
+                _errorMessage.value = "Nema interneta"
+            } catch (e: Exception) {
+                _errorMessage.value = "Doslo je do greske"
+            }
+        }
     }
-
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.send(event)

@@ -4,6 +4,8 @@ import android.media.session.MediaSession.Token
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.user.UserRepository
@@ -18,6 +20,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.IOException
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +31,9 @@ class AccountViewModel @Inject constructor(
 
     var isLoggedIn by mutableStateOf(false)
     var user by mutableStateOf<User?>(null)
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
@@ -38,7 +45,13 @@ class AccountViewModel @Inject constructor(
             isLoggedIn = if (token != "") {
                 val jwtDecoded = TokenHandler.decodeToken(token)
                 val username = JSONObject(jwtDecoded).getString("username")
-                user = userRepository.findUserByUsername(username)
+                try {
+                    user = userRepository.findUserByUsername(username)
+                } catch (e: IOException) {
+                    _errorMessage.value = "Nema interneta"
+                } catch (e: Exception) {
+                    _errorMessage.value = "Doslo je do greske"
+                }
                 true
             } else {
                 user = null

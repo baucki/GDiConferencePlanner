@@ -30,7 +30,6 @@ class LoginViewModel @Inject constructor(
 
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
-
     fun onEvent(event: LoginEvent) {
         when (event) {
             is LoginEvent.OnUsernameChanged -> {
@@ -66,5 +65,4 @@ class LoginViewModel @Inject constructor(
             _uiEvent.send(event)
         }
     }
-
 }

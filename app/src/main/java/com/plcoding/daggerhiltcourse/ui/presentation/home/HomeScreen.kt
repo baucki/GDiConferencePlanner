@@ -1,12 +1,15 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,11 +39,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.plcoding.daggerhiltcourse.R
 import com.plcoding.daggerhiltcourse.util.UiEvent
 
 
@@ -73,11 +79,15 @@ fun HomeScreen(
     }
 
     if (courses.isEmpty()) {
-        Box(
-            modifier = Modifier.fillMaxSize(),
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator()
+        if (viewModel.errorMessage.value == null) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        } else {
+            NoInternetScreen(viewModel = viewModel)
         }
     } else {
         topBarState.value = true
@@ -164,6 +174,28 @@ fun SearchComponent(viewModel: HomeViewModel) {
                     }
                 }
             }
+        )
+    }
+}
+
+@Composable
+fun NoInternetScreen(viewModel: HomeViewModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_no_internet),
+            colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
+            contentDescription = "QR Code No Access",
+            modifier = Modifier.size(120.dp)
+        )
+        Text(
+            modifier = Modifier.padding(vertical = 16.dp),
+            text = viewModel.errorMessage.value!!
         )
     }
 }

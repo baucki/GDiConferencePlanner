@@ -3,21 +3,46 @@ package com.plcoding.daggerhiltcourse.ui.presentation.qr_code
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.zxing.integration.android.IntentIntegrator
+import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.user.UserRepository
+import com.plcoding.daggerhiltcourse.data.model.remote.responses.User
 import com.plcoding.daggerhiltcourse.ui.presentation.MainActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import java.io.IOException
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
-class QrCodeViewModel @Inject constructor(): ViewModel() {
+class QrCodeViewModel @Inject constructor(
+    private val userRepository: UserRepository
+): ViewModel() {
     private val _scannedResult = MutableLiveData<String?>()
     val scannedResult: LiveData<String?> = _scannedResult
 
+    var user by mutableStateOf<User?>(null)
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage: LiveData<String> = _errorMessage
+
+    fun findUser(username: String) {
+        viewModelScope.launch {
+            try {
+                user = userRepository.findUserByUsername(username)
+            } catch (e: IOException) {
+                _errorMessage.value = "Nema interneta"
+            } catch (e: Exception) {
+                _errorMessage.value = "Doslo je do greske"
+            }
+        }
+    }
     fun startScan(context: Context) {
         IntentIntegrator(context as Activity).initiateScan()
     }

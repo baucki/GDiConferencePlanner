@@ -17,6 +17,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Divider
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -39,6 +40,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
 import com.plcoding.daggerhiltcourse.R
+import com.plcoding.daggerhiltcourse.ui.presentation.clients.ClientViewModel
+import com.plcoding.daggerhiltcourse.ui.presentation.clients.NoInternetScreen
 import com.plcoding.daggerhiltcourse.util.UiEvent
 
 @Composable
@@ -58,15 +61,20 @@ fun AccountScreen(
         }
     }
 
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(12.dp),
-        elevation = 6.dp,
-        shape = RoundedCornerShape(16.dp),
-        color = MaterialTheme.colors.surface,
-    ) {
-        AccountComponent(viewModel)
+    if (viewModel.user == null && viewModel.isLoggedIn) {
+        if (viewModel.errorMessage.value != null)
+            NoInternetScreen(viewModel = viewModel)
+    } else {
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp),
+            elevation = 6.dp,
+            shape = RoundedCornerShape(16.dp),
+            color = MaterialTheme.colors.surface,
+        ) {
+            AccountComponent(viewModel)
+        }
     }
 }
 @Composable
@@ -102,14 +110,25 @@ fun AccountComponent(
                     modifier = Modifier.padding(start = 16.dp),
                     verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text(
-                        text = "${viewModel.user!!.name} ${viewModel.user!!.lastName}, ${viewModel.user!!.profession}",
-                        color = MaterialTheme.colors.primary,
-                        style = TextStyle(fontStyle = FontStyle.Italic),
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
+                    if (viewModel.user!!.profession != "") {
+                        Text(
+                            text = "${viewModel.user!!.name} ${viewModel.user!!.lastName}, ${viewModel.user!!.profession}",
+                            color = MaterialTheme.colors.primary,
+                            style = TextStyle(fontStyle = FontStyle.Italic),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                    } else {
+                        Text(
+                            text = "${viewModel.user!!.name} ${viewModel.user!!.lastName}",
+                            color = MaterialTheme.colors.primary,
+                            style = TextStyle(fontStyle = FontStyle.Italic),
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(bottom = 4.dp)
+                        )
+                    }
                 }
     //            /* TODO - ADD THIS CODE IN CASE OF BREAKING ACCOUNT INTO 2 PAGES (ACCOUNT AND SETTINGS) */
     //            Row(
@@ -293,3 +312,24 @@ fun LoginButton(viewModel: AccountViewModel) {
     }
 }
 
+@Composable
+fun NoInternetScreen(viewModel: AccountViewModel) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Image(
+            painter = painterResource(id = R.drawable.ic_no_internet),
+            colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
+            contentDescription = "QR Code No Access",
+            modifier = Modifier.size(120.dp)
+        )
+        Text(
+            modifier = Modifier.padding(vertical = 16.dp),
+            text = viewModel.errorMessage.value!!
+        )
+    }
+}
