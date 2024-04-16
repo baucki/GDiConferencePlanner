@@ -1,14 +1,22 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.edit_account
 
+import android.content.Context
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.AlertDialog
@@ -23,19 +31,41 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
+import com.plcoding.daggerhiltcourse.R
 import com.plcoding.daggerhiltcourse.ui.presentation.account.AccountViewModel
 import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseEvent
 import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseViewModel
+//import com.plcoding.daggerhiltcourse.ui.presentation.test.CoilImage
 import com.plcoding.daggerhiltcourse.util.UiEvent
+import java.io.File
+import java.io.FileNotFoundException
+import java.io.FileOutputStream
+import java.io.IOException
 
 @Composable
 fun EditAccountScreen(
@@ -104,6 +134,7 @@ fun PersonalInformationComponent(
         )
 
         if (viewModel.user != null) {
+            profileImage(viewModel = viewModel)
             EditTextField("Ime", viewModel.name, viewModel.nameErrorMessage, viewModel)
             EditTextField("Prezime", viewModel.lastName, viewModel.lastNameErrorMessage, viewModel)
             EditTextField("Zanimanje", viewModel.profession, viewModel.professionErrorMessage, viewModel)
@@ -134,6 +165,99 @@ fun PersonalInformationComponent(
                     )
                 )
             }
+        }
+    }
+}
+fun copyImageToInternalStorage(context: Context, uri: Uri): String? {
+    try {
+        val inputStream = context.contentResolver.openInputStream(uri)
+        inputStream?.use { input ->
+            val fileName = "image_${System.currentTimeMillis()}.jpg"
+            val outputFile = File(context.filesDir, fileName)
+            val outputStream = FileOutputStream(outputFile)
+            input.copyTo(outputStream)
+            return outputFile.absolutePath
+        }
+    } catch (e: FileNotFoundException) {
+        e.printStackTrace()
+    } catch (e: IOException) {
+        e.printStackTrace()
+    }
+    return null
+}
+@Composable
+fun profileImage(viewModel: EditAccountViewModel) {
+    val context = LocalContext.current
+//    var imageUri by remember { mutableStateOf<Uri?>(null) }
+//    val painter = remember { mutableStateOf<AsyncImagePainter?>(null) }
+
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
+//            imageUri = uri
+            val path = copyImageToInternalStorage(context, uri)
+                if (path != null)
+            viewModel.imagePath.value = path
+        }
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp)
+    ) {
+        if (viewModel.user != null && viewModel.imagePath.value != "") {
+            val file = File(viewModel.imagePath.value)
+            if (file.exists()) {
+                val painter: Painter =
+                    rememberAsyncImagePainter(
+                        ImageRequest.Builder(LocalContext.current).data(data = file).apply(block = fun ImageRequest.Builder.() {
+                            crossfade(true)
+                        }).build()
+                    )
+
+                Image(
+                    painter = painter,
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape)
+                )
+            } else {
+                Image(
+                    painter = rememberAsyncImagePainter(viewModel.imagePath.value),
+                    contentDescription = null,
+                    //                contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .size(64.dp)
+                        .clip(CircleShape),
+                )
+            }
+        } else {
+            Image(
+                painter = painterResource(id = R.drawable.ic_baseline_account_circle_24),
+                colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
+                contentDescription = null,
+                modifier = Modifier.size(64.dp)
+            )
+        }
+        Button(
+            onClick = {
+                launcher.launch("image/*")
+            },
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = MaterialTheme.colors.primary,
+                contentColor = MaterialTheme.colors.onPrimary,
+            ),
+            shape = RoundedCornerShape(8.dp),
+
+            ) {
+            Text(
+                text = "Promeni Sliku",
+                color = MaterialTheme.colors.onPrimary,
+                style = TextStyle(
+                    fontWeight = FontWeight.Bold,
+                )
+            )
         }
     }
 }

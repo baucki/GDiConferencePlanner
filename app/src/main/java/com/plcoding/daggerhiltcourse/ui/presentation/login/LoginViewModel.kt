@@ -15,6 +15,8 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.IOException
+import java.lang.Exception
 import java.util.Base64
 import javax.inject.Inject
 
@@ -47,14 +49,22 @@ class LoginViewModel @Inject constructor(
                         usernameTextField.value,
                         passwordTextField.value,
                         )
-                    val token: Token = userRepository.login(requestUser)
-                    if (token.value != "") {
-                        DataStoreHandler.write(token.value)
-                        sendUiEvent(UiEvent.PopBackStack)
-                        sendUiEvent(UiEvent.Navigate(Routes.HOME))
-                    } else {
+                    try {
+                        val token: Token = userRepository.login(requestUser)
+                        if (token.value != "") {
+                            DataStoreHandler.write(token.value)
+                            sendUiEvent(UiEvent.PopBackStack)
+                            sendUiEvent(UiEvent.Navigate(Routes.HOME))
+                        } else {
+                            isError.value = true
+                            errorMessage.value = "Pogresno korisnicko ime ili lozinka. Molimo pokusajte ponovo."
+                        }
+                    } catch (e: IOException) {
                         isError.value = true
-                        errorMessage.value = "Pogresno korisnicko ime ili lozinka. Molimo pokusajte ponovo."
+                        errorMessage.value = "Nema interneta"
+                    } catch (e: Exception) {
+                        isError.value = true
+                        errorMessage.value = "Doslo je do greske"
                     }
                 }
             }

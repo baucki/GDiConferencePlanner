@@ -1,8 +1,10 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.edit_account
 
+import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,6 +31,9 @@ class EditAccountViewModel @Inject constructor(
 ): ViewModel() {
 
     var user by mutableStateOf<User?>(null)
+
+    var imagePath = mutableStateOf("")
+
 
     var name = mutableStateOf("")
     var nameErrorMessage = mutableStateOf("")
@@ -66,6 +71,7 @@ class EditAccountViewModel @Inject constructor(
         if (username != null) {
             viewModelScope.launch {
                 userRepository.findUserByUsername(username)?.let { user ->
+                    imagePath.value = user.imagePath
                     name.value = user.name
                     lastName.value = user.lastName
                     email.value = user.email
@@ -134,6 +140,7 @@ class EditAccountViewModel @Inject constructor(
                         if (
                             userRepository.changePersonalInformation(
                                 ChangePersonalInformationRequest(
+                                    imagePath.value,
                                     oldUsername,
                                     name.value,
                                     lastName.value,

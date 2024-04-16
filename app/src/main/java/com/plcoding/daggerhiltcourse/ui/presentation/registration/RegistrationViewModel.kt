@@ -15,6 +15,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.io.IOException
+import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
@@ -118,15 +120,21 @@ class RegistrationViewModel @Inject constructor(
                             phone.value,
                             "USER"
                         )
-                        val token = userRepository.addUser(user)
-                        println(token.value)
-                        if (token.value != "") {
-                            DataStoreHandler.write(token.value)
-                            sendUiEvent(UiEvent.PopBackStack)
-                            sendUiEvent(UiEvent.PopBackStack)
-                            sendUiEvent(UiEvent.Navigate(Routes.HOME))
-                        } else {
-                            repeatedPasswordErrorMessage.value = "Korisnicko ime je zauzeto, molimo vas pokusajte ponovo"
+                        try {
+                            val token = userRepository.addUser(user)
+                            println(token.value)
+                            if (token.value != "") {
+                                DataStoreHandler.write(token.value)
+                                sendUiEvent(UiEvent.PopBackStack)
+                                sendUiEvent(UiEvent.PopBackStack)
+                                sendUiEvent(UiEvent.Navigate(Routes.HOME))
+                            } else {
+                                repeatedPasswordErrorMessage.value = "Korisnicko ime je zauzeto, molimo vas pokusajte ponovo"
+                            }
+                        } catch (e: IOException) {
+                            repeatedPasswordErrorMessage.value = "Nema interneta"
+                        } catch (e: Exception) {
+                            repeatedPasswordErrorMessage.value = "Doslo je do greske"
                         }
                     }
                 }

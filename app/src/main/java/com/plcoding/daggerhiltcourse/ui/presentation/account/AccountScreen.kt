@@ -29,7 +29,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -39,10 +41,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
+import coil.request.ImageRequest
 import com.plcoding.daggerhiltcourse.R
 import com.plcoding.daggerhiltcourse.ui.presentation.clients.ClientViewModel
 import com.plcoding.daggerhiltcourse.ui.presentation.clients.NoInternetScreen
 import com.plcoding.daggerhiltcourse.util.UiEvent
+import java.io.File
 
 @Composable
 fun AccountScreen(
@@ -91,17 +96,35 @@ fun AccountComponent(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 if (viewModel.user != null && viewModel.user!!.imagePath != "") {
-                    Image(
-                        painter = rememberAsyncImagePainter(viewModel.user!!.imagePath),
-                        contentDescription = "${viewModel.user!!.name} ${viewModel.user!!.lastName}",
-                        contentScale = ContentScale.Fit,
-                        modifier = Modifier
-                            .size(64.dp)
-                            .clip(CircleShape)
-                    )
+                    val file = File(viewModel.user!!.imagePath)
+                    if (file.exists()) {
+                        val painter: Painter =
+                            rememberAsyncImagePainter(
+                                ImageRequest.Builder(LocalContext.current).data(data = file).apply(block = fun ImageRequest.Builder.() {
+                                    crossfade(true)
+                                }).build()
+                            )
+
+                        Image(
+                            painter = painter,
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(64.dp)
+                                .clip(CircleShape)
+                        )
+                    } else {
+                        Image(
+                            painter = rememberAsyncImagePainter(viewModel.user!!.imagePath),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(64.dp)
+                                .clip(CircleShape),
+                        )
+                    }
                 } else {
                     Image(
                         painter = painterResource(id = R.drawable.ic_baseline_account_circle_24),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                         contentDescription = null,
                         modifier = Modifier.size(64.dp)
                     )
@@ -194,6 +217,9 @@ fun AccountComponent(
         }
     }
 }
+
+
+
 @Composable
 fun ContactDetail(label: String, value: String) {
     Row(
