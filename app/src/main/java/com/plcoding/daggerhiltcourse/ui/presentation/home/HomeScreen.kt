@@ -78,17 +78,16 @@ fun HomeScreen(
         }
     }
 
-    if (courses.isEmpty()) {
-        if (viewModel.errorMessage.value == null) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        } else {
-            NoInternetScreen(viewModel = viewModel)
+    if (viewModel.isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
         }
+    } else if (courses.isEmpty()) {
+        if (viewModel.errorMessage.value != null)
+            NoInternetScreen(viewModel = viewModel)
     } else {
         topBarState.value = true
         Column {

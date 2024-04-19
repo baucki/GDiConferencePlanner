@@ -1,5 +1,8 @@
 package com.plcoding.daggerhiltcourse.ui.presentation.clients
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.client.ClientRepository
 
 import com.plcoding.daggerhiltcourse.data.model.remote.responses.Client
+import dagger.Lazy
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,10 +21,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ClientViewModel @Inject constructor(
-    private val clientRepository: ClientRepository
+    private val clientRepository: Lazy<ClientRepository>
 ): ViewModel() {
     private val _clients = MutableStateFlow<List<Client>>(emptyList())
     val clients: StateFlow<List<Client>> = _clients
+
+    var isLoggedIn by mutableStateOf(false)
+    var isLoading by mutableStateOf(false)
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
@@ -28,10 +35,14 @@ class ClientViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                _clients.value = clientRepository.fetchAllClients()
+                isLoading = true
+                _clients.value = clientRepository.get().fetchAllClients()
+                isLoading = false
             } catch (e: IOException) {
+                isLoading = false
                 _errorMessage.value = "Nema interneta"
             } catch (e: Exception) {
+                isLoading = false
                 _errorMessage.value = "Doslo je do greske"
             }
         }

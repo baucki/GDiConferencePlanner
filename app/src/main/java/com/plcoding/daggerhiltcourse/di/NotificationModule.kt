@@ -130,7 +130,7 @@ object NotificationModule {
         val notificationManager = NotificationManagerCompat.from(context)
         val channel = NotificationChannel(
             "Third Channel ID",
-            "second channel",
+            "third channel",
             NotificationManager.IMPORTANCE_DEFAULT
         )
         notificationManager.createNotificationChannel(channel)

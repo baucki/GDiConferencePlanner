@@ -36,7 +36,7 @@ fun ClientsScreen(viewModel: ClientViewModel = hiltViewModel()) {
     val clients by viewModel.clients.collectAsState(initial = emptyList())
 
     if (clients.isEmpty()) {
-        if (viewModel.errorMessage.value == null) {
+        if (viewModel.isLoading) {
             Box(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center

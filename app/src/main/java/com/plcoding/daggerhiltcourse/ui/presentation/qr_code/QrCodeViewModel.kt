@@ -13,9 +13,9 @@ import androidx.lifecycle.viewModelScope
 import com.google.zxing.integration.android.IntentIntegrator
 import com.plcoding.daggerhiltcourse.data.datasource.remote.repository.user.UserRepository
 import com.plcoding.daggerhiltcourse.data.model.remote.responses.User
-import com.plcoding.daggerhiltcourse.ui.presentation.MainActivity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.io.EOFException
 import java.io.IOException
 import java.lang.Exception
 import javax.inject.Inject
@@ -36,9 +36,15 @@ class QrCodeViewModel @Inject constructor(
         viewModelScope.launch {
             try {
                 user = userRepository.findUserByUsername(username)
+            }catch (e: EOFException) {
+                user = null
+                _errorMessage.value = null
             } catch (e: IOException) {
+                user = null
                 _errorMessage.value = "Nema interneta"
             } catch (e: Exception) {
+                e.printStackTrace()
+                user = null
                 _errorMessage.value = "Doslo je do greske"
             }
         }

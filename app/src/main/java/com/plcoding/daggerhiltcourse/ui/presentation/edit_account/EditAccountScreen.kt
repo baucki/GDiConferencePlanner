@@ -60,7 +60,7 @@ import com.plcoding.daggerhiltcourse.R
 import com.plcoding.daggerhiltcourse.ui.presentation.account.AccountViewModel
 import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseEvent
 import com.plcoding.daggerhiltcourse.ui.presentation.saved_course.SavedCourseViewModel
-//import com.plcoding.daggerhiltcourse.ui.presentation.test.CoilImage
+
 import com.plcoding.daggerhiltcourse.util.UiEvent
 import java.io.File
 import java.io.FileNotFoundException
@@ -134,7 +134,7 @@ fun PersonalInformationComponent(
         )
 
         if (viewModel.user != null) {
-            profileImage(viewModel = viewModel)
+            ProfileImage(viewModel = viewModel)
             EditTextField("Ime", viewModel.name, viewModel.nameErrorMessage, viewModel)
             EditTextField("Prezime", viewModel.lastName, viewModel.lastNameErrorMessage, viewModel)
             EditTextField("Zanimanje", viewModel.profession, viewModel.professionErrorMessage, viewModel)
@@ -186,17 +186,16 @@ fun copyImageToInternalStorage(context: Context, uri: Uri): String? {
     return null
 }
 @Composable
-fun profileImage(viewModel: EditAccountViewModel) {
+fun ProfileImage(viewModel: EditAccountViewModel) {
     val context = LocalContext.current
-//    var imageUri by remember { mutableStateOf<Uri?>(null) }
-//    val painter = remember { mutableStateOf<AsyncImagePainter?>(null) }
 
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri ->
-//            imageUri = uri
-            val path = copyImageToInternalStorage(context, uri)
+            if (uri != null) {
+                val path = copyImageToInternalStorage(context, uri)
                 if (path != null)
-            viewModel.imagePath.value = path
+                    viewModel.imagePath.value = path
+            }
         }
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -214,19 +213,18 @@ fun profileImage(viewModel: EditAccountViewModel) {
                             crossfade(true)
                         }).build()
                     )
-
                 Image(
                     painter = painter,
                     contentDescription = null,
                     modifier = Modifier
                         .size(64.dp)
-                        .clip(CircleShape)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop
                 )
             } else {
                 Image(
-                    painter = rememberAsyncImagePainter(viewModel.imagePath.value),
+                    painter = painterResource(id = R.drawable.ic_baseline_account_circle_24),
                     contentDescription = null,
-                    //                contentScale = ContentScale.Fit,
                     modifier = Modifier
                         .size(64.dp)
                         .clip(CircleShape),
@@ -237,7 +235,9 @@ fun profileImage(viewModel: EditAccountViewModel) {
                 painter = painterResource(id = R.drawable.ic_baseline_account_circle_24),
                 colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                 contentDescription = null,
-                modifier = Modifier.size(64.dp)
+                modifier = Modifier
+                    .size(64.dp)
+                    .clip(CircleShape)
             )
         }
         Button(

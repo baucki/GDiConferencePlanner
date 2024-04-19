@@ -46,6 +46,8 @@ class HomeViewModel @Inject constructor(
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
 
+    var isLoading by mutableStateOf(false)
+
     private val _uiEvent = Channel<UiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
@@ -93,11 +95,15 @@ class HomeViewModel @Inject constructor(
     suspend fun fetchAllCourses() {
         viewModelScope.launch {
             try {
+                isLoading = true
                 _courses.value = remoteRepository.get().fetchAllCourses()
                 sortTabsData()
+                isLoading = false
             } catch (e: IOException) {
+                isLoading = false
                 _errorMessage.value = "Nema interneta"
             } catch (e: Exception) {
+                isLoading = false
                 _errorMessage.value = "Doslo je do greske"
             }
         }

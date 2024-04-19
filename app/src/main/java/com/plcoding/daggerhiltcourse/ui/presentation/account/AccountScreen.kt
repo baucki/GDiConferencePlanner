@@ -110,11 +110,12 @@ fun AccountComponent(
                             contentDescription = null,
                             modifier = Modifier
                                 .size(64.dp)
-                                .clip(CircleShape)
+                                .clip(CircleShape),
+                            contentScale = ContentScale.Crop
                         )
                     } else {
                         Image(
-                            painter = rememberAsyncImagePainter(viewModel.user!!.imagePath),
+                            painter = painterResource(id = R.drawable.ic_baseline_account_circle_24),
                             contentDescription = null,
                             modifier = Modifier
                                 .size(64.dp)
@@ -126,7 +127,9 @@ fun AccountComponent(
                         painter = painterResource(id = R.drawable.ic_baseline_account_circle_24),
                         colorFilter = ColorFilter.tint(MaterialTheme.colors.primary),
                         contentDescription = null,
-                        modifier = Modifier.size(64.dp)
+                        modifier = Modifier
+                            .size(64.dp)
+                            .clip(CircleShape)
                     )
                 }
                 Column(
